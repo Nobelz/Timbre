@@ -10,6 +10,13 @@ import Container from 'react-bootstrap/Container';
 export default function Home() {
 
   const { data: session } = useSession();
+  const [topTracks, setTopTracks] = useState([]);
+
+  const getTopTracks = async () => {
+    const res = await fetch('/api/handler');
+    const { items } = await res.json();
+    setTopTracks(items);
+  };
 
   return (
     <div>
@@ -26,6 +33,13 @@ export default function Home() {
           {!session && <Button onClick={() => signIn()}>Sign In</Button>}
         </Container>
       </Navbar>
+      <button onClick={() => getTopTracks()}>Get top tracks</button>
+      {topTracks.map((item) => (
+        <div key={item.id}>
+          <h1>{item.name}</h1>
+          <img src={item.images[0]?.url} width="100" />
+        </div>
+      ))}
     </div>
   )
 }
