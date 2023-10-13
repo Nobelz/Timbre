@@ -1,22 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from 'next-auth/react';
 import Head from 'next/head'
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import useRefreshToken from "../hooks/useRefreshToken";
+import { authorize, getToken } from "./api/auth/authorize";
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 
 export default function Home() {
 
-  const { data: session } = useSession();
-  const [topTracks, setTopTracks] = useState([]);
-
-  const getTopTracks = async () => {
-    const res = await fetch('/api/handler');
-    const { items } = await res.json();
-    setTopTracks(items);
-  };
+  const searchParams = useSearchParams()
+  const code = searchParams.get('code')
+  useRefreshToken(String(code));
 
   return (
     <div>
@@ -29,17 +26,9 @@ export default function Home() {
           <Navbar.Brand>
             Timbre
           </Navbar.Brand>
-          {session && <Button onClick={() => signOut()}>Sign Out</Button>}
-          {!session && <Button onClick={() => signIn()}>Sign In</Button>}
+          <Button onClick={authorize}>Authorize</Button>
         </Container>
       </Navbar>
-      <button onClick={() => getTopTracks()}>Get top tracks</button>
-      {topTracks.map((item) => (
-        <div key={item.id}>
-          <h1>{item.name}</h1>
-          <img src={item.images[0]?.url} width="100" />
-        </div>
-      ))}
     </div>
   )
 }
