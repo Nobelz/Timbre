@@ -9,11 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 
-export default function Home() {
-
-  const searchParams = useSearchParams()
-  const code = searchParams.get('code')
-  useRefreshToken(String(code));
+export default function Login() {
 
   return (
     <div>
@@ -26,7 +22,7 @@ export default function Home() {
           <Navbar.Brand>
             Timbre
           </Navbar.Brand>
-          <Button onClick={authorize}>Authorize</Button>
+          <Button onClick={authorize}>Sign In</Button>
         </Container>
       </Navbar>
     </div>

@@ -1,5 +1,5 @@
 const SPOTIFY_CLIENT_ID = "b19d3fc2519f47b69da48d2a75142499";
-const redirectUri = 'http://localhost:3000/callback';
+const redirectUri = 'http://localhost:3000/homepage';
 
 function generateRandomString(length) {
     let text = '';
@@ -36,7 +36,7 @@ let code = urlParams.get('code');
 export const authorize = async () => {
     generateCodeChallenge(codeVerifier).then((codeChallenge) => {
         const state = generateRandomString(16);
-        const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state";
+        const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state user-top-read";
 
         sessionStorage.setItem("code_verifier", codeVerifier);
 
