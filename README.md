@@ -7,6 +7,6 @@ To run the project:
     - run **npm run dev** in the terminal  
     - click on sign in and authorize Spotify
 
-Credits:
+Credits:  
     - Spotify for developers documentation  
     - [nishant-666](https://github.com/nishant-666) for authentication with PKCE into Spotify api  
