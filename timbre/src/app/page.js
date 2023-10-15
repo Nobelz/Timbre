@@ -9,8 +9,10 @@ import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 
+/* 
+ The landing page of the application where users will have to sign in to their Spotify account.
+ */
 export default function Login() {
-
   return (
     <div>
       <Head>

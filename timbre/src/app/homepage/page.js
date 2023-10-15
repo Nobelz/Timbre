@@ -10,6 +10,10 @@ import Container from 'react-bootstrap/Container';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 
+/*
+ Homepage of the application where users can get matched with other users.
+ *******Most of it right now is just placeholder code for testing purposes*******
+ */
 export default function Home() {
   const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
@@ -28,6 +32,7 @@ export default function Home() {
     setTopTracks(response.items);
   };
 
+  // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     let token = sessionStorage.getItem("access_token");
     setAccessToken(token || "");

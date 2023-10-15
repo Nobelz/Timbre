@@ -1,4 +1,5 @@
 const SPOTIFY_CLIENT_ID = "b19d3fc2519f47b69da48d2a75142499";
+// Upon successful authentication by the user, redirect to this url
 const redirectUri = 'http://localhost:3000/homepage';
 
 function generateRandomString(length) {
@@ -27,12 +28,16 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 let codeVerifier = generateRandomString(128);
-let urlParams = new URLSearchParams();
-if (typeof window !== "undefined") {
-  urlParams = new URLSearchParams(window.location.search);
-}
-let code = urlParams.get('code');
 
+if (typeof window !== "undefined") {
+  let urlParams = new URLSearchParams(window.location.search);
+}
+
+/*
+ Main authorize method to log the user into their Spotify account by sending a request to Spotify's /authorize endpoint. 
+ The authentication method used is PKCE where we do not need a client secret id.
+ The scope variable is responsible for access privileges to the user's information. 
+ */
 export const authorize = async () => {
     generateCodeChallenge(codeVerifier).then((codeChallenge) => {
         const state = generateRandomString(16);
@@ -54,9 +59,11 @@ export const authorize = async () => {
     });
 };
 
+// Gets the access token from Spotify api after the user is authenticated
 export const getToken = async (code) => {
     const codeVerifier = sessionStorage.getItem("code_verifier");
 
+    console.log("getting token");
     const body = new URLSearchParams({
         grant_type: "authorization_code" || "",
         code: code || "",
@@ -79,6 +86,7 @@ export const getToken = async (code) => {
     }
 };
 
+// Gets the refresh token (token that allows users to get more access tokens without having to log back in again) from Spotify api after the user is authenticated
 export const refreshSpotifyToken = async (refresh_token) => {
     const body = new URLSearchParams({
         grant_type: "refresh_token" || "",

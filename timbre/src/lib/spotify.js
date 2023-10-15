@@ -4,10 +4,10 @@ const TOP_ARTISTS_ENDPOINT = 'https://api.spotify.com/v1/me/top/artists';
 const RECENTLY_PLAYED_ENDPOINT = 'https://api.spotify.com/v1/me/player/recently-played';
 
 /*
-These are functions responsible for making api requests to the Spotify api.
-Each function must get the access token generated from the user logging in 
-and pass that as authorization to the Spotify api.
-*/
+ These are functions responsible for making api requests to the Spotify api.
+ Each function must get the access token generated from the user logging in 
+ and pass that as authorization to the Spotify api.
+ */
 
 // Gets the playlists of the current user
 export const playlists = async () => {
