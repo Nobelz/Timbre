@@ -1,11 +1,24 @@
-CREATE PROCEDURE timbre.search_user_from_username(
+CREATE OR REPLACE FUNCTION timbre.search_user_from_username(
     username_to_search TEXT
+)
+RETURNS SETOF INTEGER 
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+	SELECT user_id FROM timbre.timbre_user WHERE username = username_to_search;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.create_user(
+    username TEXT
 )
 LANGUAGE SQL
 AS $$
-    SELECT user_id FROM timbre.timbre_user WHERE username = username_to_search;
+    INSERT INTO timbre.timbre_user (username) VALUES (username);
+$$;
 
-CREATE PROCEDURE timbre.insert_song_profile(
+CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
     user_id INTEGER,
     type_id INTEGER,
     acousticness DECIMAL,
