@@ -18,5 +18,6 @@ token = util.prompt_for_user_token(username, scope, client_id=client_id, client_
 
 if token:
     sp = spotipy.Spotify(auth=token)
-
-    results = sp.current_user_recently_played(50)
+    
+    results = sp.current_user_recently_played()
+    
