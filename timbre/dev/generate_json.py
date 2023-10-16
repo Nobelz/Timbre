@@ -19,5 +19,9 @@ token = util.prompt_for_user_token(username, scope, client_id=client_id, client_
 if token:
     sp = spotipy.Spotify(auth=token)
     
-    results = sp.current_user_recently_played()
+    results = sp.current_user_recently_played(50)
     
+    track_ids = []
+    for item in results['items']:
+        track = item['track']
+        print(track['name'] + ' - ' + track['artists'][0]['name'])
