@@ -31,14 +31,23 @@ if token:
     sp_general = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
     
     
-    top_artist_tracks = np.empty((5, 5), dtype=np.dtype('U100'))
+    top_artist_track_ids = np.empty((5, 5), dtype=np.dtype('U100'))
 
     # Get the top 5 track ids for each artist
     for i, artist_id in enumerate(artist_ids):
         top_tracks = sp_general.artist_top_tracks(artist_id)
         for j, item in enumerate(top_tracks['tracks'][:5]):
-            top_artist_tracks[i][j] = item['id']
+            top_artist_track_ids[i][j] = item['id']
 
+    # Get recently played ids
+    recently_played_track_ids = []
+    for item in recently_played_tracks['items']:
+        recently_played_track_ids.append(item['track']['id'])
+
+    # Get top track ids
+    top_track_ids = []
+    for item in top_tracks['tracks']:
+        top_track_ids.append(item['id'])
 
     # Get the track ids of the recently played tracks
     print('Test')
