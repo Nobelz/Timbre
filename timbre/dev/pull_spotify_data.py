@@ -55,6 +55,8 @@ if token:
     top_artists = sp_user.current_user_top_artists(5)
     email = sp_user.current_user()['email']
 
+    # TODO: If username does not exist in database, add it
+
     artist_ids = []
     # Get the top 5 artists
     for item in top_artists['items']:
