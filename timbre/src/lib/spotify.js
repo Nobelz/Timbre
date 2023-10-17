@@ -100,11 +100,12 @@ export const artistsTopTracks = async (id) => {
 };
 
 // Gets the audio features of a track given its id
-export const trackFeatures = async (id) => {
+// ids should be a comma separated string of track ids
+export const trackFeatures = async (ids) => {
     const token = sessionStorage.getItem("access_token");
     try {
         const response = await fetch(
-            `https://api.spotify.com/v1/audio-features/${id}`,
+            `https://api.spotify.com/v1/audio-features/${ids}`,
             {
                 headers: {
                     Authorization: "Bearer " + token,

@@ -42,6 +42,15 @@ export default function Home() {
 
   console.log(userTopTracks);
 
+  // Function to test connection to db called on button press
+  // makes a call to the route.js file in app/api/endpoint folder
+  function test() {
+    const apiReq = fetch('http://localhost:3000/api/endpoint', {
+      method: 'PUT',
+      body: JSON.stringify("this is a test")
+    });
+  }
+
   return (
     <div>
       <Head>
@@ -56,6 +65,7 @@ export default function Home() {
           <Button onClick={authorizeApp}>Refresh Token</Button>
         </Container>
       </Navbar>
+      <Button onClick={test}>Test API Endpoint</Button>
     </div>
   )
 }
