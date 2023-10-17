@@ -55,15 +55,18 @@ if token:
     top_artists = sp_user.current_user_top_artists(5)
     email = sp_user.current_user()['email']
 
-    user_id = database.search_user_from_username(email)[0]
+    user_id = database.search_user_from_username(email)
     if user_id is None:
         database.create_user(email)
         user_id = database.search_user_from_username(email)[0]
+    else:
+        user_id = user_id[0]
 
     artist_ids = []
     # Get the top 5 artists
-    for item in top_artists['items']:
-        artist_ids.append(item['id'])
+    if top_artists['items']:
+        for item in top_artists['items']:
+            artist_ids.append(item['id'])
 
     top_artist_track_ids = np.empty((5, 5), dtype=np.dtype('U100'))
 
@@ -80,8 +83,9 @@ if token:
 
     # Get top track ids
     top_track_ids = []
-    for item in top_tracks['tracks']:
-        top_track_ids.append(item['id'])
+    if 'tracks' in top_tracks:
+        for item in top_tracks['tracks']:
+            top_track_ids.append(item['id'])
 
     # Get top ratings
     top_ratings = database.get_top_ratings(user_id, 10)
@@ -95,8 +99,8 @@ if token:
     # Get audio features for each track
     audio_features = sp_general.audio_features(removed_track_ids)
 
-    scaled_audio_features = []
     # Processing of audio features
+    scaled_audio_features = []
     for feature in audio_features:
         temp = dict()
         temp['danceability'] = feature['danceability']
@@ -114,7 +118,7 @@ if token:
     artist_scores = []
     i = 0
     for j in range(len(top_artist_track_ids)):
-        num_artist_tracks = len(top_artist_track_ids[j])
+        num_artist_tracks = len(top_artist_track_ids[j][top_artist_track_ids[j] != ''])
         artist_scores.append(_weighted_average(scaled_audio_features[i:i+num_artist_tracks], generate_weights(num_artist_tracks)))
         i = i + num_artist_tracks
     
