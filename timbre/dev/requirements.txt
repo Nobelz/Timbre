@@ -1,0 +1,4 @@
+spotipy
+json
+psycopg2
+numpy
