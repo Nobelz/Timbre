@@ -15,7 +15,7 @@ CREATE OR REPLACE PROCEDURE timbre.create_user(
 )
 LANGUAGE SQL
 AS $$
-    INSERT INTO timbre.timbre_user (username) VALUES (username);
+    INSERT INTO timbre.timbre_user (username, create_time) VALUES (username, NOW());
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
@@ -47,8 +47,50 @@ BEGIN
             tempo = $11
         WHERE user_id = $1 AND type_id = $2;
     ELSE
+        IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song.song_id = $2) THEN
+            INSERT INTO timbre.song(song_id) VALUES ($2);
+        END IF;
+        
         INSERT INTO timbre.song_profile 
         VALUES (user_id, type_id, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_top_ratings(
+    user_id INTEGER,
+    rating_limit INTEGER
+)
+RETURNS TABLE (song_id TEXT, rating DECIMAL)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+	SELECT song_rating.song_id, song_rating.rating FROM timbre.song_rating
+    WHERE timbre.song_rating.user_id = $1
+    ORDER BY rating DESC, rating_time DESC -- Take the top ratings, and if there are ties, take the most recent ratings
+    LIMIT rating_limit;
+END;
+$$;
+    
+CREATE OR REPLACE PROCEDURE timbre.make_rating(
+    user_id INTEGER,
+    song_id TEXT,
+    rating DECIMAL
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM timbre.song_rating WHERE song_rating.user_id = $1 AND song_rating.song_id = $2) THEN
+        UPDATE timbre.song_rating
+        SET song_rating.rating = $3
+        WHERE song_rating.user_id = $1 AND song_rating.song_id = $2;
+    ELSE
+        IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song.song_id = $2) THEN
+            INSERT INTO timbre.song(song_id) VALUES ($2);
+        END IF;
+
+        INSERT INTO timbre.song_rating(user_id, song_id, rating) VALUES ($1, $2, $3);
     END IF;
 END;
 $$;

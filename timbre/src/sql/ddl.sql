@@ -14,7 +14,8 @@ CREATE TABLE timbre_user (
 	first_name TEXT,
 	last_name TEXT,
 	user_bio TEXT,
-	spotify_last_refresh TIMESTAMP
+	spotify_last_refresh TIMESTAMP,
+	create_time TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE friend_request (
@@ -61,7 +62,8 @@ CREATE TABLE song (
 CREATE TABLE song_rating(
 	user_id INTEGER,
 	song_id TEXT,
-	rating INTEGER NOT NULL,
+	rating DECIMAL NOT NULL,
+	rating_time TIMESTAMP NOT NULL DEFAULT NOW(),
 	
 	PRIMARY KEY(user_id, song_id),
 	
@@ -80,6 +82,7 @@ CREATE TABLE recommendation(
 	sender_id INTEGER,
 	receiver_id INTEGER,
 	rec_message TEXT,
+	rec_time TIMESTAMP NOT NULL DEFAULT NOW(),
 	
 	PRIMARY KEY(song_id, sender_id, receiver_id),
 
@@ -109,6 +112,7 @@ CREATE TABLE song_profile(
     loudness DECIMAL NOT NULL CHECK (loudness >= 0 AND loudness <= 1),
     speechiness DECIMAL NOT NULL CHECK (speechiness >= 0 AND speechiness <= 1),
     tempo DECIMAL NOT NULL CHECK (tempo >= 0 AND tempo <= 1),
+	profile_time TIMESTAMP NOT NULL DEFAULT NOW(),
 
     PRIMARY KEY(user_id, type_id),
 
