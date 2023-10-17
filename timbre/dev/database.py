@@ -37,3 +37,10 @@ class Database:
         self.cursor.execute('CALL timbre.make_rating(%s, %s, %s)', [user_id, song_id, rating])
         self.connection.commit()
 
+    def get_song_profile(self, user_id: int, type_id: int, limit: int = 0):
+        self.cursor.callproc('timbre.get_song_profile', [user_id, type_id, limit])
+        return self.cursor.fetchall()
+    
+    def get_all_song_profiles(self, user_id: int, limit: int = 0):
+        self.cursor.callproc('timbre.get_all_song_profiles', [user_id, limit])
+        return self.cursor.fetchall()

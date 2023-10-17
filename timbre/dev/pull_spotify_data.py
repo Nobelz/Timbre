@@ -55,7 +55,10 @@ if token:
     top_artists = sp_user.current_user_top_artists(5)
     email = sp_user.current_user()['email']
 
-    # TODO: If username does not exist in database, add it
+    user_id = database.search_user_from_username(email)[0]
+    if user_id is None:
+        database.create_user(email)
+        user_id = database.search_user_from_username(email)[0]
 
     artist_ids = []
     # Get the top 5 artists
@@ -81,7 +84,6 @@ if token:
         top_track_ids.append(item['id'])
 
     # Get top ratings
-    user_id = database.search_user_from_username(email)[0]
     top_ratings = database.get_top_ratings(user_id, 10)
 
     top_rating_ids = [rating[0] for rating in top_ratings]

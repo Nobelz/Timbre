@@ -76,3 +76,66 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION timbre.get_song_profile(
+    user_id INTEGER,
+    type_id INTEGER,
+    num_profiles INTEGER DEFAULT 0
+) 
+RETURNS TABLE (acousticness DECIMAL, valence DECIMAL, danceability DECIMAL, energy DECIMAL, instrumentalness DECIMAL, liveness DECIMAL, loudness DECIMAL, speechiness DECIMAL, tempo DECIMAL, profile_time TIMESTAMP)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF num_profiles = 0 THEN
+        RETURN QUERY
+        SELECT song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = $2
+        ORDER BY profile_time DESC;
+    ELSE
+        RETURN QUERY
+        SELECT song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = $2
+        ORDER BY profile_time DESC
+        LIMIT num_profiles;
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_all_song_profiles(
+    user_id INTEGER,
+    num_profiles INTEGER DEFAULT 0
+)
+RETURNS TABLE (type_id INTEGER, acousticness DECIMAL, valence DECIMAL, danceability DECIMAL, energy DECIMAL, instrumentalness DECIMAL, liveness DECIMAL, loudness DECIMAL, speechiness DECIMAL, tempo DECIMAL, profile_time TIMESTAMP)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF num_profiles = 0 THEN
+        RETURN QUERY
+        SELECT song_profile.type_id, song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1
+        ORDER BY type_id ASc, profile_time DESC;
+    ELSE
+        RETURN QUERY
+        (SELECT song_profile.type_id, song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = 1
+        ORDER BY profile_time DESC
+        LIMIT num_profiles)
+        UNION
+        (SELECT song_profile.type_id, song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = 2
+        ORDER BY profile_time DESC
+        LIMIT num_profiles)
+        UNION
+        (SELECT song_profile.type_id, song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = 3
+        ORDER BY profile_time DESC
+        LIMIT num_profiles)
+        UNION
+        (SELECT song_profile.type_id, song_profile.acousticness, song_profile.valence, song_profile.danceability, song_profile.energy, song_profile.instrumentalness, song_profile.liveness, song_profile.loudness, song_profile.speechiness, song_profile.tempo, song_profile.profile_time FROM timbre.song_profile
+        WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = 4
+        ORDER BY profile_time DESC
+        LIMIT num_profiles)
+        ORDER BY type_id ASc, profile_time DESC;
+    END IF;
+END;
+$$;
