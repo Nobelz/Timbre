@@ -34,26 +34,8 @@ CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF EXISTS (SELECT 1 FROM timbre.song_profile WHERE user_id = $1 AND type_id = $2) THEN
-        UPDATE timbre.song_profile
-        SET acousticness = $3,
-            valence = $4,
-            danceability = $5,
-            energy = $6,
-            instrumentalness = $7,
-            liveness = $8,
-            loudness = $9,
-            speechiness = $10,
-            tempo = $11
-        WHERE user_id = $1 AND type_id = $2;
-    ELSE
-        IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song.song_id = $2) THEN
-            INSERT INTO timbre.song(song_id) VALUES ($2);
-        END IF;
-        
-        INSERT INTO timbre.song_profile 
-        VALUES (user_id, type_id, $3, $4, $5, $6, $7, $8, $9, $10, $11);
-    END IF;
+    INSERT INTO timbre.song_profile 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
 END;
 $$;
 

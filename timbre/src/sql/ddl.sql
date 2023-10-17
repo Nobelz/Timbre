@@ -102,7 +102,7 @@ CREATE TABLE recommendation(
 
 CREATE TABLE song_profile(
     user_id INTEGER,
-    type_id INTEGER CHECK (type_id BETWEEN 1 AND 4), -- 1: top artists, 2: top tracks, 3: recently played, 4: user ratings
+    type_id INTEGER CHECK (type_id BETWEEN 1 AND 5), -- 1: top artists, 2: top tracks, 3: recently played, 4: user ratings
     acousticness DECIMAL NOT NULL CHECK (acousticness >= 0 AND acousticness <= 1),
     valence DECIMAL NOT NULL CHECK (valence >= 0 AND valence <= 1),
     danceability DECIMAL NOT NULL CHECK (danceability >= 0 AND danceability <= 1),
@@ -114,7 +114,7 @@ CREATE TABLE song_profile(
     tempo DECIMAL NOT NULL CHECK (tempo >= 0 AND tempo <= 1),
 	profile_time TIMESTAMP NOT NULL DEFAULT NOW(),
 
-    PRIMARY KEY(user_id, type_id),
+    PRIMARY KEY(user_id, type_id, profile_time),
 
     CONSTRAINT fk_user_song_profile
         FOREIGN KEY(user_id)
