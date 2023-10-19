@@ -119,7 +119,7 @@ if token:
     i = 0
     for j in range(len(top_artist_track_ids)):
         num_artist_tracks = len(top_artist_track_ids[j][top_artist_track_ids[j] != ''])
-        artist_scores.append(_weighted_average(scaled_audio_features[i:i+num_artist_tracks], generate_weights(num_artist_tracks)))
+        artist_scores.append(_weighted_average(scaled_audio_features[i:i+num_artist_tracks], [1 / num_artist_tracks for i in range(num_artist_tracks)]))
         i = i + num_artist_tracks
     
     num_artist_tracks = i

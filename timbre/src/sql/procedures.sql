@@ -135,7 +135,7 @@ BEGIN
         WHERE timbre.song_profile.user_id = $1 AND timbre.song_profile.type_id = 4
         ORDER BY profile_time DESC
         LIMIT num_profiles)
-        ORDER BY type_id ASc, profile_time DESC;
+        ORDER BY type_id ASC, profile_time DESC;
     END IF;
 END;
 $$;

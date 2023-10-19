@@ -65,4 +65,4 @@ def _calculate_compatibility(profile1, profile2) -> float:
         abs(profile1['tempo'] - profile2['tempo'])
     return 1 - (diff) / 9
 
-print(f'Compatibility Score: {round(calculate_compatibility_score("nobelzhou19@gmail.com", "ashidacollege@gmail.com") * 100, 1)}%')
+print(f'Compatibility Score: {round(calculate_compatibility_score("nobelzhou19@gmail.com", "wtl2255@gmail.com") * 100, 1)}%')

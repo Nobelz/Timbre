@@ -26,7 +26,7 @@ class Database:
         self.connection.commit()
     
     def insert_song_profile(self, user_id: int, type_id: int, acousticness: float, danceability: float, energy: float, instrumentalness: float, liveness: float, loudness: float, speechiness: float, valence: float, tempo: float):
-        self.cursor.execute('CALL timbre.insert_song_profile(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [user_id, type_id, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, valence, tempo])
+        self.cursor.execute('CALL timbre.insert_song_profile(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', [user_id, type_id, acousticness, valence, danceability, energy, instrumentalness, liveness, loudness, speechiness, tempo])
         self.connection.commit()
     
     def get_top_ratings(self, user_id: int, limit: int):
