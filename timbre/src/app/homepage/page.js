@@ -4,12 +4,12 @@ import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
 import { topTracks, topArtists } from "../../lib/spotify";
-import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
+import { Container, ListGroup, Button } from 'react-bootstrap';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { Row, Col, Card } from 'react-bootstrap';
+import Link from 'next/link';
 
 
 /*
@@ -17,6 +17,11 @@ import { Row, Col, Card } from 'react-bootstrap';
  *******Most of it right now is just placeholder code for testing purposes*******
  */
 export default function Home() {
+  const dummyFriends = [
+    { id: 1, name: "Friend A", email: "frienda@email.com", profilePictureUrl: "path/to/imageA.jpg" },
+    { id: 2, name: "Friend B", email: "friendb@email.com", profilePictureUrl: "path/to/imageB.jpg" },
+    // ... add more friends as needed
+  ];
   const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
   //const [userTopArtists, setTopArtists] = useState([]);
@@ -78,6 +83,7 @@ export default function Home() {
             Timbre
           </Navbar.Brand>
           <Button onClick={authorizeApp}>Refresh Token</Button>
+          <Link href="/friends">Friends</Link>
         </Container>
       </Navbar>
       <Button onClick={test}>Test API Endpoint</Button>
