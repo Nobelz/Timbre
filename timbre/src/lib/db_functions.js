@@ -15,22 +15,36 @@ if (!connection) {
 }
 
 // Function that is responsible for inserting user information into the database
-const insertUser = async (user_id, username) => {
+const insertSongRating = async (user_id, song_id, rating) => {
     try {
-        const query = `INSERT INTO timbre.timbre_user (username, first_name, last_name, user_bio, email, hash_password) VALUES ("${username}")` // fixing this later just testing if i can at least connect to db
-        const result = await connection.query(
-            query
-        );
-        connection.end();
+        const query = `CALL timbre.make_rating (
+            '${user_id}', 
+            '${song_id}', 
+            '${rating}'
+        )`;
+        const result = await connection.query(query);
+        // connection.end();
         return result;
     } catch (error) {
         console.log(error);
     }
 };
 
+const getSongRating = async () => {
+    try {
+        const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
 // Put all function names here to export
 const db_functions = {
-    insertUser,
+    insertSongRating,
+    getSongRating,
 };
 
 module.exports = db_functions;

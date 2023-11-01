@@ -10,11 +10,22 @@ import Container from 'react-bootstrap/Container';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 
+
+export async function getStaticProps() {
+  const res = await fetch('http://localhost:3000/api/endpoint');
+  const props = await res.json();
+  return {
+      props: {
+          props,
+      },
+  }
+}
+
 /*
  Homepage of the application where users can get matched with other users.
  *******Most of it right now is just placeholder code for testing purposes*******
  */
-export default function Home() {
+export default function Home({ props }) {
   const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
   const [userTopTracks, setTopTracks] = useState([]);
@@ -40,15 +51,16 @@ export default function Home() {
     setCodeVerifier(sessionStorage.getItem("code_verifier") || "");
   }, []);
 
-  console.log(userTopTracks);
+  useEffect(() => {
+    console.log(props);
+  }, [props])
 
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
-  function test() {
-    const apiReq = fetch('http://localhost:3000/api/endpoint', {
-      method: 'PUT',
-      body: JSON.stringify("this is a test")
-    });
+  const test = async () => {
+    const res = await fetch('http://localhost:3000/api/endpoint');
+    const output = await res.json();
+    console.log(output);
   }
 
   return (
