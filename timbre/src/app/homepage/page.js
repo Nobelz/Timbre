@@ -12,6 +12,17 @@ import { Row, Col, Card } from 'react-bootstrap';
 import Link from 'next/link';
 
 
+
+export async function getStaticProps() {
+  const res = await fetch('http://localhost:3000/api/endpoint');
+  const props = await res.json();
+  return {
+      props: {
+          props,
+      },
+  }
+}
+
 /*
  Homepage of the application where users can get matched with other users.
  *******Most of it right now is just placeholder code for testing purposes*******
@@ -51,13 +62,13 @@ export default function Home() {
   };
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
-    let token = sessionStorage.getItem("access_token");
-    setAccessToken(token || "");
-    fetchTopTracks();
-    setCodeVerifier(sessionStorage.getItem("code_verifier") || "");
-  }, []);
-
-  console.log(userTopTracks);
+    if (!access_token) {
+      let token = sessionStorage.getItem("access_token");
+      setAccessToken(token || "");
+    } else {
+      fetchTopTracks(); // This should now only be called when you have a token
+    }
+  }, [access_token]); // Dependency array
 
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
