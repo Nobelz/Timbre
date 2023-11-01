@@ -11,18 +11,6 @@ import useRefreshToken from "../../hooks/useRefreshToken";
 import { Row, Col, Card } from 'react-bootstrap';
 import Link from 'next/link';
 
-
-
-export async function getStaticProps() {
-  const res = await fetch('http://localhost:3000/api/endpoint');
-  const props = await res.json();
-  return {
-      props: {
-          props,
-      },
-  }
-}
-
 /*
  Homepage of the application where users can get matched with other users.
  *******Most of it right now is just placeholder code for testing purposes*******
