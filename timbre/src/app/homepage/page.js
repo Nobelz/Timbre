@@ -3,32 +3,30 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
-import { topTracks } from "../../lib/spotify";
-import Button from 'react-bootstrap/Button';
+import { topTracks, topArtists } from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
+import { Container, ListGroup, Button } from 'react-bootstrap';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
+import { Row, Col, Card } from 'react-bootstrap';
+import Link from 'next/link';
 
-
-export async function getStaticProps() {
-  const res = await fetch('http://localhost:3000/api/endpoint');
-  const props = await res.json();
-  return {
-      props: {
-          props,
-      },
-  }
-}
 
 /*
  Homepage of the application where users can get matched with other users.
  *******Most of it right now is just placeholder code for testing purposes*******
  */
-export default function Home({ props }) {
+export default function Home() {
+  const dummyFriends = [
+    { id: 1, name: "Friend A", email: "frienda@email.com", profilePictureUrl: "path/to/imageA.jpg" },
+    { id: 2, name: "Friend B", email: "friendb@email.com", profilePictureUrl: "path/to/imageB.jpg" },
+    // ... add more friends as needed
+  ];
   const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
+  //const [userTopArtists, setTopArtists] = useState([]);
   const [userTopTracks, setTopTracks] = useState([]);
+  //const [userTopGenres, setUserTopGenres] = useState([]);
 
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
@@ -39,10 +37,18 @@ export default function Home({ props }) {
   };
 
   const fetchTopTracks = async () => {
-    let response = await topTracks();
-    setTopTracks(response.items);
+    try {
+      // Assuming topTracks() returns a promise that resolves with the response data.
+      let response = await topTracks(access_token); // passing the token if required
+      if (response.items) {
+        setTopTracks(response.items);
+      } else {
+        console.error("Unexpected response", response);
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching top tracks:", error);
+    }
   };
-
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     let token = sessionStorage.getItem("access_token");
@@ -51,9 +57,7 @@ export default function Home({ props }) {
     setCodeVerifier(sessionStorage.getItem("code_verifier") || "");
   }, []);
 
-  useEffect(() => {
-    console.log(props);
-  }, [props])
+  console.log(userTopTracks);
 
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
@@ -75,9 +79,34 @@ export default function Home({ props }) {
             Timbre
           </Navbar.Brand>
           <Button onClick={authorizeApp}>Refresh Token</Button>
+          <Link href="/friends">Friends</Link>
         </Container>
       </Navbar>
       <Button onClick={test}>Test API Endpoint</Button>
+      <div>
+        <Card>
+          <Card.Title>Your Top Tracks</Card.Title>
+          <Container>
+            <Row>
+              {
+                userTopTracks.map(track => (
+                  <Col md={3} key={track.id}>
+                    <Card>
+                      <Card.Img variant="top" src={track.album.images[0]?.url || ''} />
+                      <Card.Body>
+                        <Card.Title>{track.name}</Card.Title>
+                        <Card.Text>
+                          {track.artists.map(artist => artist.name).join(', ')}
+                        </Card.Text>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))
+              }
+            </Row>
+          </Container>
+        </Card>
+      </div>
     </div>
   )
 }
