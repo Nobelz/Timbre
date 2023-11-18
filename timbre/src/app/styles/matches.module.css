@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-radius: .25rem;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, .3);
+    width: 200px;
+    height: 300px;
+    background-color: white;
+    transform-style: preserve-3d;
+    transition: 700ms;
+    cursor: pointer;
+    transform: perspective(1000px) rotateY(var(--rotate-y, 0)) translateY(var(--translate-y, 0));
+}
+
+.card:hover {
+    --translate-y: -2px;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, .5);
+}
+
+.card.flip {
+    transform: rotateY(180deg);
+}
+
+.cardFace {
+    position: absolute;
+    padding: 1rem;
+    backface-visibility: hidden;
+}
+
+.cardFaceBack {
+    transform: rotateY(180deg);
+}

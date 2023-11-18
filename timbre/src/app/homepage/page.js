@@ -5,11 +5,11 @@ import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
 import { topTracks, topArtists } from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { Row, Col, Card } from 'react-bootstrap';
-import Link from 'next/link';
 
 /*
  Homepage of the application where users can get matched with other users.
@@ -74,11 +74,14 @@ export default function Home() {
       </Head>
       <Navbar bg="dark" variant="dark">
         <Container fluid>
-          <Navbar.Brand>
+          <Navbar.Brand href="/homepage">
             Timbre
           </Navbar.Brand>
+          <Nav className="me-auto">
+            <Nav.Link href="/matches">Matches</Nav.Link>
+            <Nav.Link href="/friends">Friends</Nav.Link>
+          </Nav>
           <Button onClick={authorizeApp}>Refresh Token</Button>
-          <Link href="/friends">Friends</Link>
         </Container>
       </Navbar>
       <Button onClick={test}>Test API Endpoint</Button>
