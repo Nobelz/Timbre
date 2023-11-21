@@ -4,19 +4,11 @@ import Head from 'next/head'
 import { useEffect, useState } from "react";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import styles from '../styles/matches.module.css';
 import { Container, ListGroup, Button } from 'react-bootstrap';
-import { useSearchParams, useRouter } from "next/navigation";
-import useRefreshToken from "../../hooks/useRefreshToken";
-import { Row, Col, Card } from 'react-bootstrap';
-import Link from 'next/link';
+import MatchcardList from '../../components/MatchcardList'
 
 export default function Matches() {
-    const [isFlipped, setIsFlipped] = useState(false);
-
-    const handleFlip = () => {
-        setIsFlipped(!isFlipped);
-    };
+    const [matchcards, setMatchcards] = useState([1, 2, 3, 4, 5]);
 
     return (
         <div>
@@ -35,20 +27,8 @@ export default function Matches() {
                     </Nav>
                 </Container>
             </Navbar>
-            {/* Fix this: each card should be in a separate component and also possibly in a container (will test) as it is its own entity */}
-            <div className={styles.container}>
-                <div
-                    className={`${styles.card} ${isFlipped ? styles.flip : ''}`}
-                    onClick={handleFlip}
-                >
-                {/* can change these divs to bootstrap cards instead to make things easier */}
-                    <div className={styles.cardFace}>
-                        <p>Front Side</p>
-                    </div>
-                    <div className={`${styles.cardFace} ${styles.cardFaceBack}`}>
-                        <p>Back Side</p>
-                    </div>
-                </div>
+            <div className='container'>
+                <MatchcardList matchcards={matchcards} />
             </div>
         </div>
     )
