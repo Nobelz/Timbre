@@ -6,16 +6,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import MatchcardList from '../../components/MatchcardList'
+import styles from '../styles/matches.module.css';
 
 export default function Matches() {
     const [matchcards, setMatchcards] = useState([1, 2, 3, 4, 5]);
 
     return (
-        <div>
-            <Head>
-                <title>Timbre</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
+        <div className={`${styles.matches}`}>
             <Navbar bg="dark" variant="dark">
                 <Container fluid>
                     <Navbar.Brand href="/homepage">
@@ -27,7 +24,10 @@ export default function Matches() {
                     </Nav>
                 </Container>
             </Navbar>
-            <div className='container'>
+            <div className={`${styles.header}`}>
+                Your Matches
+            </div>
+            <div className={`${styles.container}`}>
                 <MatchcardList matchcards={matchcards} />
             </div>
         </div>

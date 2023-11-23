@@ -1,8 +1,11 @@
 .container {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    transform: translate(-50%, -50%);
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    /* align-items: center; */
 }
 
 .card {
@@ -10,11 +13,11 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    border-radius: .25rem;
+    border-radius: 1rem;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, .3);
     width: 200px;
     height: 300px;
-    background-color: white;
+    background-color: #eff4ff;
     transform-style: preserve-3d;
     transition: 700ms;
     cursor: pointer;
@@ -23,7 +26,7 @@
 
 .card:hover {
     --translate-y: -5px;
-    box-shadow: 0 0 5px 3px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 7px 5px rgba(241, 251, 255, 0.5);
 }
 
 .card.flip {
@@ -45,7 +48,18 @@
     justify-content: center;
     grid-template-areas: 'card card card card card';
     padding: 10%;
-    gap: 1rem;
+    gap: 2.5rem;
 }
 
-/* https://codepen.io/aybukeceylan/pen/RwrRPoO?editors=0100 */
+.matches {
+    background-image: linear-gradient(rgb(0, 15, 66), rgb(0, 0, 0));
+    height: 100%;
+}
+
+.header {
+    text-align: center;
+    color: #ffffff;
+    font-size: 6.5em;
+    font-weight: 900;
+    transform: translateY(70%);
+}
