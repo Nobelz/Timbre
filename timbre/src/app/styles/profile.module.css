@@ -1,0 +1,62 @@
+ .container {
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 80%; /* Adjust the width as needed */
+    height: 100%;
+    padding: 20px;
+    background-color: white;
+    /*position: absolute;*/
+}
+
+.container:hover {
+    --translate-y: -5px;
+    box-shadow: 0 0 5px 3px rgba(0, 0, 0, .5);
+}
+
+.title {
+    background: #d3d3d3;
+    font-weight: bold;
+    color:black;
+    padding: 20px;
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.content {
+    background: #d3d3d3;
+    color:rgb(94, 93, 93);
+    padding: 20px;
+    width: 80%;
+}
+
+.s_content {
+    background: #d3d3d3;
+    color:rgb(94, 93, 93);
+    padding: 20px;
+    width: 40%;
+}
+
+.s_button {
+    background: #d3d3d3;
+    padding: 20px;
+    width: 40%;
+}
+
+.greenButton {
+    background-color: #1ed760; /* Green background color */
+    color: white; /* White text color, adjust as needed */
+    /* Add any other styles for the green button */
+  }
+
+.row {
+    margin-bottom: 30px;
+    margin-top: 30px;
+    color: black
+}
