@@ -9,7 +9,13 @@ import MatchcardList from '../../components/MatchcardList'
 import styles from '../styles/matches.module.css';
 
 export default function Matches() {
-    const [matchcards, setMatchcards] = useState([1, 2, 3, 4, 5]);
+    const [matchcards, setMatchcards] = useState([
+        {"username": "bob"},
+        {"username": "billy"},
+        {"username": "joe"},
+        {"username": "steve"},
+        {"username": "jane"}
+    ]);
 
     return (
         <div className={`${styles.matches}`}>

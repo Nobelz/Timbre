@@ -4,9 +4,10 @@ import styles from '../app/styles/matches.module.css';
 export default function MatchcardList({ matchcards }) {
     return (
         <div className={`${styles.cardGrid}`}>
-            {matchcards.map(matches => {
-                return <Matchcard content={matches} key={matches.id} />
+            {matchcards.map((matches, index) => {
+                return <Matchcard content={matches} key={index} />
             })}
         </div>
     )
 }
+// NOTE: change the key to something meaningful

@@ -13,11 +13,11 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    border-radius: 1rem;
+    border-radius: 2.5rem;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, .3);
-    width: 200px;
+    width: 210px;
     height: 300px;
-    background-color: #eff4ff;
+    background-color: rgb(255, 255, 255);
     transform-style: preserve-3d;
     transition: 700ms;
     cursor: pointer;
@@ -25,8 +25,8 @@
 }
 
 .card:hover {
-    --translate-y: -5px;
-    box-shadow: 0 0 7px 5px rgba(241, 251, 255, 0.5);
+    /* --translate-y: -5px; */
+    box-shadow: 0 0 7px 7px rgba(241, 251, 255, 0.5);
 }
 
 .card.flip {
@@ -52,13 +52,13 @@
 }
 
 .matches {
-    background-image: linear-gradient(rgb(0, 15, 66), rgb(0, 0, 0));
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
     height: 100%;
 }
 
 .header {
     text-align: center;
-    color: #ffffff;
+    color: rgb(255, 255, 255);
     font-size: 6.5em;
     font-weight: 900;
     transform: translateY(70%);
