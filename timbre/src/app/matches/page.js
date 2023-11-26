@@ -10,11 +10,11 @@ import styles from '../styles/matches.module.css';
 
 export default function Matches() {
     const [matchcards, setMatchcards] = useState([
-        {"username": "bob"},
-        {"username": "billy"},
-        {"username": "joe"},
-        {"username": "steve"},
-        {"username": "jane"}
+        { "username": "bob" },
+        { "username": "billy" },
+        { "username": "joe" },
+        { "username": "steve" },
+        { "username": "jane" }
     ]);
 
     return (
@@ -30,6 +30,7 @@ export default function Matches() {
                     </Nav>
                 </Container>
             </Navbar>
+            <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
             <div className={`${styles.header}`}>
                 Your Matches
             </div>

@@ -1,0 +1,23 @@
+.searchCard {
+    display: flex;
+    margin: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+
+.searchCard:hover {
+    background-color: rgba(167, 167, 167, 0.527);
+}
+
+.trackImage {
+    height: 64px;
+    width: 64px;
+}
+
+.trackInfo {
+    margin-left: 10px;
+}
+
+.artists {
+    margin-right: 3px;
+}

@@ -1,0 +1,16 @@
+.recModal {
+    width: 40vw;
+    max-width: 40vw;
+}
+
+.container {
+    height: 50vh;
+    max-height: 50vh;
+}
+
+.songs {
+    flex-grow: 1;
+    overflow-y: auto;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
