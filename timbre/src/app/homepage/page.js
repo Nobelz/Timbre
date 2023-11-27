@@ -10,6 +10,7 @@ import { Container, ListGroup, Button } from 'react-bootstrap';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { Row, Col, Card } from 'react-bootstrap';
+import Navigation from '../../components/Navigation';
 
 /*
  Homepage of the application where users can get matched with other users.

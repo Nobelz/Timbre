@@ -5,13 +5,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Nav from 'react-bootstrap/Nav';
-
-import { useSearchParams, useRouter } from "next/navigation";
-import useRefreshToken from "../hooks/useRefreshToken";
-import { authorize, getToken } from "../app/api/auth/authorize";
+import { authorize, getToken } from "../api/auth/authorize";
 
 
-export default Navigation = () => {
+
+// userAuth prop
+
+export default Navigation = ({ isAuthenticated, authorizeApp}) => {
+
 
   return (
     <Navbar bg="dark" variant="dark">
@@ -19,7 +20,11 @@ export default Navigation = () => {
           <Navbar.Brand>
             Timbre
           </Navbar.Brand>
-          <Button onClick={authorize}>Sign In</Button>
+          <Nav className="me-auto">
+            <Nav.Link href="/matches">Matches</Nav.Link>
+            <Nav.Link href="/friends">Friends</Nav.Link>
+          </Nav>
+          <Button onClick={authorizeApp}>{isAuthenticated ? "Refresh Token" : "Sign In"}</Button>
         </Container>
       </Navbar>
   );
