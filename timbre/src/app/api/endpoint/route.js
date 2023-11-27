@@ -2,7 +2,7 @@ import { insertSongRating, getSongRating } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 
 // Handler for PUT requests 
-// Can potentially differentiate between which functions to call in db_functionsusing request.json() or request.text()
+// Can potentially differentiate between which functions to call in db_functions using request.json() or request.text()
 // That will get the body of the fetch request from the frontend: line 50 of homepage/page.js
 // There might be a better method
 export async function PUT(request) {

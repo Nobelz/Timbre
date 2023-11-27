@@ -48,6 +48,7 @@ export default function Home() {
       console.error("An error occurred while fetching top tracks:", error);
     }
   };
+  
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     if (!access_token) {

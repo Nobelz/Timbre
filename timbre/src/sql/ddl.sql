@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS friend_request;
 DROP TABLE IF EXISTS recommendation;
 DROP TABLE IF EXISTS song;
 DROP TABLE IF EXISTS timbre_user;
+DROP TABLE IF EXISTS characteristics;
 
 CREATE TABLE timbre_user (
 	user_id SERIAL PRIMARY KEY,
@@ -120,4 +121,10 @@ CREATE TABLE song_profile(
         FOREIGN KEY(user_id)
             REFERENCES timbre_user(user_id)
             ON DELETE CASCADE
-)
+);
+
+CREATE TABLE characteristics(
+	name TEXT PRIMARY KEY,
+	min DECIMAL NOT NULL CHECK (min >= 0 AND min <= 1),
+	max DECIMAL NOT NULL CHECK (max >= 0 AND max <= 1)
+);
