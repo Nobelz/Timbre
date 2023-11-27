@@ -27,6 +27,8 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   //const [userTopGenres, setUserTopGenres] = useState([]);
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const searchParams = useSearchParams()
   const code = searchParams.get('code')
   useRefreshToken(String(code));
@@ -53,6 +55,7 @@ export default function Home() {
     if (!access_token) {
       let token = sessionStorage.getItem("access_token");
       setAccessToken(token || "");
+      setIsAuthenticated(true);
     } else {
       fetchTopTracks(); // This should now only be called when you have a token
     }
@@ -81,7 +84,7 @@ export default function Home() {
             <Nav.Link href="/matches">Matches</Nav.Link>
             <Nav.Link href="/friends">Friends</Nav.Link>
           </Nav>
-          <Button onClick={authorizeApp}>Refresh Token</Button>
+          <Button onClick={authorizeApp}>{isAuthenticated ? "Refresh Token" : "Sign In"}</Button>
         </Container>
       </Navbar>
       <Button onClick={test}>Test API Endpoint</Button>
