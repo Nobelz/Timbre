@@ -48,7 +48,7 @@ export default function Home() {
       console.error("An error occurred while fetching top tracks:", error);
     }
   };
-  
+
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     if (!access_token) {
@@ -62,7 +62,9 @@ export default function Home() {
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
   const test = async () => {
-    const res = await fetch('http://localhost:3000/api/endpoint');
+    const res = await fetch('../api/endpoint', {
+      method: 'GET',
+    });
     const output = await res.json();
     console.log(output);
   }

@@ -1,10 +1,7 @@
-import { connect } from "http2";
 import { Pool } from "pg";
 
-// Connection to Postgres database
 let connection;
 
-// Requires environment variables set up in .env.local
 if (!connection) {
     connection = new Pool({
         user: process.env.PGSQL_USER,
@@ -43,7 +40,7 @@ const getSongRating = async () => {
 
 const getUserIDFromUsername = async(username) => {
     try {
-        const query = `SELECT * FROM timbre.search_user_from_username(${username})`;
+        const query = `SELECT * FROM timbre.search_user_from_username('${username}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -95,7 +92,7 @@ const getTopRatings = async(user_id, limit) => {
 
 const getSongProfile = async(user_id, type_id, limit) => {
     try {
-        const query = 'SELECT * FROM timbre.get_song_profile(${user_id}, ${type_id}, ${limit})';
+        const query = `SELECT * FROM timbre.get_song_profile(${user_id}, ${type_id}, ${limit})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {   
@@ -113,6 +110,16 @@ const getSongProfiles = async(user_id, type_id) => {
     }
 };
 
+const getProfileCharacteristics = async() => {
+    try {
+        const query = `SELECT * FROM timbre.get_profile_characteristics()`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Put all function names here to export
 const db_functions = {
     insertSongRating,
@@ -122,7 +129,8 @@ const db_functions = {
     insertSongProfile,
     getTopRatings,
     getSongProfile,
-    getSongProfiles
+    getSongProfiles,
+    getProfileCharacteristics,
 };
 
 module.exports = db_functions;
