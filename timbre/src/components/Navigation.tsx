@@ -9,9 +9,10 @@ import { authorize, getToken } from "../api/auth/authorize";
 
 
 
-// userAuth prop
+// profilePage is false by default
+// profilePage is true when the user is on the profile page
 
-export default Navigation = ({ isAuthenticated, authorizeApp}) => {
+const Navigation = ({ isAuthenticated, authorizeApp}) => {
 
 
   return (
@@ -29,3 +30,5 @@ export default Navigation = ({ isAuthenticated, authorizeApp}) => {
       </Navbar>
   );
 };
+
+export default Navigation;
