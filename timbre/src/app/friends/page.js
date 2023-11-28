@@ -9,7 +9,7 @@ import { Container, ListGroup, Button } from 'react-bootstrap';
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import { Row, Col, Card } from 'react-bootstrap';
-
+import Navigation from '../../components/Navigation';
 
 /*
  Homepage of the application where users can get matched with other users.
@@ -25,6 +25,7 @@ export default function Home() {
     //const [userTopArtists, setTopArtists] = useState([]);
     const [userTopTracks, setTopTracks] = useState([]);
     //const [userTopGenres, setUserTopGenres] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const searchParams = useSearchParams()
     const code = searchParams.get('code')
@@ -52,6 +53,7 @@ export default function Home() {
         if (!access_token) {
             let token = localStorage.getItem("access_token");
             setAccessToken(token || "");
+            if (token) setIsAuthenticated(true);
         } else {
             fetchTopTracks(); // This should now only be called when you have a token
         }
@@ -75,15 +77,7 @@ export default function Home() {
                 <title>Timbre</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Navbar bg="dark" variant="dark">
-                <Container fluid>
-                    <Navbar.Brand>
-                        Timbre
-                    </Navbar.Brand>
-                    <Button onClick={authorizeApp}>Refresh Token</Button>
-                    <Button href="/friends">Friends</Button>
-                </Container>
-            </Navbar>
+            <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
             <Button onClick={test}>Test API Endpoint</Button>
             <Container>
                 <h2>My Friends</h2>
