@@ -12,18 +12,6 @@ export default function Callback() {
   const [done, setDone] = useState(false);
 
   useRefreshToken(String(code));
-  
-  useEffect(() => {
-    if (done && done !== null) {
-      console.log('test');
-      window.location.href = '../../homepage';
-    }
-  }, [done]);
-
-  useEffect(() => {
-    // Set done to true when useRefreshToken is done running
-    setDone(true);
-  }, []);
 
   return (
     <title>Logging you in...</title>
