@@ -11,7 +11,7 @@ const RECENTLY_PLAYED_ENDPOINT = 'https://api.spotify.com/v1/me/player/recently-
 
 // Gets the playlists of the current user
 export const playlists = async () => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             PLAYLISTS_ENDPOINT,
@@ -29,7 +29,7 @@ export const playlists = async () => {
 
 // Gets the top tracks of the current user
 export const topTracks = async () => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             TOP_TRACKS_ENDPOINT,
@@ -47,7 +47,7 @@ export const topTracks = async () => {
 
 // Gets the top artists of the current user
 export const topArtists = async () => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             TOP_ARTISTS_ENDPOINT,
@@ -65,7 +65,7 @@ export const topArtists = async () => {
 
 // Gets 20 of the current user's recently played songs
 export const recentlyPlayed = async () => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             RECENTLY_PLAYED_ENDPOINT,
@@ -83,7 +83,7 @@ export const recentlyPlayed = async () => {
 
 // Gets the top tracks on an artist given their id
 export const artistsTopTracks = async (id) => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             `https://api.spotify.com/v1/artists/${id}/top-tracks`,
@@ -102,7 +102,7 @@ export const artistsTopTracks = async (id) => {
 // Gets the audio features of a track given its id
 // ids should be a comma separated string of track ids
 export const trackFeatures = async (ids) => {
-    const token = sessionStorage.getItem("access_token");
+    const token = localStorage.getItem("access_token");
     try {
         const response = await fetch(
             `https://api.spotify.com/v1/audio-features/${ids}`,

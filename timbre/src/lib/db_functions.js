@@ -1,9 +1,7 @@
 import { Pool } from "pg";
 
-// Connection to Postgres database
 let connection;
 
-// Requires environment variables set up in .env.local
 if (!connection) {
     connection = new Pool({
         user: process.env.PGSQL_USER,
@@ -23,13 +21,13 @@ const insertSongRating = async (user_id, song_id, rating) => {
             '${rating}'
         )`;
         const result = await connection.query(query);
-        // connection.end();
         return result;
     } catch (error) {
         console.log(error);
     }
 };
 
+// TODO: remove this function, replaced by getTopRatings
 const getSongRating = async () => {
     try {
         const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
@@ -40,11 +38,99 @@ const getSongRating = async () => {
     }
 };
 
+const getUserIDFromUsername = async(username) => {
+    try {
+        const query = `SELECT * FROM timbre.search_user_from_username('${username}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const createUser = async(username) => {
+    try {
+        const query = 'CALL timbre.create_profile(${username})';
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const insertSongProfile = async(user_id, type_id, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, valence, tempo) => {
+    try {
+        const query = `CALL timbre.insert_song_profile(
+            '${user_id}', 
+            '${type_id}', 
+            '${acousticness}',
+            '${valence}',
+            '${danceability}',
+            '${energy}',
+            '${instrumentalness}',
+            '${liveness}',
+            '${loudness}',
+            '${speechiness}',
+            '${tempo}'
+        )`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getTopRatings = async(user_id, limit) => {
+    try {
+        const query = `SELECT * FROM timbre.get_top_ratings(${user_id}, ${limit})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getSongProfile = async(user_id, type_id, limit) => {
+    try {
+        const query = `SELECT * FROM timbre.get_song_profile(${user_id}, ${type_id}, ${limit})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {   
+        console.log(error);
+    }
+};
+
+const getSongProfiles = async(user_id, type_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_all_song_profiles(${user_id}, ${type_id})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getProfileCharacteristics = async() => {
+    try {
+        const query = `SELECT * FROM timbre.get_profile_characteristics()`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 // Put all function names here to export
 const db_functions = {
     insertSongRating,
-    getSongRating,
+    getSongRating, // TODO REMOVE
+    getUserIDFromUsername,
+    createUser,
+    insertSongProfile,
+    getTopRatings,
+    getSongProfile,
+    getSongProfiles,
+    getProfileCharacteristics,
 };
 
 module.exports = db_functions;

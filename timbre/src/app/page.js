@@ -1,10 +1,7 @@
 "use client";
 
 import Head from 'next/head'
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import useRefreshToken from "../hooks/useRefreshToken";
-import { authorize, getToken } from "./api/auth/authorize";
+import { authorize } from "./api/auth/authorize";
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -20,7 +17,7 @@ export default function Login() {
         <title>Timbre</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Navigation isAuthenticated={false} authorizeApp={authorize} />
+    <Navigation isAuthenticated={false} authorizeApp={authorize} />
     </div>
   )
 }

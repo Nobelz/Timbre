@@ -7,8 +7,8 @@ import { topTracks, topArtists } from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
-import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
 
@@ -33,17 +33,9 @@ export default function Home() {
     // ... add more matches as needed
   ];
 
-  const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
-  //const [userTopArtists, setTopArtists] = useState([]);
   const [userTopTracks, setTopTracks] = useState([]);
-  //const [userTopGenres, setUserTopGenres] = useState([]);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const searchParams = useSearchParams()
-  const code = searchParams.get('code')
-  useRefreshToken(String(code));
 
   const authorizeApp = async () => {
     await authorize();
@@ -66,7 +58,7 @@ export default function Home() {
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     if (!access_token) {
-      let token = sessionStorage.getItem("access_token");
+      let token = localStorage.getItem("access_token");
       setAccessToken(token || "");
       if (token) setIsAuthenticated(true);
     } else {
@@ -77,9 +69,12 @@ export default function Home() {
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
   const test = async () => {
-    const res = await fetch('http://localhost:3000/api/endpoint');
+    const res = await fetch('../api/endpoint', {
+      method: 'GET',
+    });
     const output = await res.json();
-    console.log(output);
+    console.log(access_token);
+    // console.log(output);
   }
 
   return (
