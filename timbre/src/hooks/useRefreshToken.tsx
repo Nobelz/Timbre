@@ -12,7 +12,7 @@ export default function useRefreshToken(code: string) {
   const [refreshToken, setRefreshToken] = useState("");
 
   // Gets a new access token upon login
-  const fetchToken = async () => {
+  const fetchToken = async (code) => {
     let response = await getToken(code);
     setRefreshToken(response.refresh_token);
     setAccessToken(response.access_token);
@@ -31,7 +31,7 @@ export default function useRefreshToken(code: string) {
   // Immediately get an access token upon the users first login
   // This needs to be debugged and might be the cause of bad responses because the refresh token is never used
   useEffect(() => {
-    fetchToken();
+    fetchToken(code);
   }, [code]);
 
   // Sets up a countdown for when the access token will expire and upon expiration gets a new one with the refresh token

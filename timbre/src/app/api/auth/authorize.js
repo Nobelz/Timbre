@@ -1,6 +1,6 @@
-const SPOTIFY_CLIENT_ID = "b19d3fc2519f47b69da48d2a75142499";
+const SPOTIFY_CLIENT_ID = "058f825752a846299e9ae732eda6e7e1";
 // Upon successful authentication by the user, redirect to this url
-const redirectUri = 'http://localhost:3000/homepage';
+const redirectUri = 'http://localhost:3000/api/callback';
 
 function generateRandomString(length) {
     let text = '';
@@ -44,6 +44,7 @@ export const authorize = async () => {
         const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state user-top-read";
 
         sessionStorage.setItem("code_verifier", codeVerifier);
+        sessionStorage.setItem("state", state);
 
         const args = new URLSearchParams({
             response_type: "code",
@@ -65,12 +66,13 @@ export const getToken = async (code) => {
 
     console.log("getting token");
     const body = new URLSearchParams({
-        grant_type: "authorization_code" || "",
-        code: code || "",
-        redirect_uri: redirectUri || "",
-        client_id: SPOTIFY_CLIENT_ID || "",
-        code_verifier: codeVerifier || "",
+        client_id: SPOTIFY_CLIENT_ID,
+        grant_type: "authorization_code", 
+        code,
+        redirect_uri: redirectUri,
+        code_verifier: codeVerifier,
     });
+
     try {
         const response = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
@@ -80,7 +82,11 @@ export const getToken = async (code) => {
             body: body,
         });
 
-        return response.json();
+        // console.log(response);
+        let stuff = await response.json();
+        console.log(stuff);
+        console.log(code);
+        return stuff;
     } catch (error) {
         window.location.href = "/";
     }

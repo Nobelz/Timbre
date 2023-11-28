@@ -7,8 +7,8 @@ import { topTracks, topArtists } from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
-import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../hooks/useRefreshToken";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 
 /*
@@ -26,10 +26,6 @@ export default function Home() {
   //const [userTopArtists, setTopArtists] = useState([]);
   const [userTopTracks, setTopTracks] = useState([]);
   //const [userTopGenres, setUserTopGenres] = useState([]);
-
-  const searchParams = useSearchParams()
-  const code = searchParams.get('code')
-  useRefreshToken(String(code));
 
   const authorizeApp = async () => {
     await authorize();
@@ -66,7 +62,8 @@ export default function Home() {
       method: 'GET',
     });
     const output = await res.json();
-    console.log(output);
+    console.log(access_token);
+    // console.log(output);
   }
 
   return (
@@ -84,7 +81,7 @@ export default function Home() {
             <Nav.Link href="/matches">Matches</Nav.Link>
             <Nav.Link href="/friends">Friends</Nav.Link>
           </Nav>
-          <Button onClick={authorizeApp}>Refresh Token</Button>
+          <Button onClick={authorize}>Refresh Token</Button>
         </Container>
       </Navbar>
       <Button onClick={test}>Test API Endpoint</Button>

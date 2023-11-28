@@ -1,10 +1,7 @@
 "use client";
 
 import Head from 'next/head'
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import useRefreshToken from "../hooks/useRefreshToken";
-import { authorize, getToken } from "./api/auth/authorize";
+import { authorize } from "./api/auth/authorize";
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -21,7 +18,7 @@ export default function Login() {
       </Head>
       <Navbar bg="dark" variant="dark">
         <Container fluid>
-          <Navbar.Brand>
+          <Navbar.Brand>e
             Timbre
           </Navbar.Brand>
           <Button onClick={authorize}>Sign In</Button>
