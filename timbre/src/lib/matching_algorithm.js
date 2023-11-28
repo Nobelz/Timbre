@@ -1,8 +1,9 @@
 import { getUserIDFromUsername, getSongProfiles, getProfileCharacteristics } from './db_functions';
+import { recentlyPlayed } from './spotify';
 
 export const calculateCompatibilityScore = async (email1, email2) => {
     // ACCESSORY FUNCTIONS
-    // Function to calculate the score between each profile
+    // Accessory Function: Calculate the score between each profile
     const calculateScore = async (profile1, profile2) => {
         const diff = Math.abs(profile1['danceability'] - profile2['danceability']) +
             Math.abs(profile1['energy'] - profile2['energy']) +
@@ -16,7 +17,7 @@ export const calculateCompatibilityScore = async (email1, email2) => {
         return 1 - (diff / total);
     };
     
-    // Check if dictionary is empty
+    // Accessory Function: Check if dictionary is empty
     const isEmpty = (dict) => {
         return Object.keys(dict).length === 0;
     };
@@ -109,4 +110,40 @@ export const calculateCompatibilityScore = async (email1, email2) => {
 
     // Return API response
     return response;
+};
+
+export const pullSpotifyData = async() => {
+    // ACCESSORY FUNCTIONS
+    // Accessory Function: Calculate the weighted average
+    const calculateWeightedAverage = async (features, weights) => {
+        const temp = {};
+
+        // Iterate over each feature
+        for (const featureKey in features[0]) {
+            if (features[0].hasOwnProperty(featureKey)) {
+                const featureValues = features.map(feature => feature[featureKey]);
+                temp[featureKey] = featureValues.reduce((sum, value, i) => sum + value * weights[i], 0);
+            }
+        }
+
+        return temp;
+    };
+
+    // Accessory Function: Generate the weights
+    const generateWeights = async (num_ranks) => {
+        const weights = [];
+
+        for (let i = 0; i < num_ranks; i++) {
+            weights.push(num_ranks - i);
+        }
+
+        const sumWeights = weights.reduce((sum, weight) => sum + weight, 0);
+        return weights.map(weight => weight / sumWeights);
+    };
+    
+    let recent = await recentlyPlayed();
+
+    console.log(recent);
+
+    return token;
 };

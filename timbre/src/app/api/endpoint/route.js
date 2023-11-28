@@ -1,5 +1,5 @@
 import { insertSongRating, getSongRating } from "../../../lib/db_functions"
-import { calculateCompatibilityScore } from '../../../lib/matching_algorithm';
+import { pullSpotifyData } from '../../../lib/matching_algorithm';
 import { NextResponse } from 'next/server';
 
 // Handler for PUT requests 
@@ -23,7 +23,6 @@ export async function PUT(request) {
 export async function GET(request) {
     try {
         let response = await getSongRating();
-        let response2 = await calculateCompatibilityScore("nobelzhou19@gmail.com", "wtl2255@gmail.com");
         if (response.rows) {
             return NextResponse.json({ message: 'get successful', data: response.rows })
         } else {
