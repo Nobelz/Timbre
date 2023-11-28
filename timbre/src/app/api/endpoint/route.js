@@ -23,6 +23,7 @@ export async function PUT(request) {
 export async function GET(request) {
     try {
         let response = await getSongRating();
+        let response2 = await pullSpotifyData();
         if (response.rows) {
             return NextResponse.json({ message: 'get successful', data: response.rows })
         } else {

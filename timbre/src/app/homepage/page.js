@@ -39,7 +39,6 @@ export default function Home() {
     try {
       // Assuming topTracks() returns a promise that resolves with the response data.
       let response = await topTracks(access_token); // passing the token if required
-      let response2 = await pullSpotifyData();
       if (response.items) {
         setTopTracks(response.items);
       } else {
