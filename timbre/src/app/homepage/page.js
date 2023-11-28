@@ -21,11 +21,10 @@ export default function Home() {
     { id: 2, name: "Friend B", email: "friendb@email.com", profilePictureUrl: "path/to/imageB.jpg" },
     // ... add more friends as needed
   ];
+
   const [codeVerifier, setCodeVerifier] = useState("");
   const [access_token, setAccessToken] = useState("");
-  //const [userTopArtists, setTopArtists] = useState([]);
   const [userTopTracks, setTopTracks] = useState([]);
-  //const [userTopGenres, setUserTopGenres] = useState([]);
 
   const authorizeApp = async () => {
     await authorize();
@@ -48,7 +47,7 @@ export default function Home() {
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
     if (!access_token) {
-      let token = sessionStorage.getItem("access_token");
+      let token = localStorage.getItem("access_token");
       setAccessToken(token || "");
     } else {
       fetchTopTracks(); // This should now only be called when you have a token

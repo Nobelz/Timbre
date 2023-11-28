@@ -43,8 +43,8 @@ export const authorize = async () => {
         const state = generateRandomString(16);
         const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state user-top-read";
 
-        sessionStorage.setItem("code_verifier", codeVerifier);
-        sessionStorage.setItem("state", state);
+        localStorage.setItem("code_verifier", codeVerifier);
+        localStorage.setItem("state", state);
 
         const args = new URLSearchParams({
             response_type: "code",
@@ -62,7 +62,7 @@ export const authorize = async () => {
 
 // Gets the access token from Spotify api after the user is authenticated
 export const getToken = async (code) => {
-    const codeVerifier = sessionStorage.getItem("code_verifier");
+    const codeVerifier = localStorage.getItem("code_verifier");
 
     console.log("getting token");
     const body = new URLSearchParams({

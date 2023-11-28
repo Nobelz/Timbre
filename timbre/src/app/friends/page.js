@@ -50,7 +50,7 @@ export default function Home() {
     // Runs once when accessing this webpage. Fetches the user's top tracks
     useEffect(() => {
         if (!access_token) {
-            let token = sessionStorage.getItem("access_token");
+            let token = localStorage.getItem("access_token");
             setAccessToken(token || "");
         } else {
             fetchTopTracks(); // This should now only be called when you have a token

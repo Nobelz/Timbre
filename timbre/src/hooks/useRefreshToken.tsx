@@ -4,7 +4,7 @@ import { getToken, refreshSpotifyToken } from "../app/api/auth/authorize";
 /* 
  Whenever a page is loaded this function should be called.
  This function fetched the access token and allows for access into the Spotify api.
- The access token is stored into sessionStorage which can be then accessed with getItem().
+ The access token is stored into localStorage which can be then accessed with getItem().
  */
 export default function useRefreshToken(code: string) {
   const [expiresIn, setExpiresIn] = useState(0);
@@ -17,7 +17,7 @@ export default function useRefreshToken(code: string) {
     setRefreshToken(response.refresh_token);
     setAccessToken(response.access_token);
     setExpiresIn(response.expires_in);
-    sessionStorage.setItem("access_token", response.access_token);
+    localStorage.setItem("access_token", response.access_token);
   };
 
   // Gets a new access token after the previous one expired
@@ -25,7 +25,7 @@ export default function useRefreshToken(code: string) {
     let response = await refreshSpotifyToken(refreshToken);
     setAccessToken(response.access_token);
     setExpiresIn(response.expires_in);
-    sessionStorage.setItem("access_token", response.access_token);
+    localStorage.setItem("access_token", response.access_token);
   };
 
   // Immediately get an access token upon the users first login
