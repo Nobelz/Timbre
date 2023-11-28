@@ -53,7 +53,7 @@ export default function Home() {
         if (!access_token) {
             let token = sessionStorage.getItem("access_token");
             setAccessToken(token || "");
-            setIsAuthenticated(true);
+            if (token) setIsAuthenticated(true);
         } else {
             fetchTopTracks(); // This should now only be called when you have a token
         }
