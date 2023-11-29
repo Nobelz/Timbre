@@ -41,46 +41,42 @@ export default function Profile({content}) {
 
 
     return (
-        <div>
-            <Head>
-                <title>Timbre</title>
-                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-            </Head>
-            <Navbar bg="dark" variant="dark">
-                <Container fluid>
-                    <Navbar.Brand href="/homepage">
-                        Timbre
-                    </Navbar.Brand>
-                    <Nav className="me-auto">
-                        <Nav.Link href="/matches">Matches</Nav.Link>
-                        <Nav.Link href="/friends">Friends</Nav.Link>
-                    </Nav>
-                    
-                    <Dropdown>
-                        <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            TO BE FILL ICON
-                        </Dropdown.Toggle>
+        
+            <div className={`${styles.profile}`}>
+                <Head>
+                    <title>Timbre</title>
+                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                </Head>
+                <Navbar bg="dark" variant="dark">
+                    <Container fluid>
+                        <Navbar.Brand href="/homepage">
+                            Timbre
+                        </Navbar.Brand>
+                        <Nav className="me-auto">
+                            <Nav.Link href="/matches">Matches</Nav.Link>
+                            <Nav.Link href="/friends">Friends</Nav.Link>
+                        </Nav>
+                        
+                        <Dropdown>
+                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                TO BE FILL ICON
+                            </Dropdown.Toggle>
 
-                        <Dropdown.Menu>
-                            <Dropdown.Item href="#/action-1">My Account</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Log Out</Dropdown.Item>
-                        </Dropdown.Menu>
-                        </Dropdown>
-                </Container>
-            </Navbar>
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1">My Account</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2">Log Out</Dropdown.Item>
+                            </Dropdown.Menu>
+                            </Dropdown>
+                    </Container>
+                </Navbar>
 
-            <div>
                 <Container class={`${styles.container}`}>
                     <h1 class={`${styles.row}`}>Personal Details</h1>
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Name</Col>
-                                <Col class={`${styles.content_col}`}>name_info</Col>
-                            </Row>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Username</Col>
-                                <Col class={`${styles.content_col}`}>username_info</Col>
+                                <Col class={`${styles.content_col}`}>first_name_last_name</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Email</Col>
@@ -88,7 +84,7 @@ export default function Profile({content}) {
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Bio</Col>
-                                <Col class={`${styles.content_col}`}>Bio_info</Col>
+                                <Col class={`${styles.content_col}`}>bio_info</Col>
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
@@ -101,12 +97,12 @@ export default function Profile({content}) {
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
-                                <Col class={`${styles.title_col}`}>Account</Col>
-                                <Col class={`${styles.content_col}`}>account_info</Col>
+                                <Col class={`${styles.title_col}`}>Username</Col>
+                                <Col class={`${styles.content_col}`}>spotify_username</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Last Synced</Col>
-                                <Col class={`${styles.content_col}`}>sync_info</Col>
+                                <Col class={`${styles.content_col}`}>last_synced_info</Col>
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
@@ -119,11 +115,7 @@ export default function Profile({content}) {
                     </Row>
 
                 </Container>
-
-            
-
                 
             </div>
-        </div>
     )
 }

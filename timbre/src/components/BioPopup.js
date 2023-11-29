@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal';
 import { Container, Form, Button } from "react-bootstrap";
+import styles from "../app/styles/bioPopup.module.css"
 
 export default function UpdateTextPopup({ show, onHide, updateBackend }) {
     const [inputText, setInputText] = useState("");
@@ -17,23 +18,22 @@ export default function UpdateTextPopup({ show, onHide, updateBackend }) {
     };
 
     return (
-        <Modal show={show} onHide={onHide} centered>
+        <Modal show={show} onHide={onHide} dialogClassName={styles.recModal} centered>
             <Modal.Header closeButton>
                 <Modal.Title>Update Bio</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Container>
+                <Container className={styles.container}>
                     <Form.Group>
-                        <Form.Label>New Bio:</Form.Label>
-                        <Form.Control
+                        <Form.Control className={styles.form}
                             type="text"
-                            placeholder="Enter text..."
+                            placeholder="Enter new bio here..."
                             value={inputText}
                             onChange={handleInputChange}
                         />
                     </Form.Group>
-                    <Button variant="primary" onClick={handleUpdate}>
-                        Update
+                    <Button className={styles.button} variant="primary" onClick={handleUpdate}>
+                        Done
                     </Button>
                 </Container>
             </Modal.Body>

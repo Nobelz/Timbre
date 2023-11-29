@@ -10,7 +10,6 @@
     width: 80%; /* Adjust the width as needed */
     height: 100%;
     padding: 10px;
-    background-color: white;
     /*position: absolute;*/
 }
 
@@ -45,30 +44,39 @@
 }
 
 .button_col {
+    display: flex;
     background: #d3d3d3;
     color:rgb(94, 93, 93);
     width:40%;
     padding: 20px;
+    align-items: center;
+    justify-content: center;
 }
 
-.button_col:hover {
+.profile:hover {
     --translate-y: -5px;
     box-shadow: 0 0 5px 3px rgba(1, 190, 64, 0.5);
 }
 
 .greenButton:hover {
     --translate-y: -5px;
-    box-shadow: 0 0 5px 3px rgba(1, 190, 64, 0.5);
+    box-shadow: 0 0 5px 3px rgba(1, 80, 190, 0.5);
 }
 
 .greenButton {
-    background-color: #1ed760; /* Green background color */
+    background-color: #0a4ec4; /* Green background color*/
     color: white; /* White text color, adjust as needed */
-    font-size: xx-large;
+    font-size: x-large;
   }
 
 .row {
     margin-bottom: 30px;
     margin-top: 30px;
-    color: black
+    color: white;
+    font-weight: 500;
+}
+
+.profile {
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
+    height: 100%;
 }
