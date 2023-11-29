@@ -9,9 +9,7 @@ import { NextResponse } from 'next/server';
 export async function PUT(request) {
     const body = await request.json();
     try {        
-        console.log('test');
         let response = await generateSpotifyData(body.access_token);
-        console.log('test1`');
         // let response = await insertSongRating(body.user_id, body.song_id, body.rating);
         if (response.data.success) {
             return NextResponse.json({ message: 'Insert user successful' })

@@ -1,7 +1,7 @@
-import { getUserIDFromUsername, getSongProfiles, getProfileCharacteristics } from './db_functions';
-import { recentlyPlayed } from './spotify';
+import { getUserIDFromSpotifyID, getSongProfiles, getProfileCharacteristics } from './db_functions';
+import { getGeneralToken, recentlyPlayed, topTracks, topArtists, profileInfo } from './spotify';
 
-export const calculateCompatibilityScore = async (email1, email2) => {
+export const calculateCompatibilityScore = async (id1, id2) => {
     // ACCESSORY FUNCTIONS
     // Accessory Function: Calculate the score between each profile
     const calculateScore = async (profile1, profile2) => {
@@ -23,10 +23,10 @@ export const calculateCompatibilityScore = async (email1, email2) => {
     };
     
     // Get User IDs from emails
-    const user_id1 = await getUserIDFromUsername(email1);
-    const user_id2 = await getUserIDFromUsername(email2);
+    const user_id1 = await getUserIDFromSpotifyID(id1);
+    const user_id2 = await getUserIDFromSpotifyID(id2);
 
-    const user_ids = [user_id1.rows[0].search_user_from_username, user_id2.rows[0].search_user_from_username]
+    const user_ids = [user_id1.rows[0].search_user_from_id, user_id2.rows[0].search_user_from_id]
 
     // Get all song profiles for each user
     const songProfiles1 = await getSongProfiles(user_ids[0], 1);
@@ -141,10 +141,24 @@ export const generateSpotifyData = async(access_token) => {
         return weights.map(weight => weight / sumWeights);
     };
     
-    console.log('TESTST');
-    let recent = await recentlyPlayed(access_token);
+    console.log('Test');
+    
+    let recentSongs = await recentlyPlayed(access_token);
+    let topSongs = await topTracks(access_token);
+    let topMusicians = await topArtists(access_token);
+    let personalInfo = await profileInfo(access_token); 
 
-    console.log(recent);
+    console.log(recentSongs);
+    console.log(topSongs);
+    console.log(topMusicians);
+    console.log(personalInfo);
+
+    try {
+        let token = await getGeneralToken();
+        console.log(token);
+    } catch(err) {
+        console.log(err);
+    }
 
     return token;
 };

@@ -1,12 +1,12 @@
-CREATE OR REPLACE FUNCTION timbre.search_user_from_username(
-    username_to_search TEXT
+CREATE OR REPLACE FUNCTION timbre.search_user_from_id(
+    id_to_search TEXT
 )
 RETURNS SETOF INTEGER 
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT user_id FROM timbre.timbre_user WHERE username = username_to_search;
+	SELECT user_id FROM timbre.timbre_user WHERE spotify_id = id_to_search;
 END;
 $$;
 
