@@ -56,7 +56,8 @@ export default function useRefreshToken(code: string) {
 
   useEffect(() => {
     if (accessToken && accessToken !== 'undefined')
-      window.location.href = '../homepage';
+    console.log('test');
+      // window.location.href = '../homepage'; //TODO change back once done debugging
   }, [accessToken]);
 
   // Sets up a countdown for when the access token will expire and upon expiration gets a new one with the refresh token

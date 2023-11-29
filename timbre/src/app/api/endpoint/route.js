@@ -1,5 +1,5 @@
 import { insertSongRating, getSongRating } from "../../../lib/db_functions"
-import { pullSpotifyData } from '../../../lib/matching_algorithm';
+import { generateSpotifyData } from '../../../lib/matching_algorithm';
 import { NextResponse } from 'next/server';
 
 // Handler for PUT requests 
@@ -8,8 +8,11 @@ import { NextResponse } from 'next/server';
 // There might be a better method
 export async function PUT(request) {
     const body = await request.json();
-    try {
-        let response = await insertSongRating(body.user_id, body.song_id, body.rating);
+    try {        
+        console.log('test');
+        let response = await generateSpotifyData(body.access_token);
+        console.log('test1`');
+        // let response = await insertSongRating(body.user_id, body.song_id, body.rating);
         if (response.data.success) {
             return NextResponse.json({ message: 'Insert user successful' })
         } else {
@@ -23,7 +26,7 @@ export async function PUT(request) {
 export async function GET(request) {
     try {
         let response = await getSongRating();
-        let response2 = await pullSpotifyData();
+
         if (response.rows) {
             return NextResponse.json({ message: 'get successful', data: response.rows })
         } else {

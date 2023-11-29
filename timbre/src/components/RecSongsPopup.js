@@ -12,7 +12,7 @@ const spotifyApi = new SpotifyWebApi({
 export default function RecSongPopup({ show, onHide, props }) {
     const [search, setSearch] = useState("");
     const [accessToken, setAccessToken] = useState(
-        typeof window !== 'undefined' ? sessionStorage.getItem("access_token") : null
+        typeof window !== 'undefined' ? localStorage.getItem("access_token") : null
     );
     const [searchResults, setSearchResults] = useState([]);
 

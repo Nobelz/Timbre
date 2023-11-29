@@ -112,7 +112,7 @@ export const calculateCompatibilityScore = async (email1, email2) => {
     return response;
 };
 
-export const pullSpotifyData = async() => {
+export const generateSpotifyData = async(access_token) => {
     // ACCESSORY FUNCTIONS
     // Accessory Function: Calculate the weighted average
     const calculateWeightedAverage = async (features, weights) => {
@@ -141,7 +141,8 @@ export const pullSpotifyData = async() => {
         return weights.map(weight => weight / sumWeights);
     };
     
-    let recent = await recentlyPlayed();
+    console.log('TESTST');
+    let recent = await recentlyPlayed(access_token);
 
     console.log(recent);
 
