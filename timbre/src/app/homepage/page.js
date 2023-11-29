@@ -35,7 +35,7 @@ export default function Home() {
 
   const [access_token, setAccessToken] = useState("");
   const [userTopTracks, setTopTracks] = useState([]);
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const authorizeApp = async () => {
     await authorize();
