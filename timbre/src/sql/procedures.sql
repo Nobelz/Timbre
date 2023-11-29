@@ -10,12 +10,25 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION timbre.search_user_from_email(
+    email_to_search TEXT
+)
+RETURNS SETOF INTEGER 
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+	SELECT user_id FROM timbre.timbre_user WHERE email = email_to_search;
+END;
+$$;
+
 CREATE OR REPLACE PROCEDURE timbre.create_user(
-    username TEXT
+    username TEXT,
+    email TEXT
 )
 LANGUAGE SQL
 AS $$
-    INSERT INTO timbre.timbre_user (username, create_time) VALUES (username, NOW());
+    INSERT INTO timbre.timbre_user (username, email, create_time) VALUES (username, email, NOW());
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(

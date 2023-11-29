@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS characteristics;
 CREATE TABLE timbre_user (
 	user_id SERIAL PRIMARY KEY,
 	username TEXT NOT NULL UNIQUE,
+	email TEXT NOT NULL UNIQUE,
 	first_name TEXT,
 	last_name TEXT,
 	user_bio TEXT,
