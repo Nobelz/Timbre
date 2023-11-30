@@ -15,9 +15,7 @@ export default function RecSongPopup({ show, onHide, props }) {
         typeof window !== 'undefined' ? localStorage.getItem("access_token") : null
     );
     const [searchResults, setSearchResults] = useState([]);
-
-    console.log(searchResults);
-
+    
     useEffect(() => {
         if (!accessToken) return;
         spotifyApi.setAccessToken(accessToken);

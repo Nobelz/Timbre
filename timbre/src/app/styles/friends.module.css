@@ -1,0 +1,68 @@
+.friends {
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
+    height: 100%;
+}
+
+.header {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 2em;
+    font-weight: 100;
+    transform: translateY(70%);
+    padding-left: 30px;
+    font-family: 'Lexend';
+}
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 70%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+}
+
+.tabContainer {
+    justify-content: center;
+    position: relative;
+    border-radius: .5rem;
+    width: 80%;
+    height: 70%;
+    background-color: rgb(248, 248, 248);
+}
+
+.navTab {
+    border-bottom: none;
+    margin-bottom: 10px;
+    border-radius: 2.5rem;
+    font-weight: 500;
+    color: gray;
+}
+
+.navTabContent {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.listItem {
+    line-height: 30px;
+    font-size: 1.2em;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.listItem:hover {
+    background-color: rgba(167, 167, 167, 0.527);
+}
+
+.listItemHidden {
+    font-size: .7em;
+    float: right;
+    visibility: hidden;
+}
+
+.listItem:hover .listItemHidden{
+    visibility: visible;
+}
