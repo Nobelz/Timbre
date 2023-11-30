@@ -70,6 +70,7 @@ export default function Profile({content}) {
                     </Container>
                 </Navbar>
 
+                <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
                 <Container class={`${styles.container}`}>
                     <h1 class={`${styles.row}`}>Personal Details</h1>
                     <Row>

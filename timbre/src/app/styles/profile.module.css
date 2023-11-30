@@ -32,6 +32,7 @@
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+    font-family: 'Lexend';
 }
 
 .content_col {
@@ -41,6 +42,7 @@
     padding: 20px;
     width: 60%;
     text-align: left;
+    font-family: 'Lexend';
 }
 
 .button_col {
@@ -67,13 +69,15 @@
     background-color: #0a4ec4; /* Green background color*/
     color: white; /* White text color, adjust as needed */
     font-size: x-large;
+    font-family: 'Lexend';
   }
 
 .row {
     margin-bottom: 30px;
-    margin-top: 30px;
+    margin-top: 70px;
     color: white;
     font-weight: 500;
+    font-family: 'Lexend';
 }
 
 .profile {
