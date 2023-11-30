@@ -1,0 +1,24 @@
+.recModal {
+    width: 50vw;
+    max-width: 50vw;
+}
+
+.container {
+    height: 10vh;
+    max-height: 10vh;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.button {
+    overflow-y: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.form {
+   display: flex; 
+   width: 30vw;
+}
