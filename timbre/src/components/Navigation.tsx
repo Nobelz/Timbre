@@ -14,11 +14,6 @@ import { authorize, getToken } from "../api/auth/authorize";
 
 const Navigation = ({ isAuthenticated, authorizeApp, userProfile }) => {
 
-  if (!userProfile){
-    // userProfile = JSON.parse(localStorage.getItem('userProfile'));
-    userProfile = {display_name: 'John Smith'};
-  }
-
   const getInitials = (name) => {
     return name.split(' ').map(part => part[0].toUpperCase()).join('');
   };
@@ -35,7 +30,7 @@ const Navigation = ({ isAuthenticated, authorizeApp, userProfile }) => {
           <Nav.Link href="/friends">Friends</Nav.Link>
         </Nav>
         
-        {isAuthenticated && (
+        {isAuthenticated && userProfile && (
           <Nav>
             {userProfile?.images?.length > 0 ? (
               <img src={userProfile.images[0].url} alt="Profile" style={{ borderRadius: '50%', width: '40px' }} />
