@@ -27,8 +27,8 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   //const [userTopGenres, setUserTopGenres] = useState([]);
 
-  const searchParams = useSearchParams()
-  const code = searchParams.get('code')
+  const searchParams = useSearchParams();
+  const code = searchParams.get('code');
   useRefreshToken(String(code));
 
   const authorizeApp = async () => {
