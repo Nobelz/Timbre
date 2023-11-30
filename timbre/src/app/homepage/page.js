@@ -37,6 +37,30 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Add this inside your Home component or in a suitable place
+  const [userProfile, setUserProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            Authorization: `Bearer ${access_token}`
+          }
+        });
+        const data = await response.json();
+        setUserProfile(data);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+      }
+    };
+
+    if (access_token) {
+      fetchUserProfile();
+    }
+  }, [access_token]);
+
+
   const authorizeApp = async () => {
     await authorize();
   };
@@ -83,7 +107,7 @@ export default function Home() {
         <title>Timbre</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
+      <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} userProfile={userProfile} />
       <Button onClick={test}>Test API Endpoint</Button>
 
       <Container>
@@ -128,6 +152,7 @@ export default function Home() {
           </Col>
         </Row>
         {/* Add some space between the two sections */}
+        {/*}
         <Row className="mb-4">
           <Col>
             <br />
@@ -157,9 +182,8 @@ export default function Home() {
                 </Row>
               </Container>
             </Card>
-            {/* ... [Top Tracks section remains unchanged] */}
           </Col>
-        </Row>
+                </Row> */}
       </Container>
     </div>
   )
