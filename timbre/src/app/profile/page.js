@@ -11,6 +11,8 @@ import Navigation from '../../components/Navigation';
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useUserProfile from "../../hooks/useUserProfile";
 import useAuthentication from '../../hooks/useAccessToken';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
+import AuthRedirect from '../../components/AuthRedirect';
 import { useSearchParams, useRouter } from "next/navigation";
 import { authorize, getToken } from "../api/auth/authorize";
 import styles from '../styles/profile.module.css';
@@ -29,6 +31,8 @@ export default function Profile({content}) {
 
     const userProfile = useUserProfile(access_token);
 
+    const isLoading = useAuthRedirect(isAuthenticated);
+
     const authorizeApp = async () => {
         await authorize();
       };
@@ -42,10 +46,14 @@ export default function Profile({content}) {
         setShowBioPopup(false);
     }
 
+    if (isLoading){
+        return null;
+    }
+
 
     return (
-        
-            <div className={`${styles.profile}`}>
+        <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
+        <div className={`${styles.profile}`}>
                 <Head>
                     <title>Timbre</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -100,5 +108,6 @@ export default function Profile({content}) {
                 </Container>
                 
             </div>
+            </AuthRedirect>
     )
 }
