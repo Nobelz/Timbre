@@ -76,8 +76,8 @@ export default function Profile({content}) {
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
-                                <Col class={`${styles.title_col}`}>Name</Col>
-                                <Col class={`${styles.content_col}`}>first_name_last_name</Col>
+                                <Col class={`${styles.title_col}`}>Display Name</Col>
+                                <Col class={`${styles.content_col}`}>display_name</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Email</Col>
@@ -89,7 +89,7 @@ export default function Profile({content}) {
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
-                            <Button className={styles.greenButton} onClick={(event) => handleBio(event)}>Edit Bio</Button>
+                            <Button className={styles.button} onClick={(event) => handleBio(event)}>Edit Bio</Button>
                             <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content}/>
                         </Col>
                     </Row>
@@ -98,8 +98,8 @@ export default function Profile({content}) {
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
-                                <Col class={`${styles.title_col}`}>Username</Col>
-                                <Col class={`${styles.content_col}`}>spotify_username</Col>
+                                <Col class={`${styles.title_col}`}>Spotify ID</Col>
+                                <Col class={`${styles.content_col}`}>spotify_id</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Last Synced</Col>
@@ -107,12 +107,12 @@ export default function Profile({content}) {
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
-                            <Button className={styles.greenButton} onClick={authorizeApp}>Resync Now</Button>
+                            <Button className={styles.button} onClick={authorizeApp}>Resync Now</Button>
                         </Col>
                     </Row>
 
                     <Row class={`${styles.row}`}>
-                        <Button className={styles.greenButton}>Log Out</Button>
+                        <Button className={styles.button}>Log Out</Button>
                     </Row>
 
                 </Container>

@@ -1,0 +1,12 @@
+.container {
+    left: 50%;
+    top: 15%;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.addFriend {
+    display: flex;
+    margin-left: 20px;
+}

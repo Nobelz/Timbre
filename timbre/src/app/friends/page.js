@@ -16,6 +16,13 @@ export default function Friends() {
         { "username": "steve" },
         { "username": "jane" }
     ]);
+    const [friendRequests, setFriendRequests] = useState([
+        { "username": "bob" },
+        { "username": "billy" },
+        { "username": "joe" },
+        { "username": "steve" },
+        { "username": "jane" }
+    ]);
 
     const authorizeApp = async () => {
         await authorize();
@@ -37,7 +44,7 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} />
+                <FriendsTab friends={friends} friendRequests={friendRequests}/>
             </div>
         </div>
     )

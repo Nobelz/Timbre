@@ -24,7 +24,6 @@
 }
 
 .card:hover {
-    /* --translate-y: -5px; */
     box-shadow: 0 0 7px 7px rgba(241, 251, 255, 0.5);
 }
 
@@ -46,7 +45,6 @@
     display: grid;
     justify-content: center;
     grid-template-areas: 'card card card card card';
-    padding: 10%;
     gap: 2.5rem;
 }
 
@@ -60,6 +58,6 @@
     color: rgb(255, 255, 255);
     font-size: 6.5em;
     font-weight: 900;
-    transform: translateY(60%);
+    transform: translateY(15%);
     font-family: 'Lexend';
 }

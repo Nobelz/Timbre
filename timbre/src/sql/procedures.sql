@@ -1,12 +1,12 @@
-CREATE OR REPLACE FUNCTION timbre.search_user_from_username(
-    username_to_search TEXT
+CREATE OR REPLACE FUNCTION timbre.search_user_from_id(
+    id_to_search TEXT
 )
 RETURNS SETOF INTEGER 
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT user_id FROM timbre.timbre_user WHERE username = username_to_search;
+    SELECT user_id FROM timbre.timbre_user WHERE spotify_id = id_to_search;
 END;
 $$;
 
@@ -23,12 +23,14 @@ END;
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.create_user(
-    username TEXT,
-    email TEXT
+    spotify_id TEXT,
+    email TEXT,
+    spotify_display_name TEXT,
+    profile_link TEXT
 )
 LANGUAGE SQL
 AS $$
-    INSERT INTO timbre.timbre_user (username, email, create_time) VALUES (username, email, NOW());
+    INSERT INTO timbre.timbre_user (spotify_id, email, spotify_display_name, profile_link, create_time) VALUES (spotify_id, email, spotify_display_name, profile_link, NOW());
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
