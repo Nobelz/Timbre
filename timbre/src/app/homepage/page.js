@@ -3,7 +3,7 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
-import { topTracks, topArtists } from "../../lib/spotify";
+import { topTracks, topArtists, getUserProfile } from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
@@ -37,9 +37,26 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Add this inside your Home component or in a suitable place
+  const [userProfile, setUserProfile] = useState(null);
+
   const authorizeApp = async () => {
     await authorize();
   };
+
+  const fetchUserProfile = async () => {
+    try {
+      // Assuming userProfile() returns a promise that resolves with the response data.
+      let response = await getUserProfile(access_token); // passing the token if required
+      if (response) {
+        setUserProfile(response);
+      } else {
+        console.error("Unexpected response", response);
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching user profile:", error);
+    }
+  }
 
   const fetchTopTracks = async () => {
     try {
@@ -62,6 +79,7 @@ export default function Home() {
       setAccessToken(token || "");
       if (token) setIsAuthenticated(true);
     } else {
+      fetchUserProfile();
       fetchTopTracks(); // This should now only be called when you have a token
     }
   }, [access_token]); // Dependency array
@@ -83,7 +101,7 @@ export default function Home() {
         <title>Timbre</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
+      <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} userProfile={userProfile} />
       <Button onClick={test}>Test API Endpoint</Button>
 
       <Container>
@@ -157,7 +175,6 @@ export default function Home() {
                 </Row>
               </Container>
             </Card>
-            {/* ... [Top Tracks section remains unchanged] */}
           </Col>
         </Row>
       </Container>
