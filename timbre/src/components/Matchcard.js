@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 
 export default function Matchcard({ content }) {
     const [isFlipped, setIsFlipped] = useState(false);
-    // const [showRecSongPopup, setShowRecSongPopup] = useState(false);
 
     const handleFlip = () => {
         setIsFlipped(!isFlipped);
@@ -14,10 +13,6 @@ export default function Matchcard({ content }) {
         e.stopPropagation();
         // add logic here for adding a friend
     }
-
-    // const handleRecSongPopupClose = () => {
-    //     setShowRecSongPopup(false);
-    // }
 
     return (
         <div>
@@ -34,7 +29,6 @@ export default function Matchcard({ content }) {
                     <Button onClick={(event) => handleAddFriend(event)}>Add Friend</Button>
                 </div>
             </div>
-            {/* <RecSongPopup show={showRecSongPopup} onHide={handleRecSongPopupClose} props={content}/> */}
         </div>
     )
 }
