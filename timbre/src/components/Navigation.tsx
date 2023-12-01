@@ -15,7 +15,11 @@ import { authorize, getToken } from "../api/auth/authorize";
 const Navigation = ({ isAuthenticated, authorizeApp, userProfile }) => {
 
   const getInitials = (name) => {
-    return name.split(' ').map(part => part[0].toUpperCase()).join('');
+    // if name, then first character, else empty string
+    return name &&
+    name.length > 0 &&
+    name[0].toUpperCase() &&
+    name.split(' ').map(part => part[0].toUpperCase()).join('');
   };
 
 

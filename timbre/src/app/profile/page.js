@@ -8,6 +8,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { Container, ListGroup, Button, Form } from 'react-bootstrap';
 import MatchcardList from '../../components/MatchcardList';
 import useRefreshToken from "../../hooks/useRefreshToken";
+import useUserProfile from "../../hooks/useUserProfile";
+import useAuthentication from '../../hooks/useAccessToken';
 import { useSearchParams, useRouter } from "next/navigation";
 import { authorize, getToken } from "../api/auth/authorize";
 import styles from '../styles/profile.module.css';
@@ -22,9 +24,9 @@ export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
 
-    const searchParams = useSearchParams()
-    const code = searchParams.get('code')
-    useRefreshToken(String(code));
+    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
+
+    const userProfile = useUserProfile(access_token);
 
     const authorizeApp = async () => {
         await authorize();
@@ -55,7 +57,12 @@ export default function Profile({content}) {
                         <Nav className="me-auto">
                             <Nav.Link href="/matches">Matches</Nav.Link>
                             <Nav.Link href="/friends">Friends</Nav.Link>
+                            {/*TODO: Delete this code, this is just to test that authentication is working properly for now*/}
+                            {isAuthenticated && userProfile ? <Navbar.Text>Signed in as: {userProfile.display_name}</Navbar.Text> : <Navbar.Text>Not signed in</Navbar.Text>}
+
+
                         </Nav>
+                        {/*If authenticated, display text*/}
                         
                         <Dropdown>
                             <Dropdown.Toggle variant="success" id="dropdown-basic">

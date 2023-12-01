@@ -3,11 +3,13 @@
 import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
-import { topTracks, topArtists, getUserProfile } from "../../lib/spotify";
+import { topTracks, topArtists} from "../../lib/spotify";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import useRefreshToken from "../../hooks/useRefreshToken";
+import useUserProfile from "../../hooks/useUserProfile";
+import useAuthentication from '../../hooks/useAccessToken';
 import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
@@ -33,30 +35,16 @@ export default function Home() {
     // ... add more matches as needed
   ];
 
-  const [access_token, setAccessToken] = useState("");
   const [userTopTracks, setTopTracks] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
 
   // Add this inside your Home component or in a suitable place
-  const [userProfile, setUserProfile] = useState(null);
+  const userProfile = useUserProfile(access_token);
 
   const authorizeApp = async () => {
     await authorize();
   };
 
-  const fetchUserProfile = async () => {
-    try {
-      // Assuming userProfile() returns a promise that resolves with the response data.
-      let response = await getUserProfile(access_token); // passing the token if required
-      if (response) {
-        setUserProfile(response);
-      } else {
-        console.error("Unexpected response", response);
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching user profile:", error);
-    }
-  }
 
   const fetchTopTracks = async () => {
     try {
@@ -74,15 +62,10 @@ export default function Home() {
 
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
-    if (!access_token) {
-      let token = localStorage.getItem("access_token");
-      setAccessToken(token || "");
-      if (token) setIsAuthenticated(true);
-    } else {
-      fetchUserProfile();
-      fetchTopTracks(); // This should now only be called when you have a token
+    if (isAuthenticated && access_token) {
+      fetchTopTracks();
     }
-  }, [access_token]); // Dependency array
+  }, [isAuthenticated, access_token]);
 
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
@@ -176,7 +159,7 @@ export default function Home() {
               </Container>
             </Card>
           </Col>
-        </Row>
+                </Row>
       </Container>
     </div>
   )
