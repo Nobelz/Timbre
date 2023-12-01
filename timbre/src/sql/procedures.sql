@@ -30,7 +30,7 @@ CREATE OR REPLACE PROCEDURE timbre.create_user(
 )
 LANGUAGE SQL
 AS $$
-    INSERT INTO timbre.timbre_user (spotify_id, email, spotify_diplay_name, profile_link, create_time) VALUES (spotify_id, email, spotify_display_name, profile_link, NOW());
+    INSERT INTO timbre.timbre_user (spotify_id, email, spotify_display_name, profile_link, create_time) VALUES (spotify_id, email, spotify_display_name, profile_link, NOW());
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
