@@ -10,6 +10,7 @@ import { Container, ListGroup, Button } from 'react-bootstrap';
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useUserProfile from "../../hooks/useUserProfile";
 import useAuthentication from '../../hooks/useAccessToken';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
 import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
@@ -38,7 +39,7 @@ export default function Home() {
 
   const [userTopTracks, setTopTracks] = useState([]);
   const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = useAuthRedirect(isAuthenticated);
 
   // Add this inside your Home component or in a suitable place
   const userProfile = useUserProfile(access_token);
@@ -70,12 +71,6 @@ export default function Home() {
   }, [isAuthenticated, access_token]);
 
 
-  useEffect(() => {
-    if (isAuthenticated !== true) {
-      setIsLoading(false);
-    }
-    console.log("isLoading", isLoading);
-  }, [isAuthenticated]);
 
   if (isLoading) {
     return null; // Or any other loading indicator
