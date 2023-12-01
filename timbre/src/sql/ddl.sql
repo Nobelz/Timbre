@@ -13,10 +13,10 @@ CREATE TABLE timbre_user (
 	user_id SERIAL PRIMARY KEY,
 	spotify_id TEXT NOT NULL UNIQUE, 
 	email TEXT NOT NULL UNIQUE,
-	spotify_display_name TEXT,
+	spotify_display_name TEXT NOT NULL,
 	user_bio TEXT,
 	profile_pic TEXT,
-	profile_link TEXT,
+	profile_link TEXT NOT NULL UNIQUE,
 	spotify_last_refresh TIMESTAMP,
 	create_time TIMESTAMP NOT NULL DEFAULT NOW()
 );
