@@ -72,7 +72,7 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, autho
             <Dropdown.Item><Button onClick={logout}>Log Out</Button></Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <Button onClick={authorizeApp}>{isAuthenticated ? "Refresh Token" : "Sign In"}</Button>
+        { !isAuthenticated && <Button onClick={authorizeApp}>{isAuthenticated ? "Refresh Token" : "Sign In"}</Button>}
       </Container>
     </Navbar>
   );
