@@ -51,13 +51,13 @@ export default function useRefreshToken(code: string) {
   // Immediately get an access token upon the users first login
   // This needs to be debugged and might be the cause of bad responses because the refresh token is never used
   useEffect(() => {
-      fetchToken(code);
+    fetchToken(code);
   }, []);
 
   useEffect(() => {
-    if (accessToken && accessToken !== 'undefined')
-    console.log('test');
-      // window.location.href = '../homepage'; //TODO change back once done debugging
+    if (accessToken && accessToken !== 'undefined') {
+      window.location.href = '../homepage'; //TODO change back once done debugging Oswin says use Router
+    }
   }, [accessToken]);
 
   // Sets up a countdown for when the access token will expire and upon expiration gets a new one with the refresh token

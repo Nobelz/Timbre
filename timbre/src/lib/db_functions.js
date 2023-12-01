@@ -38,9 +38,9 @@ const getSongRating = async () => {
     }
 };
 
-const getUserIDFromSpotifyID = async(username) => {
+const getUserIDFromSpotifyID = async(spotify_id) => {
     try {
-        const query = `SELECT * FROM timbre.search_user_from_id('${username}')`;
+        const query = `SELECT * FROM timbre.search_user_from_id('${spotify_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -48,9 +48,9 @@ const getUserIDFromSpotifyID = async(username) => {
     }
 };
 
-const createUser = async(username) => {
+const createUser = async(spotify_id, email, spotify_display_name, profile_link) => {
     try {
-        const query = 'CALL timbre.create_profile(${username})';
+        const query = `CALL timbre.create_user('${spotify_id}', '${email}', '${spotify_display_name}', '${profile_link}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {

@@ -8,37 +8,6 @@ const RECENTLY_PLAYED_ENDPOINT = 'https://api.spotify.com/v1/me/player/recently-
  Each function must get the access token generated from the user logging in 
  and pass that as authorization to the Spotify api.
  */
-// TODO: I stopped here - Nobel
-export const getGeneralToken = async () => {
-    try {
-        console.log(process.env.CLIENT_ID);
-        console.log(process.env.CLIENT_SECRET);
-        
-        const authOptions = {
-            url: 'https://accounts.spotify.com/api/token',
-            headers: {
-                'Authorization': 'Basic ' + btoa(process.env.CLIENT_ID + ':' + process.env.CLIENT_SECRET)
-            },
-            form: {
-                grant_type: 'client_credentials'
-            },
-            json: true
-        };
-        
-        const response = await fetch(authOptions.url, {
-            method: 'POST',
-            headers: authOptions.headers,
-            body: JSON.stringify(authOptions.form),
-        });
-
-        if (response.ok) {
-            const body = await response.json();
-            return body.access_token;
-        }
-    } catch (err) {
-        console.log(err);
-    }
-};
 
 // Gets the playlists of the current user
 // TODO: Do we need this?
@@ -86,15 +55,18 @@ export const topTracks = async (access_token) => {
 };
 
 // Gets the top artists of the current user
-export const topArtists = async (access_token) => {
+export const topArtists = async (access_token, limit) => {
     let token = access_token;
+
+    if (!limit)
+        limit = 5;
 
     if (typeof window !== 'undefined' && localStorage)
         token = localStorage.getItem("access_token") || access_token;
 
     try {
         const response = await fetch(
-            TOP_ARTISTS_ENDPOINT,
+            `${TOP_ARTISTS_ENDPOINT}?limit=${limit}`,
             {
                 headers: {
                     Authorization: "Bearer " + token,
@@ -130,15 +102,18 @@ export const recentlyPlayed = async (access_token) => {
 };
 
 // Gets the top tracks on an artist given their id
-export const artistsTopTracks = async (access_token, id) => {
+export const artistTopTracks = async (access_token, id, country_code) => {
     let token = access_token;
 
     if (typeof window !== 'undefined' && localStorage)
         token = localStorage.getItem("access_token") || access_token;
 
+    if (!country_code)
+        country_code = 'US';
+
     try {
         const response = await fetch(
-            `https://api.spotify.com/v1/artists/${id}/top-tracks`,
+            `https://api.spotify.com/v1/artists/${id}/top-tracks?market=${country_code}`, // Market is required
             {
                 headers: {
                     Authorization: "Bearer " + token,
