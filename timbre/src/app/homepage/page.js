@@ -9,6 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useUserProfile from "../../hooks/useUserProfile";
+import useAuthentication from '../../hooks/useAccessToken';
 import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
@@ -34,9 +35,8 @@ export default function Home() {
     // ... add more matches as needed
   ];
 
-  const [access_token, setAccessToken] = useState("");
   const [userTopTracks, setTopTracks] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
 
   // Add this inside your Home component or in a suitable place
   const userProfile = useUserProfile(access_token);
@@ -62,14 +62,10 @@ export default function Home() {
 
   // Runs once when accessing this webpage. Fetches the user's top tracks
   useEffect(() => {
-    if (!access_token) {
-      let token = localStorage.getItem("access_token");
-      setAccessToken(token || "");
-      if (token) setIsAuthenticated(true);
-    } else {
-      fetchTopTracks(); // This should now only be called when you have a token
+    if (isAuthenticated && access_token) {
+      fetchTopTracks();
     }
-  }, [access_token]); // Dependency array
+  }, [isAuthenticated, access_token]);
 
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
