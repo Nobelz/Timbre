@@ -1,3 +1,18 @@
+CREATE OR REPLACE FUNCTION timbre.get_random_users(
+)
+RETURNS SETOF TEXT /* this needs to be changed too to make type if needed */
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+	SELECT username /* change to spotify_id once DB is edited */
+	FROM timbre.timbre_user
+    WHERE username != 'wtl2255@gmail.com' /* change to current spotify_id variable */
+	ORDER BY RANDOM()
+	LIMIT 5; /* change this value to set the number of randomly sampled users to return */ 
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION timbre.search_user_from_username(
     username_to_search TEXT
 )
