@@ -27,7 +27,7 @@ const insertSongRating = async (user_id, song_id, rating) => {
     }
 };
 
-// TODO: remove this function, replaced by getTopRatings
+// TODO: remove this function, replaced by getTopRatings ACTUALLY DON'T REMOVE
 const getSongRating = async () => {
     try {
         const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
@@ -38,9 +38,9 @@ const getSongRating = async () => {
     }
 };
 
-const getUserIDFromUsername = async(username) => {
+const getUserIDFromSpotifyID = async(spotify_id) => {
     try {
-        const query = `SELECT * FROM timbre.search_user_from_username('${username}')`;
+        const query = `SELECT * FROM timbre.search_user_from_id('${spotify_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -48,9 +48,39 @@ const getUserIDFromUsername = async(username) => {
     }
 };
 
-const createUser = async(username) => {
+const createUser = async(spotify_id, email, spotify_display_name, profile_link) => {
     try {
-        const query = 'CALL timbre.create_profile(${username})';
+        const query = `CALL timbre.create_user('${spotify_id}', '${email}', '${spotify_display_name}', '${profile_link}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
+    try {
+        if (profile_pic)
+            profile_pic = `'${profile_pic}'`;
+        else 
+            profile_pic = null;
+
+        const query = `CALL timbre.update_user(${user_id}, '${email}', '${spotify_display_name}', ${profile_pic})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const updateUserBio = async(user_id, bio) => {
+    try {
+        if (bio)
+            bio = `'${bio}'`;
+        else 
+            bio = null;
+
+        const query = `CALL timbre.update_bio(${user_id}, ${bio})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -124,8 +154,10 @@ const getProfileCharacteristics = async() => {
 const db_functions = {
     insertSongRating,
     getSongRating, // TODO REMOVE
-    getUserIDFromUsername,
+    getUserIDFromSpotifyID,
     createUser,
+    updateUser,
+    updateUserBio,
     insertSongProfile,
     getTopRatings,
     getSongProfile,
