@@ -1,5 +1,5 @@
 import { insertSongRating, getSongRating } from "../../../lib/db_functions"
-import { generateSpotifyData } from '../../../lib/matching_algorithm';
+import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
 import { NextResponse } from 'next/server';
 
 // Handler for PUT requests 
@@ -8,15 +8,21 @@ import { NextResponse } from 'next/server';
 // There might be a better method
 export async function PUT(request) {
     const body = await request.json();
-    try {        
-        let response = await generateSpotifyData(body.access_token);
-        // let response = await insertSongRating(body.user_id, body.song_id, body.rating);
-        if (response.data.success) {
-            return NextResponse.json({ message: 'Insert user successful' })
-        } else {
-            return NextResponse.json({ message: 'Insert user failed' })
+    try {
+        let response;
+        switch (body.command) {
+            case 'GENERATE_SPOTIFY_DATA':
+                response = await generateSpotifyData(body.access_token);
+                break;
+            case 'CALCULATE_COMPATIBILITY':
+                response = await calculateCompatibilityScore(body.id1, body.id2);
+                console.log(response.data.score);
+                break;
         }
+
+        return NextResponse.json({ message: 'Successful data entry' })
     } catch (err) {
+        console.log(err);
         return NextResponse.json({ message: 'Internal server error' })
     }
 }

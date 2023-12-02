@@ -136,7 +136,7 @@ export const trackFeatures = async (access_token, ids) => {
 
     try {
         const response = await fetch(
-            `https://api.spotify.com/v1/audio-features/${ids}`,
+            `https://api.spotify.com/v1/audio-features?ids=${ids}`,
             {
                 headers: {
                     Authorization: "Bearer " + token,

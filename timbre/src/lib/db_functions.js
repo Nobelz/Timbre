@@ -58,6 +58,36 @@ const createUser = async(spotify_id, email, spotify_display_name, profile_link) 
     }
 };
 
+const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
+    try {
+        if (profile_pic)
+            profile_pic = `'${profile_pic}'`;
+        else 
+            profile_pic = null;
+
+        const query = `CALL timbre.update_user(${user_id}, '${email}', '${spotify_display_name}', ${profile_pic})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const updateUserBio = async(user_id, bio) => {
+    try {
+        if (bio)
+            bio = `'${bio}'`;
+        else 
+            bio = null;
+
+        const query = `CALL timbre.update_bio(${user_id}, ${bio})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const insertSongProfile = async(user_id, type_id, acousticness, danceability, energy, instrumentalness, liveness, loudness, speechiness, valence, tempo) => {
     try {
         const query = `CALL timbre.insert_song_profile(
@@ -126,6 +156,8 @@ const db_functions = {
     getSongRating, // TODO REMOVE
     getUserIDFromSpotifyID,
     createUser,
+    updateUser,
+    updateUserBio,
     insertSongProfile,
     getTopRatings,
     getSongProfile,

@@ -1,10 +1,10 @@
-import { createUser, getUserIDFromSpotifyID, getSongProfiles, getProfileCharacteristics, getTopRatings } from './db_functions';
+import { createUser, getUserIDFromSpotifyID, getSongProfiles, getProfileCharacteristics, getTopRatings, insertSongProfile, updateUser } from './db_functions';
 import { recentlyPlayed, topTracks, topArtists, profileInfo, artistTopTracks, trackFeatures } from './spotify';
 
 export const calculateCompatibilityScore = async (id1, id2) => {
     // ACCESSORY FUNCTIONS
     // Accessory Function: Calculate the score between each profile
-    const calculateScore = async (profile1, profile2) => {
+    const calculateScore = async (profile1, profile2, total) => {
         const diff = Math.abs(profile1['danceability'] - profile2['danceability']) +
             Math.abs(profile1['energy'] - profile2['energy']) +
             Math.abs(profile1['loudness'] - profile2['loudness']) +
@@ -22,6 +22,7 @@ export const calculateCompatibilityScore = async (id1, id2) => {
         return Object.keys(dict).length === 0;
     };
     
+    try {
     // Get User IDs from emails
     const user_id1 = await getUserIDFromSpotifyID(id1);
     const user_id2 = await getUserIDFromSpotifyID(id2);
@@ -74,7 +75,7 @@ export const calculateCompatibilityScore = async (id1, id2) => {
     // Determine final sum by summing the max - min for each characteristic
     let total = 0;
     for (dataRow of characteristics.rows) {
-        total += (parseFloat(dataRow.max) - parseFloat(dataRow.min));
+        total += (parseFloat(dataRow.c_max) - parseFloat(dataRow.c_min));
     }
 
     let scores = new Array(4);
@@ -85,7 +86,7 @@ export const calculateCompatibilityScore = async (id1, id2) => {
         if (isEmpty(profiles1[i]) || isEmpty(profiles2[i]))  // If song profile doesn't exist for one of the users, disregard
             weights[i] = 0;
         else 
-            scores[i] = await calculateScore(profiles1[i], profiles2[i]); // Calculate subscore for each profile type
+            scores[i] = await calculateScore(profiles1[i], profiles2[i], total); // Calculate subscore for each profile type
     }
 
     // Normalize weights
@@ -97,25 +98,24 @@ export const calculateCompatibilityScore = async (id1, id2) => {
         if (weights[i] > 0)
             sum += scores[i] * weights[i];
     }
-    
-    // Formulate API response
-    let response = {};
-    response.rowCount = 1;
-    response.command = "CALCULATE_SCORE";
-    response.rows = [{ // TODO change to username
-        'email1': email1,
-        'email2': email2,
-        'score': sum
-    }];
 
     // Return API response
-    return response;
+    return {
+        command: 'CALCULATE_COMPATIBILITY',
+        data: {
+            success: true,
+            score: sum
+        }
+    };
+} catch (err) {
+    console.log(err);
+}
 };
 
-export const generateSpotifyData = async(access_token) => { // TODO add spotify last refresh
+export const generateSpotifyData = async(access_token) => {
     // ACCESSORY FUNCTIONS
     // Accessory Function: Calculate the weighted average
-    const calculateWeightedAverage = async (features, weights) => {
+    const calculateWeightedAverage = (features, weights) => {
         const temp = {};
 
         // Iterate over each feature
@@ -130,7 +130,7 @@ export const generateSpotifyData = async(access_token) => { // TODO add spotify 
     };
 
     // Accessory Function: Generate the weights
-    const generateWeights = async (num_ranks) => {
+    const generateWeights = (num_ranks) => {
         const weights = [];
 
         for (let i = 0; i < num_ranks; i++) {
@@ -140,9 +140,7 @@ export const generateSpotifyData = async(access_token) => { // TODO add spotify 
         const sumWeights = weights.reduce((sum, weight) => sum + weight, 0);
         return weights.map(weight => weight / sumWeights);
     };
-    
-    console.log('Test');
-    
+        
     let recentSongs = await recentlyPlayed(access_token);
     let topSongs = await topTracks(access_token);
     let topMusicians = await topArtists(access_token);
@@ -161,149 +159,120 @@ export const generateSpotifyData = async(access_token) => { // TODO add spotify 
         profilePic = personalInfo.images[1].url;
     }
 
-    try {
-        let userID = await getUserIDFromSpotifyID(spotifyID);
+    let userID = await getUserIDFromSpotifyID(spotifyID);
 
-        if (userID.rows.length === 0) {
-            await createUser(spotifyID, email, displayName, profileURL);
-            userID = await getUserIDFromSpotifyID(spotifyID); // Get new user id that was just inserted
-        }
-        
-        userID = userID.rows[0].search_user_from_id;
-        
-        let artistIds = [];
-        // Get the top 5 artists
-        if (topMusicians.items) {
-            for (let i = 0; i < topMusicians.items.length; i++) {
-                const item = topMusicians.items[i];
-                artistIds.push(item.id);
-            }
-        }
-
-        // Make empty array of 5 artists, 5 tracks each
-        const topArtistTrackIDs = new Array(5).fill('').map(() => new Array(5).fill('')); 
-
-        // Get the top 5 track IDs for each artist
-        for (let i = 0; i < artistIds.length; i++) {
-            const artistID = artistIds[i];
-            const topArtistSongs = await artistTopTracks(access_token, artistID, country);
-            for (let j = 0; j < Math.min(5, topArtistSongs.tracks.length); j++) {
-                if (topArtistSongs.tracks[j]) {
-                    topArtistTrackIDs[i][j] = topArtistSongs.tracks[j].id;
-                }
-            }
-        }
-
-        // Get recently played IDs
-        const recentlyPlayedIDs = [];
-        for (const item of recentSongs.items) {
-            recentlyPlayedIDs.push(item.track.id);
-        }
-
-        // Get top track IDs
-        const topIDs = [];
-        if (topSongs.tracks) {
-            for (const item of topSongs.tracks) {
-                topIDs.push(item.id);
-            }
-        }
-
-        // Get top rating IDs
-        let topRatings = await getTopRatings(userID, 10);
-
-        // TODO I WAS HERE
-        topRatings = topRatings.rows.map(row => [row.song_id, row.rating]);
-        console.log(topRatings);
-
-        const topRatingIDs = topRatings.map(rating => rating[0]);
-
-        // Concatenate all track IDs into one Spotify API call to reduce number of API calls
-        const trackIDs = [...topArtistTrackIDs.flat(), ...topIDs, ...recentlyPlayedIDs, ...topRatingIDs];
-        const removedTrackIDs = trackIDs.filter(trackID => trackID !== '');
-
-        const audioFeatures = await trackFeatures(removedTrackIDs);
-
-        console.log(audioFeatures);
-        const scaled_audio_features = audio_features.map(feature => {
-            return {
-                danceability: feature.danceability,
-                energy: feature.energy,
-                loudness: (feature.loudness / 60) + 1,
-                speechiness: feature.speechiness,
-                acousticness: feature.acousticness,
-                instrumentalness: feature.instrumentalness,
-                liveness: feature.liveness,
-                valence: feature.valence,
-                tempo: Math.min(Math.log(feature.tempo) / Math.log(300), 1)
-            };
-        });
-
-        const artist_scores = [];
-        let i = 0;
-        for (let j = 0; j < top_artist_track_ids.length; j++) {
-            const num_artist_tracks = top_artist_track_ids[j].filter(track_id => track_id !== '').length;
-            artist_scores.push(_weighted_average(scaled_audio_features.slice(i, i + num_artist_tracks), Array(num_artist_tracks).fill(1 / num_artist_tracks)));
-            i += num_artist_tracks;
-        }
-
-        const num_artist_tracks = i;
-        const artist_score = _weighted_average(artist_scores, generate_weights(artist_scores.length));
-
-        const top_track_score = _weighted_average(scaled_audio_features.slice(i, i + top_track_ids.length), generate_weights(top_track_ids.length));
-        i += top_track_ids.length;
-
-        const recently_played_score = _weighted_average(scaled_audio_features.slice(i, i + recently_played_track_ids.length), Array(recently_played_track_ids.length).fill(1 / recently_played_track_ids.length));
-        i += recently_played_track_ids.length;
-
-        const top_ratings_scores = top_ratings.map(rating => parseFloat(rating[1]));
-        const top_rating_score = _weighted_average(scaled_audio_features.slice(i, i + top_rating_ids.length), top_ratings_scores.map(rating => rating / top_ratings_scores.reduce((sum, rating) => sum + rating, 0)));
-
-        const scores = [];
-        const weights = [];
-        if (num_artist_tracks > 0) {
-            database.insert_song_profile(user_id, 1, artist_score.acousticness, artist_score.danceability, artist_score.energy, artist_score.instrumentalness, artist_score.liveness, artist_score.loudness, artist_score.speechiness, artist_score.valence, artist_score.tempo);
-            scores.push(artist_score);
-            weights.push(0.2);
-        }
-
-        if (top_track_ids.length > 0) {
-            database.insert_song_profile(user_id, 2, top_track_score.acousticness, top_track_score.danceability, top_track_score.energy, top_track_score.instrumentalness, top_track_score.liveness, top_track_score.loudness, top_track_score.speechiness, top_track_score.valence, top_track_score.tempo);
-            scores.push(top_track_score);
-            weights.push(0.3);
-        }
-
-        if (recently_played_track_ids.length > 0) {
-            database.insert_song_profile(user_id, 3, recently_played_score.acousticness, recently_played_score.danceability, recently_played_score.energy, recently_played_score.instrumentalness, recently_played_score.liveness, recently_played_score.loudness, recently_played_score.speechiness, recently_played_score.valence, recently_played_score.tempo);
-            scores.push(recently_played_score);
-            weights.push(0.2);
-        }
-
-        if (top_rating_ids.length > 0) {
-            database.insert_song_profile(user_id, 4, top_rating_score.acousticness, top_rating_score.danceability, top_rating_score.energy, top_rating_score.instrumentalness, top_rating_score.liveness, top_rating_score.loudness, top_rating_score.speechiness, top_rating_score.valence, top_rating_score.tempo);
-            scores.push(top_rating_score);
-            weights.push(0.3);
-        }
-
-        const normalized_weights = weights.map(weight => weight / weights.reduce((sum, weight) => sum + weight, 0));
-        const final_score = _weighted_average(scores, normalized_weights);
-
-        for (const [feature, value] of Object.entries(final_score)) {
-            console.log(`${feature}: ${value}`);
-        }
-    } catch (error) {
-        console.log(error);
+    if (userID.rows.length === 0) {
+        await createUser(spotifyID, email, displayName, profileURL);
+        userID = await getUserIDFromSpotifyID(spotifyID); // Get new user id that was just inserted
     }
-    
-    // console.log(user_id);
-    // console.log(recentSongs);
-    // console.log(topSongs);
-    // console.log(topMusicians);
-    // console.log(personalInfo);
+    userID = userID.rows[0].search_user_from_id;
+    await updateUser(userID, email, displayName, profilePic);
 
-    console.log(display_name);
-    console.log(profile_URL);
-    console.log(username);
-    console.log(profile_pic);
-    
-    return token;
+    let artistIds = [];
+    // Get the top 5 artists
+    if (topMusicians.items) {
+        for (let i = 0; i < topMusicians.items.length; i++) {
+            const item = topMusicians.items[i];
+            artistIds.push(item.id);
+        }
+    }
+
+    // Make empty array of 5 artists, 5 tracks each
+    const topArtistTrackIDs = new Array(5).fill('').map(() => new Array(5).fill(''));
+
+    // Get the top 5 track IDs for each artist
+    for (let i = 0; i < artistIds.length; i++) {
+        const artistID = artistIds[i];
+        const topArtistSongs = await artistTopTracks(access_token, artistID, country);
+        for (let j = 0; j < Math.min(5, topArtistSongs.tracks.length); j++) {
+            if (topArtistSongs.tracks[j]) {
+                topArtistTrackIDs[i][j] = topArtistSongs.tracks[j].id;
+            }
+        }
+    }
+
+    // Get recently played IDs
+    const recentlyPlayedIDs = [];
+    for (const item of recentSongs.items) {
+        recentlyPlayedIDs.push(item.track.id);
+    }
+
+    // Get top track IDs
+    const topIDs = [];
+    if (topSongs.items) {
+        for (const item of topSongs.items) {
+            topIDs.push(item.id);
+        }
+    }
+
+    // Get top rating IDs
+    let topRatings = await getTopRatings(userID, 10);
+    topRatings = topRatings.rows.map(row => [row.song_id, parseFloat(row.rating)]);
+    const topRatingIDs = topRatings.map(rating => rating[0]);
+
+    // Concatenate all track IDs into one Spotify API call to reduce number of API calls
+    const trackIDs = [...topArtistTrackIDs.flat(), ...topIDs, ...recentlyPlayedIDs, ...topRatingIDs];
+    const removedTrackIDs = trackIDs.filter(trackID => trackID !== '');
+    const trackIDString = removedTrackIDs.join(',');
+
+    let audioFeatures = await trackFeatures(access_token, trackIDString);
+    audioFeatures = audioFeatures.audio_features;
+
+    const scaledAudioFeatures = audioFeatures.map(feature => {
+        return {
+            danceability: feature.danceability,
+            energy: feature.energy,
+            loudness: (feature.loudness / 60) + 1,
+            speechiness: feature.speechiness,
+            acousticness: feature.acousticness,
+            instrumentalness: feature.instrumentalness,
+            liveness: feature.liveness,
+            valence: feature.valence,
+            tempo: Math.min(Math.log(feature.tempo) / Math.log(300), 1)
+        };
+    });
+
+    const artistScores = [];
+    let i = 0;
+    for (let j = 0; j < topArtistTrackIDs.length; j++) {
+        const numArtistTracks = topArtistTrackIDs[j].filter(trackID => trackID !== '').length;
+        artistScores.push(calculateWeightedAverage(scaledAudioFeatures.slice(i, i + numArtistTracks), Array(numArtistTracks).fill(1 / numArtistTracks)));
+        i += numArtistTracks;
+    }
+
+    const numArtistTracks = i;
+    const artistScore = calculateWeightedAverage(artistScores, generateWeights(artistScores.length));
+
+    const topTrackScore = calculateWeightedAverage(scaledAudioFeatures.slice(i, i + topIDs.length), generateWeights(topIDs.length));
+    i += topIDs.length;
+
+    const recentlyPlayedScore = calculateWeightedAverage(scaledAudioFeatures.slice(i, i + recentlyPlayedIDs.length), Array(recentlyPlayedIDs.length).fill(1 / recentlyPlayedIDs.length));
+    i += recentlyPlayedIDs.length;
+
+    const topRatingScores = topRatings.map(rating => parseFloat(rating[1]));
+    const topRatingScore = calculateWeightedAverage(scaledAudioFeatures.slice(i, i + topRatingIDs.length), topRatingScores.map(rating => rating / topRatingScores.reduce((sum, rating) => sum + rating, 0)));
+
+    if (numArtistTracks > 0) {
+        await insertSongProfile(userID, 1, artistScore.acousticness, artistScore.danceability, artistScore.energy, artistScore.instrumentalness, artistScore.liveness, artistScore.loudness, artistScore.speechiness, artistScore.valence, artistScore.tempo);
+    }
+
+    if (topIDs.length > 0) {
+        await insertSongProfile(userID, 2, topTrackScore.acousticness, topTrackScore.danceability, topTrackScore.energy, topTrackScore.instrumentalness, topTrackScore.liveness, topTrackScore.loudness, topTrackScore.speechiness, topTrackScore.valence, topTrackScore.tempo);
+    }
+
+    if (recentlyPlayedIDs.length > 0) {
+        await insertSongProfile(userID, 3, recentlyPlayedScore.acousticness, recentlyPlayedScore.danceability, recentlyPlayedScore.energy, recentlyPlayedScore.instrumentalness, recentlyPlayedScore.liveness, recentlyPlayedScore.loudness, recentlyPlayedScore.speechiness, recentlyPlayedScore.valence, recentlyPlayedScore.tempo);
+    }
+
+    if (topRatingIDs.length > 0) {
+        await insertSongProfile(userID, 4, topRatingScore.acousticness, topRatingScore.danceability, topRatingScore.energy, topRatingScore.instrumentalness, topRatingScore.liveness, topRatingScore.loudness, topRatingScore.speechiness, topRatingScore.valence, topRatingScore.tempo);
+    }
+
+    return {
+        command: 'GENERATE_SPOTIFY_DATA',
+        data: {
+            success: true,
+            user_id: userID,
+        },
+    };
 };
