@@ -1,16 +1,30 @@
 CREATE OR REPLACE FUNCTION timbre.get_random_users(
     current_user_spotify_id TEXT
 )
-RETURNS SETOF TEXT /* this needs to be changed too to make type if needed */
+RETURNS SETOF TEXT
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT spotify_id /* change to spotify_id once DB is edited */
+	SELECT spotify_id 
 	FROM timbre.timbre_user
-    WHERE spotify_id != current_user_spotify_id /* change to current spotify_id variable */
+    WHERE spotify_id != current_user_spotify_id
 	ORDER BY RANDOM()
 	LIMIT 5; /* change this value to set the number of randomly sampled users to return */ 
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_user_info_from_spotify_id(
+    spotify_id_to_search TEXT
+)
+RETURNS TABLE (display_name TEXT, pic_link TEXT, bio TEXT, last_refresh TIMESTAMP)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+	SELECT spotify_display_name, profile_pic, user_bio, spotify_last_refresh
+	FROM timbre.timbre_user
+    WHERE spotify_id = spotify_id_to_search;
 END;
 $$;
 
