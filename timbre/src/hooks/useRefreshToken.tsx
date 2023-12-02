@@ -48,15 +48,40 @@ export default function useRefreshToken(code: string) {
     }
   };
 
+  const pullSpotifyData = async () => {
+    let data = {
+      command: 'GENERATE_SPOTIFY_DATA',
+      access_token: accessToken,
+    };
+
+    // let data = {
+    //   command: 'CALCULATE_COMPATIBILITY',
+    //   id1: 'iobhblgu6dtcyol8vy5n0i7e7',
+    //   id2: 'jonathanlong19148',
+    // }
+
+    const response = await fetch('./endpoint', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( data ),
+    });
+
+    await response.json();
+  }
+
   // Immediately get an access token upon the users first login
   // This needs to be debugged and might be the cause of bad responses because the refresh token is never used
   useEffect(() => {
-      fetchToken(code);
+    fetchToken(code);
   }, []);
 
   useEffect(() => {
-    if (accessToken && accessToken !== 'undefined')
-      window.location.href = '../homepage';
+    if (accessToken && accessToken !== 'undefined') {
+      pullSpotifyData();
+      window.location.href = '../homepage'; //TODO change back once done debugging Oswin says use Router
+    }
   }, [accessToken]);
 
   // Sets up a countdown for when the access token will expire and upon expiration gets a new one with the refresh token

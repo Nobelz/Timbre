@@ -7,7 +7,12 @@ import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Container, ListGroup, Button, Form } from 'react-bootstrap';
 import MatchcardList from '../../components/MatchcardList';
+import Navigation from '../../components/Navigation';
 import useRefreshToken from "../../hooks/useRefreshToken";
+import useUserProfile from "../../hooks/useUserProfile";
+import useAuthentication from '../../hooks/useAccessToken';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
+import AuthRedirect from '../../components/AuthRedirect';
 import { useSearchParams, useRouter } from "next/navigation";
 import { authorize, getToken } from "../api/auth/authorize";
 import styles from '../styles/profile.module.css';
@@ -22,9 +27,11 @@ export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
 
-    const searchParams = useSearchParams()
-    const code = searchParams.get('code')
-    useRefreshToken(String(code));
+    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
+
+    const userProfile = useUserProfile(access_token);
+
+    const isLoading = useAuthRedirect(isAuthenticated);
 
     const authorizeApp = async () => {
         await authorize();
@@ -39,36 +46,19 @@ export default function Profile({content}) {
         setShowBioPopup(false);
     }
 
+    if (isLoading){
+        return null;
+    }
+
 
     return (
-        
-            <div className={`${styles.profile}`}>
+        <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
+        <div className={`${styles.profile}`}>
                 <Head>
                     <title>Timbre</title>
                     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 </Head>
-                <Navbar bg="dark" variant="dark">
-                    <Container fluid>
-                        <Navbar.Brand href="/homepage">
-                            Timbre
-                        </Navbar.Brand>
-                        <Nav className="me-auto">
-                            <Nav.Link href="/matches">Matches</Nav.Link>
-                            <Nav.Link href="/friends">Friends</Nav.Link>
-                        </Nav>
-                        
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                TO BE FILL ICON
-                            </Dropdown.Toggle>
-
-                            <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">My Account</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Log Out</Dropdown.Item>
-                            </Dropdown.Menu>
-                            </Dropdown>
-                    </Container>
-                </Navbar>
+                <Navigation isAuthenticated={isAuthenticated} userProfile={userProfile} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp}/>
 
                 <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
                 <Container class={`${styles.container}`}>
@@ -76,8 +66,8 @@ export default function Profile({content}) {
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
-                                <Col class={`${styles.title_col}`}>Name</Col>
-                                <Col class={`${styles.content_col}`}>first_name_last_name</Col>
+                                <Col class={`${styles.title_col}`}>Display Name</Col>
+                                <Col class={`${styles.content_col}`}>display_name</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Email</Col>
@@ -89,7 +79,7 @@ export default function Profile({content}) {
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
-                            <Button className={styles.greenButton} onClick={(event) => handleBio(event)}>Edit Bio</Button>
+                            <Button className={styles.button} onClick={(event) => handleBio(event)}>Edit Bio</Button>
                             <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content}/>
                         </Col>
                     </Row>
@@ -98,8 +88,8 @@ export default function Profile({content}) {
                     <Row>
                         <Col class={`${styles.info}`}>
                             <Row>
-                                <Col class={`${styles.title_col}`}>Username</Col>
-                                <Col class={`${styles.content_col}`}>spotify_username</Col>
+                                <Col class={`${styles.title_col}`}>Spotify ID</Col>
+                                <Col class={`${styles.content_col}`}>spotify_id</Col>
                             </Row>
                             <Row>
                                 <Col class={`${styles.title_col}`}>Last Synced</Col>
@@ -107,16 +97,17 @@ export default function Profile({content}) {
                             </Row>
                         </Col>
                         <Col class={`${styles.button_col}`}>
-                            <Button className={styles.greenButton} onClick={authorizeApp}>Resync Now</Button>
+                            <Button className={styles.button} onClick={authorizeApp}>Resync Now</Button>
                         </Col>
                     </Row>
 
                     <Row class={`${styles.row}`}>
-                        <Button className={styles.greenButton}>Log Out</Button>
+                        <Button className={styles.button}>Log Out</Button>
                     </Row>
 
                 </Container>
                 
             </div>
+            </AuthRedirect>
     )
 }

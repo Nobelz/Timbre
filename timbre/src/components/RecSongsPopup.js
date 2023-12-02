@@ -15,9 +15,7 @@ export default function RecSongPopup({ show, onHide, props }) {
         typeof window !== 'undefined' ? localStorage.getItem("access_token") : null
     );
     const [searchResults, setSearchResults] = useState([]);
-
-    console.log(searchResults);
-
+    
     useEffect(() => {
         if (!accessToken) return;
         spotifyApi.setAccessToken(accessToken);
@@ -46,6 +44,7 @@ export default function RecSongPopup({ show, onHide, props }) {
                 }
             }))
         })
+        console.log(searchResults);
         return () => (cancel = true)
     }, [search, accessToken]);
 
@@ -65,6 +64,7 @@ export default function RecSongPopup({ show, onHide, props }) {
                 </Container>
             </Modal.Body>
         </Modal>
+        // NOTE: in TrackSearchResult pass a handleClick prop to handle recommending songs
     )
 }
 // need to display the search results and then be able to select them for recommending

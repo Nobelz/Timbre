@@ -41,7 +41,7 @@ if (typeof window !== "undefined") {
 export const authorize = async () => {
     generateCodeChallenge(codeVerifier).then((codeChallenge) => {
         const state = generateRandomString(16);
-        const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state user-top-read";
+        const scope = "user-read-private user-read-email streaming user-read-playback-state user-modify-playback-state user-top-read user-library-read user-library-modify user-read-recently-played";
 
         localStorage.setItem("code_verifier", codeVerifier);
         localStorage.setItem("state", state);
@@ -81,12 +81,8 @@ export const getToken = async (code) => {
             },
             body: body,
         });
-
-        // console.log(response);
-        let stuff = await response.json();
-        console.log(stuff);
-        console.log(code);
-        return stuff;
+        
+        return response.json();
     } catch (error) {
         window.location.href = "/";
     }

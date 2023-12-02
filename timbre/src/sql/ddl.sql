@@ -11,12 +11,13 @@ DROP TABLE IF EXISTS characteristics;
 
 CREATE TABLE timbre_user (
 	user_id SERIAL PRIMARY KEY,
-	username TEXT NOT NULL UNIQUE,
+	spotify_id TEXT NOT NULL UNIQUE, 
 	email TEXT NOT NULL UNIQUE,
-	first_name TEXT,
-	last_name TEXT,
+	spotify_display_name TEXT NOT NULL,
 	user_bio TEXT,
-	spotify_last_refresh TIMESTAMP,
+	profile_pic TEXT,
+	profile_link TEXT NOT NULL UNIQUE,
+	spotify_last_refresh TIMESTAMP NOT NULL,
 	create_time TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -125,7 +126,7 @@ CREATE TABLE song_profile(
 );
 
 CREATE TABLE characteristics(
-	name TEXT PRIMARY KEY,
-	min DECIMAL NOT NULL CHECK (min >= 0 AND min <= 1),
-	max DECIMAL NOT NULL CHECK (max >= 0 AND max <= 1)
+	c_name TEXT PRIMARY KEY,
+	c_min DECIMAL NOT NULL CHECK (c_min >= 0 AND c_min <= 1),
+	c_max DECIMAL NOT NULL CHECK (c_max >= 0 AND c_max <= 1)
 );

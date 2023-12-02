@@ -13,37 +13,51 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION timbre.search_user_from_username(
-    username_to_search TEXT
+CREATE OR REPLACE FUNCTION timbre.search_user_from_id(
+    id_to_search TEXT
 )
 RETURNS SETOF INTEGER 
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT user_id FROM timbre.timbre_user WHERE username = username_to_search;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION timbre.search_user_from_email(
-    email_to_search TEXT
-)
-RETURNS SETOF INTEGER 
-LANGUAGE PLPGSQL
-AS $$
-BEGIN
-    RETURN QUERY
-	SELECT user_id FROM timbre.timbre_user WHERE email = email_to_search;
+    SELECT user_id FROM timbre.timbre_user WHERE spotify_id = id_to_search;
 END;
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.create_user(
-    username TEXT,
-    email TEXT
+    spotify_id TEXT,
+    email TEXT,
+    spotify_display_name TEXT,
+    profile_link TEXT
 )
 LANGUAGE SQL
 AS $$
-    INSERT INTO timbre.timbre_user (username, email, create_time) VALUES (username, email, NOW());
+    INSERT INTO timbre.timbre_user (spotify_id, email, spotify_display_name, profile_link, spotify_last_refresh, create_time) VALUES (spotify_id, email, spotify_display_name, profile_link, NOW(), NOW());
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.update_user(
+    user_id INTEGER,
+    email TEXT,
+    spotify_display_name TEXT,
+	profile_pic TEXT
+)
+LANGUAGE SQL
+AS $$
+    UPDATE timbre.timbre_user 
+    SET email = $2, spotify_display_name = $3, profile_pic = $4, spotify_last_refresh = NOW()
+    WHERE user_id = $1;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.update_bio(
+    user_id INTEGER,
+    bio TEXT
+)
+LANGUAGE SQL
+AS $$
+    UPDATE timbre.timbre_user 
+    SET user_bio = $2
+    WHERE user_id = $1;
 $$;
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
@@ -65,74 +79,74 @@ BEGIN
     INSERT INTO timbre.song_profile 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'acousticness') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'acousticness') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $3), characteristics.max = MAX(characteristics.max, $3)
-        WHERE characteristics.name = 'acousticness';
+        SET c_min = LEAST(c_min, $3), c_max = GREATEST(c_max, $3)
+        WHERE c_name = 'acousticness';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('acousticness', $3, $3);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'valence') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'valence') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $4), characteristics.max = MAX(characteristics.max, $4)
-        WHERE characteristics.name = 'valence';
+        SET c_min = LEAST(c_min, $4), c_max = GREATEST(c_max, $4)
+        WHERE c_name = 'valence';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('valence', $4, $4);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'danceability') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'danceability') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $5), characteristics.max = MAX(characteristics.max, $5)
-        WHERE characteristics.name = 'danceability';
+        SET c_min = LEAST(c_min, $5), c_max = GREATEST(c_max, $5)
+        WHERE c_name = 'danceability';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('danceability', $5, $5);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'energy') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'energy') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $6), characteristics.max = MAX(characteristics.max, $6)
-        WHERE characteristics.name = 'energy';
+        SET c_min = LEAST(c_min, $6), c_max = GREATEST(c_max, $6)
+        WHERE c_name = 'energy';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('energy', $6, $6);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'instrumentalness') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'instrumentalness') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $7), characteristics.max = MAX(characteristics.max, $7)
-        WHERE characteristics.name = 'instrumentalness';
+        SET c_min = LEAST(c_min, $7), c_max = GREATEST(c_max, $7)
+        WHERE c_name = 'instrumentalness';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('instrumentalness', $7, $7);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'liveness') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'liveness') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $8), characteristics.max = MAX(characteristics.max, $8)
-        WHERE characteristics.name = 'liveness';
+        SET c_min = LEAST(c_min, $8), c_max = GREATEST(c_max, $8)
+        WHERE c_name = 'liveness';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('liveness', $8, $8);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'loudness') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'loudness') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $9), characteristics.max = MAX(characteristics.max, $9)
-        WHERE characteristics.name = 'loudness';
+        SET c_min = LEAST(c_min, $9), c_max = GREATEST(c_max, $9)
+        WHERE c_name = 'loudness';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('loudness', $9, $9);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'speechiness') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'speechiness') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $10), characteristics.max = MAX(characteristics.max, $10)
-        WHERE characteristics.name = 'speechiness';
+        SET c_min = LEAST(c_min, $10), c_max = GREATEST(c_max, $10)
+        WHERE c_name = 'speechiness';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('speechiness', $10, $10);
     END IF;
 
-    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE characteristics.name = 'tempo') THEN
+    IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'tempo') THEN
         UPDATE timbre.characteristics
-        SET characteristics.min = MIN(characteristics.min, $11), characteristics.max = MAX(characteristics.max, $11)
-        WHERE characteristics.name = 'tempo';
+        SET c_min = LEAST(c_min, $11), c_max = GREATEST(c_max, $11)
+        WHERE c_name = 'tempo';
     ELSE
         INSERT INTO timbre.characteristics VALUES ('tempo', $11, $11);
     END IF;
@@ -165,7 +179,7 @@ AS $$
 BEGIN
     IF EXISTS (SELECT 1 FROM timbre.song_rating WHERE song_rating.user_id = $1 AND song_rating.song_id = $2) THEN
         UPDATE timbre.song_rating
-        SET song_rating.rating = $3
+        SET rating = $3
         WHERE song_rating.user_id = $1 AND song_rating.song_id = $2;
     ELSE
         IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song.song_id = $2) THEN
@@ -241,11 +255,11 @@ END;
 $$;
 
 CREATE OR REPLACE FUNCTION timbre.get_profile_characteristics()
-RETURNS TABLE (name TEXT, min DECIMAL, max DECIMAL)
+RETURNS TABLE (c_name TEXT, c_min DECIMAL, c_max DECIMAL)
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT characteristics.name, characteristics.min, characteristics.max FROM timbre.characteristics;
+    SELECT characteristics.c_name, characteristics.c_min, characteristics.c_max FROM timbre.characteristics;
 END;
 $$;

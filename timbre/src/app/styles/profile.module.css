@@ -7,9 +7,9 @@
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
-    width: 80%; /* Adjust the width as needed */
+    width: 80%; 
     height: 100%;
-    padding: 10px;
+    padding: 20px;
     /*position: absolute;*/
 }
 
@@ -60,21 +60,25 @@
     box-shadow: 0 0 5px 3px rgba(1, 190, 64, 0.5);
 }
 
-.greenButton:hover {
+.button:hover {
     --translate-y: -5px;
-    box-shadow: 0 0 5px 3px rgba(1, 80, 190, 0.5);
+    box-shadow: 0 0 5px 3px rgba(3, 49, 112, 0.5);
+    background-color: #083686; 
 }
 
-.greenButton {
-    background-color: #0a4ec4; /* Green background color*/
-    color: white; /* White text color, adjust as needed */
+.button {
+    background-color: #083686; 
+    color: white; 
     font-size: x-large;
     font-family: 'Lexend';
+    border-radius: 5px;
+    padding: 10px;
+    border-color: #083686;
   }
 
 .row {
     margin-bottom: 30px;
-    margin-top: 70px;
+    margin-top: 60px;
     color: white;
     font-weight: 500;
     font-family: 'Lexend';

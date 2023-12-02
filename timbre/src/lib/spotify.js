@@ -10,14 +10,19 @@ const RECENTLY_PLAYED_ENDPOINT = 'https://api.spotify.com/v1/me/player/recently-
  */
 
 // Gets the playlists of the current user
-export const playlists = async () => {
-    const token = localStorage.getItem("access_token");
+// TODO: Do we need this?
+export const playlists = async (access_token) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
     try {
         const response = await fetch(
             PLAYLISTS_ENDPOINT,
             {
                 headers: {
-                    Authorization: "Bearer " + token,
+                    Authorization: "Bearer " + access_token,
                 },
             }
         );
@@ -28,14 +33,18 @@ export const playlists = async () => {
 };
 
 // Gets the top tracks of the current user
-export const topTracks = async () => {
-    const token = localStorage.getItem("access_token");
+export const topTracks = async (access_token) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+    
     try {
         const response = await fetch(
             TOP_TRACKS_ENDPOINT,
             {
                 headers: {
-                    Authorization: "Bearer " + token,
+                    Authorization: "Bearer " + access_token,
                 },
             }
         );
@@ -64,11 +73,18 @@ export const getUserProfile = async () => {
 };
 
 // Gets the top artists of the current user
-export const topArtists = async () => {
-    const token = localStorage.getItem("access_token");
+export const topArtists = async (access_token, limit) => {
+    let token = access_token;
+
+    if (!limit)
+        limit = 5;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
     try {
         const response = await fetch(
-            TOP_ARTISTS_ENDPOINT,
+            `${TOP_ARTISTS_ENDPOINT}?limit=${limit}`,
             {
                 headers: {
                     Authorization: "Bearer " + token,
@@ -82,8 +98,12 @@ export const topArtists = async () => {
 };
 
 // Gets 20 of the current user's recently played songs
-export const recentlyPlayed = async () => {
-    const token = localStorage.getItem("access_token");
+export const recentlyPlayed = async (access_token) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
     try {
         const response = await fetch(
             RECENTLY_PLAYED_ENDPOINT,
@@ -100,11 +120,18 @@ export const recentlyPlayed = async () => {
 };
 
 // Gets the top tracks on an artist given their id
-export const artistsTopTracks = async (id) => {
-    const token = localStorage.getItem("access_token");
+export const artistTopTracks = async (access_token, id, country_code) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
+    if (!country_code)
+        country_code = 'US';
+
     try {
         const response = await fetch(
-            `https://api.spotify.com/v1/artists/${id}/top-tracks`,
+            `https://api.spotify.com/v1/artists/${id}/top-tracks?market=${country_code}`, // Market is required
             {
                 headers: {
                     Authorization: "Bearer " + token,
@@ -119,11 +146,15 @@ export const artistsTopTracks = async (id) => {
 
 // Gets the audio features of a track given its id
 // ids should be a comma separated string of track ids
-export const trackFeatures = async (ids) => {
-    const token = localStorage.getItem("access_token");
+export const trackFeatures = async (access_token, ids) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
     try {
         const response = await fetch(
-            `https://api.spotify.com/v1/audio-features/${ids}`,
+            `https://api.spotify.com/v1/audio-features?ids=${ids}`,
             {
                 headers: {
                     Authorization: "Bearer " + token,
@@ -136,3 +167,23 @@ export const trackFeatures = async (ids) => {
     }
 };
 
+export const profileInfo = async (access_token) => {
+    let token = access_token;
+
+    if (typeof window !== 'undefined' && localStorage)
+        token = localStorage.getItem("access_token") || access_token;
+
+    try {
+        const response = await fetch(
+            'https://api.spotify.com/v1/me',
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+        return response.json();
+    } catch (err) {
+        console.log(err);
+    }
+}
