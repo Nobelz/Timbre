@@ -175,7 +175,55 @@ const getProfileCharacteristics = async() => {
     }
 };
 
+const makeFriendRequest = async(user_id1, user_id2) => {
+    try {
+        const query = `CALL timbre.make_friend_request(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
+const getFriends = async(user_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_friends(${user_id})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getFriendRequests = async(user_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_friend_requests(${user_id})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const acceptFriendRequest = async(user_id1, user_id2) => {
+    try {
+        const query = `SELECT * FROM timbre.accept_friend_request(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const rejectFriendRequest = async(user_id1, user_id2) => {
+    try {
+        const query = `SELECT * FROM timbre.reject_friend_request(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 // Put all function names here to export
 const db_functions = {
@@ -192,6 +240,11 @@ const db_functions = {
     getSongProfile,
     getSongProfiles,
     getProfileCharacteristics,
+    makeFriendRequest,
+    getFriends,
+    getFriendRequests,
+    acceptFriendRequest,
+    rejectFriendRequest,
 };
 
 module.exports = db_functions;
