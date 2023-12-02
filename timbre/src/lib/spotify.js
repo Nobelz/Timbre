@@ -54,6 +54,24 @@ export const topTracks = async (access_token) => {
     }
 };
 
+// Gets the user profile
+export const getUserProfile = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+        const response = await fetch(
+            "https://api.spotify.com/v1/me",
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }
+        );
+        return response.json();
+    } catch (err) {
+        console.log("Error getting user profile:", err);
+    }
+};
+
 // Gets the top artists of the current user
 export const topArtists = async (access_token, limit) => {
     let token = access_token;

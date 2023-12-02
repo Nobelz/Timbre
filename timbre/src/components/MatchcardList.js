@@ -10,4 +10,3 @@ export default function MatchcardList({ matchcards }) {
         </div>
     )
 }
-// NOTE: change the key to something meaningful

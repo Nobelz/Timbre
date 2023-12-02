@@ -1,14 +1,14 @@
 import React from "react";
 import styles from '../app/styles/trackSearchRes.module.css'
 
-export default function TrackSearchResult({ track }) {
+export default function TrackSearchResult({ track, chooseTrack }) {
 
-    function handleRecommend() {
-
+    function handleClick() {
+        chooseTrack(track);
     }
-    
+
     return (
-        <div className={styles.searchCard} onClick={handleRecommend}>
+        <div className={styles.searchCard} onClick={handleClick}>
             <img src={track.albumImageUrl} className={styles.trackImage} />
             <div className={styles.trackInfo}>
                 <div>{track.title}</div>

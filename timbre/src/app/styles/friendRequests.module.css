@@ -1,0 +1,59 @@
+.container {
+    margin-top: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.addFriend {
+    display: flex;
+    margin-left: 20px;
+}
+
+.requests {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    font-family: 'Lexend';
+}
+
+.listItem {
+    line-height: 30px;
+    font-size: 1.2em;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.listItem:hover {
+    background-color: rgba(167, 167, 167, 0.527);
+}
+
+.listItemHidden {
+    font-size: .7em;
+    float: right;
+    visibility: hidden;
+}
+
+.listItem:hover .listItemHidden{
+    visibility: visible;
+}
+
+.accept {
+    font-size: 1.1em;
+    margin-right: 15px;
+}
+
+.deny {
+    font-size: 1.1em;
+}
+.accept:hover {
+    color: green;
+    text-decoration: underline;
+}
+
+.deny:hover {
+    color: red;
+    text-decoration: underline;
+}

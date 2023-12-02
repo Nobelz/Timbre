@@ -1,11 +1,8 @@
 .container {
-    position: absolute;
-    left: 50%;
-    top: 60%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    top: 22.25%;
     display: flex;
     justify-content: center;
-    /* align-items: center; */
 }
 
 .card {
@@ -13,7 +10,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    border-radius: 2.5rem;
+    border-radius: 1.5rem;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, .3);
     width: 210px;
     height: 300px;
@@ -25,7 +22,6 @@
 }
 
 .card:hover {
-    /* --translate-y: -5px; */
     box-shadow: 0 0 7px 7px rgba(241, 251, 255, 0.5);
 }
 
@@ -46,9 +42,8 @@
 .cardGrid {
     display: grid;
     justify-content: center;
-    grid-template-areas: 'card card card card card';
-    padding: 10%;
-    gap: 2.5rem;
+    grid-template-areas: 'card card card';
+    gap: 5rem;
 }
 
 .matches {
@@ -57,10 +52,11 @@
 }
 
 .header {
+    position: relative;
+    top: 10%;
     text-align: center;
     color: rgb(255, 255, 255);
     font-size: 6.5em;
     font-weight: 900;
-    transform: translateY(70%);
     font-family: 'Lexend';
 }

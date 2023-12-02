@@ -7,56 +7,84 @@
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
-    width: 80%; /* Adjust the width as needed */
+    width: 80%; 
     height: 100%;
     padding: 20px;
-    background-color: white;
     /*position: absolute;*/
 }
 
-.container:hover {
+.content:hover {
     --translate-y: -5px;
     box-shadow: 0 0 5px 3px rgba(0, 0, 0, .5);
 }
 
-.title {
+.info{
+    width: 60%;
+}
+
+.title_col {
     background: #d3d3d3;
     font-weight: bold;
+    font-size:x-large;
     color:black;
     padding: 20px;
-    width: 20%;
+    width: 40%;
     margin-left: auto;
     margin-right: auto;
+    text-align: left;
+    font-family: 'Lexend';
 }
 
-.content {
+.content_col {
     background: #d3d3d3;
+    font-size: larger;
     color:rgb(94, 93, 93);
     padding: 20px;
-    width: 80%;
+    width: 60%;
+    text-align: left;
+    font-family: 'Lexend';
 }
 
-.s_content {
+.button_col {
+    display: flex;
     background: #d3d3d3;
     color:rgb(94, 93, 93);
+    width:40%;
     padding: 20px;
-    width: 40%;
+    align-items: center;
+    justify-content: center;
 }
 
-.s_button {
-    background: #d3d3d3;
-    padding: 20px;
-    width: 40%;
+.profile:hover {
+    --translate-y: -5px;
+    box-shadow: 0 0 5px 3px rgba(1, 190, 64, 0.5);
 }
 
-.greenButton {
-    background-color: #1ed760; /* Green background color */
-    color: white; /* White text color, adjust as needed */
-    /* Add any other styles for the green button */
+.button:hover {
+    --translate-y: -5px;
+    box-shadow: 0 0 5px 3px rgba(3, 49, 112, 0.5);
+    background-color: #083686; 
+}
+
+.button {
+    background-color: #083686; 
+    color: white; 
+    font-size: x-large;
+    font-family: 'Lexend';
+    border-radius: 5px;
+    padding: 10px;
+    border-color: #083686;
   }
 
 .row {
     margin-bottom: 30px;
-    margin-top: 30px;
-    color: black
+    margin-top: 60px;
+    color: white;
+    font-weight: 500;
+    font-family: 'Lexend';
+}
+
+.profile {
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
+    height: 100%;
 }
