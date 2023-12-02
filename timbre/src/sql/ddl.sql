@@ -2,7 +2,7 @@ SET SEARCH_PATH TO timbre;
 
 DROP TABLE IF EXISTS song_profile;
 DROP TABLE IF EXISTS song_rating;
-DROP TABLE IF EXISTS user_relationship;
+DROP TABLE IF EXISTS friendship;
 DROP TABLE IF EXISTS friend_request;
 DROP TABLE IF EXISTS recommendation;
 DROP TABLE IF EXISTS song;
@@ -37,14 +37,11 @@ CREATE TABLE friend_request (
 			ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX unique_friend_request_pair  ON timbre.friend_request (LEAST(from_id, to_id), GREATEST(from_id, to_id));
-
-CREATE TABLE user_relationship  (
+CREATE TABLE friendship (
 	matching_id SERIAL PRIMARY KEY,
 	user_id1 INTEGER NOT NULL,
 	user_id2 INTEGER NOT NULL,
 	compatibility_score DOUBLE PRECISION,
-	is_friend BOOLEAN NOT NULL,
 	
 	CONSTRAINT fk_matching_user1
 		FOREIGN KEY(user_id1)
@@ -56,7 +53,7 @@ CREATE TABLE user_relationship  (
 			ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX unique_relationship_pair ON timbre.user_relationship  (LEAST(user_id1, user_id2), GREATEST(user_id1, user_id2));
+CREATE UNIQUE INDEX unique_relationship_pair ON timbre.friendship (LEAST(user_id1, user_id2), GREATEST(user_id1, user_id2));
 
 CREATE TABLE song (
 	song_id TEXT PRIMARY KEY
@@ -84,7 +81,6 @@ CREATE TABLE recommendation(
 	song_id TEXT,
 	sender_id INTEGER,
 	receiver_id INTEGER,
-	rec_message TEXT,
 	rec_time TIMESTAMP NOT NULL DEFAULT NOW(),
 	
 	PRIMARY KEY(song_id, sender_id, receiver_id),

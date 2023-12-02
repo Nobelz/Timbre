@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { insertSongRating, getSongRating, getRandomUsers } from "../../../lib/db_functions"
+import { insertSongRating, getSongRating, getRandomUsers, getUserInfo } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -18,11 +18,10 @@ export async function PUT(request) {
                 break;
             case 'CALCULATE_COMPATIBILITY':
                 response = await calculateCompatibilityScore(body.id1, body.id2);
-                console.log(response.data.score);
                 break;
         }
 
-        return NextResponse.json({ message: 'Successful data entry' })
+        return NextResponse.json({ message: 'Successful data entry', data: response.data });
     } catch (err) {
         console.log(err);
         return NextResponse.json({ message: 'Internal server error' })
@@ -31,13 +30,11 @@ export async function PUT(request) {
 
 export async function GET(request) {
     try {
-        // let response3 = await getSongRating();
-        // let response2 = await pullSpotifyData();
-        let sampledUsers = await getTop3Matches('wtl2255@gmail.com');
-        
-        // console.log("hello");
+        let sampledUsers = await getTop3Matches('jonathanlong19148');
+        // let sampledUsers = await getUserInfo('jonathanlong19148')
+    
         if (sampledUsers) {
-            return NextResponse.json({ message: 'get successful', data: sampledUsers });
+            return NextResponse.json({ message: 'get successful', data: sampledUsers});
         } else {
             return NextResponse.json({ message: 'get failed' });
         }
@@ -45,15 +42,6 @@ export async function GET(request) {
         console.log(err);
         return NextResponse.json({ message: 'Internal server error' });
     }
-    //     if (response.rows) {
-    //         return NextResponse.json({ message: 'get successful', data: response.rows })
-    //     } else {
-    //         return NextResponse.json({ message: 'get failed' })
-    //     }
-    // } catch (err) {
-    //     console.log(err);
-    //     return NextResponse.json({ message: 'Internal server error' })
-    // }
 }
 // look at this https://stackoverflow.com/questions/76214029/no-http-methods-exported-in-export-a-named-export-for-each-http-method
 // name each method POST, GET, etc...
