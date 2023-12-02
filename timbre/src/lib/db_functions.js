@@ -164,6 +164,8 @@ const getProfileCharacteristics = async() => {
     }
 };
 
+
+
 // Put all function names here to export
 const db_functions = {
     getRandomUsers,

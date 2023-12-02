@@ -264,3 +264,84 @@ BEGIN
     SELECT characteristics.c_name, characteristics.c_min, characteristics.c_max FROM timbre.characteristics;
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE timbre.friend_request(
+    request_id INTEGER,
+    receive_id INTEGER
+) 
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF NOT EXISTS(SELECT 1 FROM timbre.friend_request WHERE from_id = $1 AND to_id = $2) THEN
+        IF EXISTS (SELECT 1 FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1) THEN
+            DELETE FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1;
+            INSERT INTO timbre.friendship(user_id1, user_id2) VALUES ($1, $2); -- Friendship is mutual
+        ELSE
+            INSERT INTO timbre.friend_request VALUES ($1, $2);
+        END IF;
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_friends(
+    user_id INTEGER
+) 
+RETURNS TABLE (friend_id INTEGER, spotify_id TEXT, display_name TEXT, profile_pic TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN 
+    RETURN QUERY
+    WITH friend_ids AS (
+        SELECT user_id1 AS friend_id FROM timbre.friendship
+        WHERE user_id2 = user_id
+        UNION
+        SELECT user_id2 AS friend_id FROM timbre.friendship
+        WHERE user_id1 = user_id
+    )
+    SELECT friend_ids.friend_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic FROM
+    friend_ids
+    JOIN timbre.timbre_user 
+    ON friend_ids.friend_id = timbre_user.user_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_friend_requests(
+    friend_id INTEGER
+)
+RETURNS TABLE (user_id INTEGER, spotify_id TEXT, display_name TEXT, profile_pic TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT from_id
+    FROM timbre.friend_request
+    WHERE to_id = $1;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.accept_friend_request(
+    user_id INTEGER,
+    friend_id INTEGER
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1) THEN
+        DELETE FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1;
+        INSERT INTO timbre.friendship(user_id1, user_id2) VALUES ($1, $2);
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.reject_friend_request(
+    user_id INTEGER,
+    friend_id INTEGER
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1) THEN
+        DELETE FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1;
+    END IF;
+END;
+$$;
