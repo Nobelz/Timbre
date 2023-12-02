@@ -23,7 +23,7 @@ async function getTop3Matches(currSpotifyID) {
       for (const id in top3Matches) {
         const userInfo = await getUserInfo(id);
         
-        matchInfo[id] = {Spotify_id: id,
+        matchInfo[id] = {score: top3Matches[id],
                          display_name: userInfo.rows[0].display_name,
                          profile_pic: userInfo.rows[0].pic_link, 
                          user_bio: userInfo.rows[0].bio};
