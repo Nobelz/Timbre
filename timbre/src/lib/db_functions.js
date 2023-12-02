@@ -71,6 +71,16 @@ const getUserIDFromSpotifyID = async(spotify_id) => {
     }
 };
 
+const getUserIDFromEmail = async(email) => {
+    try {
+        const query = `SELECT * FROM timbre.search_user_from_email('${email}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const createUser = async(spotify_id, email, spotify_display_name, profile_link) => {
     try {
         const query = `CALL timbre.create_user('${spotify_id}', '${email}', '${spotify_display_name}', '${profile_link}')`;
@@ -230,6 +240,7 @@ const db_functions = {
     insertSongRating,
     getSongRating, // TODO REMOVE
     getUserIDFromSpotifyID,
+    getUserIDFromEmail,
     createUser,
     updateUser,
     updateUserBio,

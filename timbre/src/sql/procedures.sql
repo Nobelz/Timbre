@@ -40,6 +40,18 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION timbre.search_user_from_email(
+    email_to_search TEXT
+)
+RETURNS SETOF INTEGER 
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT user_id FROM timbre.timbre_user WHERE email = email_to_search;
+END;
+$$;
+
 CREATE OR REPLACE PROCEDURE timbre.create_user(
     spotify_id TEXT,
     email TEXT,
