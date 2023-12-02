@@ -54,12 +54,6 @@ export default function useRefreshToken(code: string) {
       access_token: accessToken,
     };
 
-    // let data = {
-    //   command: 'CALCULATE_COMPATIBILITY',
-    //   id1: 'iobhblgu6dtcyol8vy5n0i7e7',
-    //   id2: 'jonathanlong19148',
-    // }
-
     const response = await fetch('./endpoint', {
       method: 'PUT',
       headers: {
