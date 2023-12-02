@@ -339,9 +339,15 @@ LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT from_id
-    FROM timbre.friend_request
-    WHERE to_id = $1;
+    WITH friend_ids AS (
+        SELECT from_id AS friend_id
+        FROM timbre.friend_request
+        WHERE to_id = $1
+    )
+    SELECT friend_ids.friend_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic
+    FROM friend_ids
+    JOIN timbre.timbre_user
+    ON friend_ids.friend_id = timbre_user.user_id;
 END;
 $$;
 
