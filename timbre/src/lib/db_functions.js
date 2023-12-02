@@ -13,9 +13,9 @@ if (!connection) {
 }
 
 // Function that sample random users for compatiability score calculation
-const getRandomUsers = async () => {
+const getRandomUsers = async (current_user_spotify_id) => {
     try {
-        const query = `SELECT * FROM timbre.get_random_users()`;
+        const query = `SELECT * FROM timbre.get_random_users('${current_user_spotify_id}')`;
         const result = await connection.query(query);
 
         const users = result.rows.map(row => row.get_random_users);
