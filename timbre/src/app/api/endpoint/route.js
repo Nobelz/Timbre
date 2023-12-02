@@ -31,13 +31,6 @@ export async function PUT(request) {
 
 export async function GET(request) {
     try {
-        let response = await getSongRating();
-
-        if (response.rows) {
-            return NextResponse.json({ message: 'get successful', data: response.rows })
-
-export async function GET(request) {
-    try {
         // let response3 = await getSongRating();
         // let response2 = await pullSpotifyData();
         let sampledUsers = await getTop3Matches('wtl2255@gmail.com');
