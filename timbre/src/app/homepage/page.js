@@ -83,8 +83,8 @@ export default function Home() {
       method: 'GET',
     });
     const output = await res.json();
-    console.log(access_token);
-    // console.log(output);
+    // console.log(access_token);
+    console.log(await output);
   }
 
   return (

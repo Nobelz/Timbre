@@ -12,6 +12,20 @@ if (!connection) {
     })
 }
 
+// Function that sample random users for compatiability score calculation
+const getRandomUsers = async () => {
+    try {
+        const query = `SELECT * FROM timbre.get_random_users()`;
+        const result = await connection.query(query);
+
+        const users = result.rows.map(row => row.get_random_users);
+
+        return users;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Function that is responsible for inserting user information into the database
 const insertSongRating = async (user_id, song_id, rating) => {
     try {
@@ -152,6 +166,7 @@ const getProfileCharacteristics = async() => {
 
 // Put all function names here to export
 const db_functions = {
+    getRandomUsers,
     insertSongRating,
     getSongRating, // TODO REMOVE
     getUserIDFromSpotifyID,
