@@ -16,7 +16,6 @@ const getUserInfo = async (spotify_id_to_search) => {
     try {
         const query = `SELECT * FROM timbre.get_user_info_from_spotify_id('${spotify_id_to_search}')`;
         const result = await connection.query(query);
-
         return result;
     } catch (error) {
         console.log(error);
@@ -28,7 +27,6 @@ const getRandomUsers = async (current_user_spotify_id) => {
     try {
         const query = `SELECT * FROM timbre.get_random_users('${current_user_spotify_id}')`;
         const result = await connection.query(query);
-
         const users = result.rows.map(row => row.get_random_users);
 
         return users;
@@ -207,7 +205,7 @@ const getFriendRequests = async(user_id) => {
 
 const acceptFriendRequest = async(user_id1, user_id2) => {
     try {
-        const query = `SELECT * FROM timbre.accept_friend_request(${user_id1}, ${user_id2})`;
+        const query = `CALL timbre.accept_friend_request(${user_id1}, ${user_id2})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -217,7 +215,7 @@ const acceptFriendRequest = async(user_id1, user_id2) => {
 
 const rejectFriendRequest = async(user_id1, user_id2) => {
     try {
-        const query = `SELECT * FROM timbre.reject_friend_request(${user_id1}, ${user_id2})`;
+        const query = `CALL timbre.reject_friend_request(${user_id1}, ${user_id2})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {

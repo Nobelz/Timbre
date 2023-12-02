@@ -79,12 +79,26 @@ export default function Home() {
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
   const test = async () => {
-    const res = await fetch('../api/endpoint', {
-      method: 'GET',
+    // const res = await fetch('../api/endpoint', {
+    //   method: 'PUT',
+    // });
+    // const output = await res.json();
+    // // console.log(access_token);
+    // console.log(await output);
+
+    let data = {
+      command: 'DENY_FRIEND_REQUEST',
+      receive_id: 'jonathanlong19148',
+      send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
+    };
+
+    const response = await fetch('../api/endpoint', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( data ),
     });
-    const output = await res.json();
-    // console.log(access_token);
-    console.log(await output);
   }
 
   return (

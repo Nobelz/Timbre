@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { insertSongRating, getSongRating, getRandomUsers, getUserInfo } from "../../../lib/db_functions"
+import { getUserIDFromSpotifyID, rejectFriendRequest } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -19,12 +19,19 @@ export async function PUT(request) {
             case 'CALCULATE_COMPATIBILITY':
                 response = await calculateCompatibilityScore(body.id1, body.id2);
                 break;
+            case 'DENY_FRIEND_REQUEST':
+                const response1 = await getUserIDFromSpotifyID(body.receive_id);
+                const response2 = await getUserIDFromSpotifyID(body.send_id);
+                const userID1 = response1.rows[0].search_user_from_id;
+                const userID2 = response2.rows[0].search_user_from_id;
+                response = await rejectFriendRequest(userID1, userID2);
+                break;
         }
-
+        
         return NextResponse.json({ message: 'Successful data entry', data: response.data });
     } catch (err) {
         console.log(err);
-        return NextResponse.json({ message: 'Internal server error' })
+        return NextResponse.json({ message: 'Internal server error', error: err });
     }
 }
 
