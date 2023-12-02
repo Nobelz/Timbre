@@ -3,7 +3,7 @@ import styles from '../app/styles/friends.module.css';
 import { ListGroup } from "react-bootstrap";
 import RecSongPopup from '../components/RecSongsPopup'
 
-export default function FriendsTab({ friend }) {
+export default function FriendsListItem({ friend }) {
     const [showRecSongPopup, setShowRecSongPopup] = useState(false);
 
     const handleRecommendSongs = (e) => {

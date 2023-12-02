@@ -14,6 +14,16 @@ export default function Friends() {
         { "username": "billy" },
         { "username": "joe" },
         { "username": "steve" },
+        { "username": "jane" },
+        { "username": "bob" },
+        { "username": "billy" },
+        { "username": "joe" },
+        { "username": "steve" },
+        { "username": "jane" },
+        { "username": "bob" },
+        { "username": "billy" },
+        { "username": "joe" },
+        { "username": "steve" },
         { "username": "jane" }
     ]);
     const [friendRequests, setFriendRequests] = useState([
@@ -22,6 +32,20 @@ export default function Friends() {
         { "username": "joe" },
         { "username": "steve" },
         { "username": "jane" }
+    ]);
+    const [songRecommendations, setSongRecommendations] = useState([
+        {
+            "albumImageUrl": "https://i.scdn.co/image/ab67616d00004851e4179b3fb74beaf0cdfa7a13",
+            "artists": ["League of Legends", "New Jeans"],
+            "title": "GODS",
+            "uri": "spotify:track:210JJAa9nJOgNa0YNrsT5g"
+        },
+        {
+            "albumImageUrl": "https://i.scdn.co/image/ab67616d000048517282412ad025c14f7039f516",
+            "artists": ['JAY-Z', 'Linkin Park'],
+            "title": "Numb / Encore",
+            "uri": "spotify:track:5sNESr6pQfIhL3krM8CtZn"
+        },
     ]);
 
     const authorizeApp = async () => {
@@ -44,7 +68,7 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations}/>
             </div>
         </div>
     )

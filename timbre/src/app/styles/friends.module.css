@@ -26,9 +26,12 @@
     justify-content: center;
     position: relative;
     border-radius: .5rem;
-    width: 80%;
+    width: 60%;
     height: 70%;
     background-color: rgb(248, 248, 248);
+    padding-bottom: 15px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .navTab {
@@ -42,6 +45,8 @@
 .navTabContent {
     margin-left: 20px;
     margin-right: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .listItem {
@@ -63,4 +68,13 @@
 
 .listItem:hover .listItemHidden{
     visibility: visible;
+}
+
+.yourFriends {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 500;
+    font-family: 'Lexend';
 }
