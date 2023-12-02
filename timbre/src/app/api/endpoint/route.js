@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { insertSongRating, getSongRating, getRandomUsers } from "../../../lib/db_functions"
+import { insertSongRating, getSongRating, getRandomUsers, getUserInfo } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -31,9 +31,10 @@ export async function PUT(request) {
 export async function GET(request) {
     try {
         let sampledUsers = await getTop3Matches('jonathanlong19148');
+        // let sampledUsers = await getUserInfo('jonathanlong19148')
     
         if (sampledUsers) {
-            return NextResponse.json({ message: 'get successful', data: sampledUsers });
+            return NextResponse.json({ message: 'get successful', data: sampledUsers});
         } else {
             return NextResponse.json({ message: 'get failed' });
         }
