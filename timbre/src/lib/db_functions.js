@@ -12,6 +12,17 @@ if (!connection) {
     })
 }
 
+const getUserInfo = async (spotify_id_to_search) => {
+    try {
+        const query = `SELECT * FROM timbre.get_user_info_from_spotify_id('${spotify_id_to_search}')`;
+        const result = await connection.query(query);
+
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 // Function that sample random users for compatiability score calculation
 const getRandomUsers = async (current_user_spotify_id) => {
     try {
@@ -166,6 +177,7 @@ const getProfileCharacteristics = async() => {
 
 // Put all function names here to export
 const db_functions = {
+    getUserInfo,
     getRandomUsers,
     insertSongRating,
     getSongRating, // TODO REMOVE

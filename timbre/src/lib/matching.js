@@ -1,5 +1,5 @@
 import {calculateCompatibilityScore} from './matching_algorithm';
-import {getRandomUsers} from './db_functions';
+import {getRandomUsers, getUserInfo} from './db_functions';
 
 async function getTop3Matches(currSpotifyID) {
     try {
@@ -19,7 +19,18 @@ async function getTop3Matches(currSpotifyID) {
 
       const top3Matches = Object.fromEntries(sortedEntries);
   
-      return top3Matches;
+      const matchInfo = {}
+      for (const id in top3Matches) {
+        const userInfo = await getUserInfo(id);
+        
+        matchInfo[id] = {Spotify_id: id,
+                         display_name: userInfo.rows[0].display_name,
+                         profile_pic: userInfo.rows[0].pic_link, 
+                         user_bio: userInfo.rows[0].bio};
+      }
+
+      return matchInfo;
+
     } catch (error) {
       console.error(error);
       throw error;
@@ -27,23 +38,3 @@ async function getTop3Matches(currSpotifyID) {
   }
   
   export { getTop3Matches };
-
-// async function getTop3Matches(currSpotifyID) {
-//     try {
-//       const sampledUsers = await getRandomUsers(currSpotifyID);
-//       const scores = [];
-  
-//       // calculate scores
-//       for (const sampledUser of sampledUsers) {
-//         const response = await calculateCompatibilityScore(currSpotifyID, sampledUser);
-//         scores.push(response.data.score);
-//       }
-  
-//       return scores;
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     }
-//   }
-  
-//   export { getTop3Matches };
