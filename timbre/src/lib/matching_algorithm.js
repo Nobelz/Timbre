@@ -273,6 +273,7 @@ export const generateSpotifyData = async(access_token) => {
         data: {
             success: true,
             user_id: userID,
+            spotify_id: spotifyID,
         },
     };
 };

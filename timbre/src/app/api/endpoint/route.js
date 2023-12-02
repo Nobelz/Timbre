@@ -18,11 +18,10 @@ export async function PUT(request) {
                 break;
             case 'CALCULATE_COMPATIBILITY':
                 response = await calculateCompatibilityScore(body.id1, body.id2);
-                console.log(response.data.score);
                 break;
         }
 
-        return NextResponse.json({ message: 'Successful data entry' })
+        return NextResponse.json({ message: 'Successful data entry', data: response.data });
     } catch (err) {
         console.log(err);
         return NextResponse.json({ message: 'Internal server error' })
