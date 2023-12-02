@@ -10,6 +10,7 @@ export default function useRefreshToken(code: string) {
   const [expiresIn, setExpiresIn] = useState(0);
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
+  const [spotifyID, setSpotifyID] = useState("");
 
   const lock = useRef(false);
 
@@ -62,7 +63,9 @@ export default function useRefreshToken(code: string) {
       body: JSON.stringify( data ),
     });
 
-    await response.json();
+    const res = await response.json();
+    localStorage.setItem("spotify_id", res.data.spotify_id);
+    setSpotifyID(res.data.spotify_id);
   }
 
   // Immediately get an access token upon the users first login
@@ -74,9 +77,14 @@ export default function useRefreshToken(code: string) {
   useEffect(() => {
     if (accessToken && accessToken !== 'undefined') {
       pullSpotifyData();
-      window.location.href = '../homepage'; //TODO change back once done debugging Oswin says use Router
     }
   }, [accessToken]);
+
+  useEffect(() => {
+    if (spotifyID && spotifyID !== 'undefined') {
+      window.location.href = '../homepage'; //TODO change back once done debugging Oswin says use Router
+    }
+  }, [spotifyID]);
 
   // Sets up a countdown for when the access token will expire and upon expiration gets a new one with the refresh token
   useEffect(() => {
