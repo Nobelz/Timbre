@@ -5,10 +5,16 @@ import useRefreshToken from "../../../hooks/useRefreshToken";
 import { Spinner, Container, Row, Col } from 'react-bootstrap';
 
 export default function Callback() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const code = searchParams.get('code');
 
-  useRefreshToken(String(code));
+  const error = searchParams.get('error');
+  if (error) {
+    router.push('/');
+  } else {
+    const code = searchParams.get('code');
+    useRefreshToken(String(code));
+  }
 
   return (
     <Container className="text-center mt-5">

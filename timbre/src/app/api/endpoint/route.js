@@ -28,9 +28,7 @@ export async function PUT(request) {
                 */
                 response1 = await getUserIDFromSpotifyID(body.current_id);
                 response2 = await getUserIDFromSpotifyID(body.friend_id);
-                let userID1 = response1.rows[0].search_user_from_id;
-                let userID2 = response2.rows[0].search_user_from_id;
-                response = await rejectFriendRequest(userID1, userID2);
+                response = await rejectFriendRequest(response1.rows[0].search_user_from_id, response2.rows[0].search_user_from_id);
                 break;
             case 'ACCEPT_FRIEND_REQUEST':
                 /*
@@ -68,8 +66,12 @@ export async function PUT(request) {
 }
 
 export async function POST(request) {
+    const body = await request.json();
+
     try {
         let response;
+        let response1;
+        let response2;
         switch (body.command) {
             case 'CALCULATE_COMPATIBILITY':
                 /*
@@ -84,14 +86,16 @@ export async function POST(request) {
                     spotify_id: The Spotify ID of the current user
                     Returns: The friends of the current user
                 */
-                response = await getFriends(body.spotify_id);
+                response1 = await getUserIDFromSpotifyID(body.spotify_id);
+                response = await getFriends(response1.rows[0].search_user_from_id);
                 break;
             case 'GET_FRIEND_REQUESTS':
                 /*
                     spotify_id: The Spotify ID of the current user
                     Returns: The friend requests of the current user
                 */
-                response = await getFriendRequests(body.spotify_id);
+                response1 = await getUserIDFromSpotifyID(body.spotify_id);
+                response = await getFriendRequests(response1.rows[0].search_user_from_id);
                 break;
             case 'GET_RECOMMENDATIONS':
                 /*
@@ -102,14 +106,7 @@ export async function POST(request) {
                 break;
         }
 
-        let sampledUsers = await getTop3Matches('jonathanlong19148');
-        // let sampledUsers = await getUserInfo('jonathanlong19148')
-    
-        if (sampledUsers) {
-            return NextResponse.json({ message: 'get successful', data: sampledUsers});
-        } else {
-            return NextResponse.json({ message: 'get failed' });
-        }
+        return NextResponse.json({ message: 'get successful', data: response});
     } catch (err) {
         console.log(err);
         return NextResponse.json({ message: 'Internal server error' });
