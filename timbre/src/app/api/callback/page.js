@@ -10,8 +10,6 @@ export default function Callback() {
 
   useRefreshToken(String(code));
 
-  // TODO: Make this page look nicer using React Bootstrap. Make it clear that it is loading
-  // and that we will redirect the user
   return (
     <Container className="text-center mt-5">
       <Row>

@@ -377,3 +377,36 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
+    user_id INTEGER,
+    friend_id INTEGER,
+    song_id TEXT
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
+        INSERT INTO timbre.recommendation(song_id, sender_id, friend_id) VALUES ($3, $1, $2);
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_recommendations(
+    user_id INTEGER
+)
+RETURNS TABLE (song_id TEXT, sender_id INTEGER, spotify_id TEXT, display_name TEXT, profile_pic TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH sender_ids AS (
+        SELECT song_id, sender_id FROM timbre.recommendation
+        WHERE receiver_id = $1
+    )
+    SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic 
+    FROM sender_ids
+    JOIN timbre.timbre_user
+    ON sender_ids.sender_id = timbre_user.user_id;
+END;
+$$;
