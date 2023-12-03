@@ -80,7 +80,7 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
   }, [accessToken, spotifyID]);
 
   return (
-    <Navbar bg="dark" variant="dark" style={{ fontFamily: 'Lexend, sans-serif'}}>
+    <Navbar bg="dark" variant="dark" style={{ fontFamily: 'Lexend, sans-serif', height: '60px'}}>
       <Container fluid>
         <Navbar.Brand href="/homepage">
           Timbre

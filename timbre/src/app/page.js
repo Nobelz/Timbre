@@ -36,11 +36,11 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <div style={{fontFamily: 'Lexend, sans-serif', backgroundColor: 'white'}}>
       <Head>
         <title>Timbre</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="shortcut icon" href="./favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <Container className="d-flex vh-100 justify-content-center align-items-center">
         <Row>
@@ -55,7 +55,7 @@ export default function Login() {
                 Join Timbre, where music brings us together.
               </p>
 
-              <Button variant="success" size="lg" onClick={authorize} style={{ backgroundColor: "#1DB954", color: "black" }}>Sign in with Spotify</Button>
+              <Button variant="success" size="lg" onClick={authorize} style={{backgroundColor: "#d4af37", borderColor: "#d4af37", color: "black", borderRadius: '30px'}}>Sign in with Spotify</Button>
             </div>
           </Col>
         </Row>
