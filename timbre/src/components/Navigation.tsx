@@ -80,7 +80,7 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
   }, [accessToken, spotifyID]);
 
   return (
-    <Navbar bg="dark" variant="dark">
+    <Navbar bg="dark" variant="dark" style={{ fontFamily: 'Lexend, sans-serif'}}>
       <Container fluid>
         <Navbar.Brand href="/homepage">
           Timbre
@@ -91,7 +91,7 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
         </Nav>
 
         {isAuthenticated && userProfile && (
-          <Nav>
+          <Nav style={{padding: '5px'}}>
             {userProfile['pic_link'] ? (
               <img src={userProfile['pic_link']} alt="Profile" style={{ borderRadius: '50%', width: '40px' }} />
             ) : (
@@ -102,7 +102,7 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
           </Nav>
       )}
       <Dropdown align="end">
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
+          <Dropdown.Toggle variant="secondary" id="dropdown-basic">
             Account
           </Dropdown.Toggle>
 

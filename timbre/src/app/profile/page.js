@@ -6,7 +6,6 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { Container, ListGroup, Button, Form } from 'react-bootstrap';
-import MatchcardList from '../../components/MatchcardList';
 import Navigation from '../../components/Navigation';
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useUserProfile from "../../hooks/useUserProfile";
