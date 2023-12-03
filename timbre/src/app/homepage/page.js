@@ -47,7 +47,6 @@ export default function Home() {
   const isLoading = useAuthRedirect(isAuthenticated);
 
   // Add this inside your Home component or in a suitable place
-  const userProfile = useUserProfile(access_token);
 
   const [playingTrack, setPlayingTrack] = useState();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -118,7 +117,7 @@ export default function Home() {
   }
 
   return (
-    <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
+    <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} accessToken={access_token}>
       <div className={`${styles.homepage}`}>
         <Head>
           <title>Timbre</title>
@@ -126,9 +125,9 @@ export default function Home() {
         </Head>
         <Navigation isAuthenticated={isAuthenticated}
           authorizeApp={authorizeApp}
-          userProfile={userProfile}
           setIsAuthenticated={setIsAuthenticated}
-          setAccessToken={setAccessToken} />
+          setAccessToken={setAccessToken}
+          accessToken={access_token}/>
         <Button onClick={test}>Test API Endpoint</Button>
 
         <Container>
@@ -136,7 +135,7 @@ export default function Home() {
             <Col>
               <Card>
                 <Card.Body>
-                  <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
+                  <Card.Title >Welcome to Timbre, !</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
                     
