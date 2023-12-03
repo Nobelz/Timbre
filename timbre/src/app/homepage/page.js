@@ -45,6 +45,7 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
   const isLoading = useAuthRedirect(isAuthenticated);
+  const userProfile = useUserProfile(access_token);
 
   // Add this inside your Home component or in a suitable place
 
@@ -135,7 +136,7 @@ export default function Home() {
             <Col>
               <Card>
                 <Card.Body>
-                  <Card.Title >Welcome to Timbre, !</Card.Title>
+                  <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
                     
