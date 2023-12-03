@@ -26,11 +26,8 @@ import Col from 'react-bootstrap/Col';
 export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
-
     const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
-
     const userProfile = useUserProfile(access_token);
-
     const isLoading = useAuthRedirect(isAuthenticated);
 
     const authorizeApp = async () => {
@@ -49,7 +46,6 @@ export default function Profile({content}) {
     if (isLoading){
         return null;
     }
-
 
     return (
         <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
