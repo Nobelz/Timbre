@@ -80,7 +80,7 @@ export default function Friends() {
         setToastVariant(variant);
         setShowToast(true);
         setTimeout(() => {
-          setShowToast(false);
+            setShowToast(false);
         }, 3000);
     };
 
@@ -91,7 +91,7 @@ export default function Friends() {
             fetchFriendRequests();
         }
     };
-    
+
     useEffect(() => {
         if (!access_token || !spotify_id) {
             let token = localStorage.getItem("access_token");
@@ -101,7 +101,7 @@ export default function Friends() {
             if (token) setIsAuthenticated(true);
         }
         updateFriends();
-    }, [access_token, spotify_id]); 
+    }, [access_token, spotify_id]);
 
     return (
         <div className={`${styles.friends}`}>
@@ -111,9 +111,9 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast} />
             </div>
-            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage}/>
+            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage} />
         </div>
     )
 }
