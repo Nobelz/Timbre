@@ -16,7 +16,6 @@ const getUserInfo = async (spotify_id_to_search) => {
     try {
         const query = `SELECT * FROM timbre.get_user_info_from_spotify_id('${spotify_id_to_search}')`;
         const result = await connection.query(query);
-
         return result;
     } catch (error) {
         console.log(error);
@@ -28,7 +27,6 @@ const getRandomUsers = async (current_user_spotify_id) => {
     try {
         const query = `SELECT * FROM timbre.get_random_users('${current_user_spotify_id}')`;
         const result = await connection.query(query);
-
         const users = result.rows.map(row => row.get_random_users);
 
         return users;
@@ -66,6 +64,16 @@ const getSongRating = async () => {
 const getUserIDFromSpotifyID = async(spotify_id) => {
     try {
         const query = `SELECT * FROM timbre.search_user_from_id('${spotify_id}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getUserIDFromEmail = async(email) => {
+    try {
+        const query = `SELECT * FROM timbre.search_user_from_email('${email}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -207,7 +215,7 @@ const getFriendRequests = async(user_id) => {
 
 const acceptFriendRequest = async(user_id1, user_id2) => {
     try {
-        const query = `SELECT * FROM timbre.accept_friend_request(${user_id1}, ${user_id2})`;
+        const query = `CALL timbre.accept_friend_request(${user_id1}, ${user_id2})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -217,7 +225,27 @@ const acceptFriendRequest = async(user_id1, user_id2) => {
 
 const rejectFriendRequest = async(user_id1, user_id2) => {
     try {
-        const query = `SELECT * FROM timbre.reject_friend_request(${user_id1}, ${user_id2})`;
+        const query = `CALL timbre.reject_friend_request(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const makeRecommendation = async(user_id1, user_id2, song_id) => {
+    try {
+        const query = `CALL timbre.send_recommendation(${user_id1}, ${user_id2}, ${song_id}})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getRecommendations = async(user_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_recommendations(${user_id})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -232,6 +260,7 @@ const db_functions = {
     insertSongRating,
     getSongRating, // TODO REMOVE
     getUserIDFromSpotifyID,
+    getUserIDFromEmail,
     createUser,
     updateUser,
     updateUserBio,
@@ -245,6 +274,8 @@ const db_functions = {
     getFriendRequests,
     acceptFriendRequest,
     rejectFriendRequest,
+    makeRecommendation,
+    getRecommendations,
 };
 
 module.exports = db_functions;

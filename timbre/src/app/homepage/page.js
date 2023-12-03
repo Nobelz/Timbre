@@ -15,6 +15,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Row, Col, Card } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
 import AuthRedirect from '../../components/AuthRedirect';
+import Player from '../../components/Player';
+import SpotifyPlayer from 'react-spotify-web-playback';
+import TrackSearchResult from '../../components/TrackSearchResult';
 
 /*
  Homepage of the application where users can get matched with other users.
@@ -43,6 +46,19 @@ export default function Home() {
 
   // Add this inside your Home component or in a suitable place
   const userProfile = useUserProfile(access_token);
+
+  const [playingTrack, setPlayingTrack] = useState();
+  const [showPlayer, setShowPlayer] = useState(false);
+  const [play, setPlay] = useState(false);
+
+  function chooseTrack(track) {
+    setPlayingTrack(track);
+    setShowPlayer(true);
+  }
+
+  function hidePlayer() {
+    setShowPlayer(false);
+  }
 
   const authorizeApp = async () => {
     await authorize();
@@ -79,12 +95,26 @@ export default function Home() {
   // Function to test connection to db called on button press
   // makes a call to the route.js file in app/api/endpoint folder
   const test = async () => {
-    const res = await fetch('../api/endpoint', {
-      method: 'GET',
+    // const res = await fetch('../api/endpoint', {
+    //   method: 'PUT',
+    // });
+    // const output = await res.json();
+    // // console.log(access_token);
+    // console.log(await output);
+
+    let data = {
+      command: 'DENY_FRIEND_REQUEST',
+      receive_id: 'jonathanlong19148',
+      send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
+    };
+
+    const response = await fetch('../api/endpoint', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( data ),
     });
-    const output = await res.json();
-    // console.log(access_token);
-    console.log(await output);
   }
 
   return (
@@ -106,10 +136,16 @@ export default function Home() {
             <Col>
               <Card>
                 <Card.Body>
-                  <Card.Title>Welcome to Timbre</Card.Title>
+                  {/* Make this look nicer */}
+                  <Card.Img variant="top" src={userProfile?.images[0]?.url || ''} />
+                  <Card.Title>{userProfile?.display_name}</Card.Title>
+                  <Card.Title>Welcome to Timbre, {userProfile?.display_name}</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
+                    
+                    See some of your favorite songs below and click play to listen.
                   </Card.Text>
+                  <SpotifyPlayer token={access_token} uris={playingTrack?.uri} />
                 </Card.Body>
               </Card>
             </Col>
@@ -117,7 +153,8 @@ export default function Home() {
           <Row>
             <Col md={6}>
               <Card>
-                <Card.Title>Matches</Card.Title>
+                {/* Link to the matches page. No underline*/}
+                <Card.Title><Card.Link href="/matches">Matches</Card.Link></Card.Title>
                 <ListGroup variant="flush" style={{ maxHeight: '5em', overflowY: 'scroll' }}>
                   {dummyMatches.map(match => (
                     <ListGroup.Item key={match.id} href={`/profile/${match.id}`}>
@@ -130,7 +167,7 @@ export default function Home() {
             </Col>
             <Col md={6}>
               <Card>
-                <Card.Title>Friends</Card.Title>
+                <Card.Title><Card.Link href="/friends">Friends</Card.Link></Card.Title>
                 <ListGroup variant="flush" style={{ maxHeight: '5em', overflowY: 'scroll' }}>
                   {dummyFriends.map(friend => (
                     <ListGroup.Item key={friend.id} href={`/profile/${friend.id}`}>
@@ -150,30 +187,31 @@ export default function Home() {
           </Row>
           { }
           { /* if user logs out then don't show anything */ isAuthenticated && <Row>
-            <Col md={12}>
-              <Card>
-                <Card.Title>Your Top Tracks</Card.Title>
-                <Container>
-                  <Row>
-                    {
-                      userTopTracks.map(track => (
+          <Col md={12}>
+    <Card>
+        <Card.Title>Your Top Tracks</Card.Title>
+        
+        <Container>
+            <Row>
+                {
+                    userTopTracks.map(track => (
                         <Col md={3} key={track.id}>
-                          <Card>
-                            <Card.Img variant="top" src={track.album.images[0]?.url || ''} />
-                            <Card.Body>
-                              <Card.Title>{track.name}</Card.Title>
-                              <Card.Text>
-                                {track.artists.map(artist => artist.name).join(', ')}
-                              </Card.Text>
-                            </Card.Body>
-                          </Card>
+                            <TrackSearchResult 
+                                track={{
+                                    albumImageUrl: track.album.images[0]?.url || '', 
+                                    title: track.name, 
+                                    artists: track.artists.map(artist => artist.name),
+                                    uri: track.uri
+                                }} 
+                                chooseTrack={chooseTrack} 
+                            />
                         </Col>
-                      ))
-                    }
-                  </Row>
-                </Container>
-              </Card>
-            </Col>
+                    ))
+                }
+            </Row>
+        </Container>
+    </Card>
+</Col>
           </Row>}
         </Container>
       </div>

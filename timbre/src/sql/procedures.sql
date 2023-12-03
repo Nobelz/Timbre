@@ -40,6 +40,18 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION timbre.search_user_from_email(
+    email_to_search TEXT
+)
+RETURNS SETOF INTEGER 
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT user_id FROM timbre.timbre_user WHERE email = email_to_search;
+END;
+$$;
+
 CREATE OR REPLACE PROCEDURE timbre.create_user(
     spotify_id TEXT,
     email TEXT,
@@ -327,9 +339,15 @@ LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT from_id
-    FROM timbre.friend_request
-    WHERE to_id = $1;
+    WITH friend_ids AS (
+        SELECT from_id AS friend_id
+        FROM timbre.friend_request
+        WHERE to_id = $1
+    )
+    SELECT friend_ids.friend_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic
+    FROM friend_ids
+    JOIN timbre.timbre_user
+    ON friend_ids.friend_id = timbre_user.user_id;
 END;
 $$;
 
@@ -357,5 +375,38 @@ BEGIN
     IF EXISTS (SELECT 1 FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1) THEN
         DELETE FROM timbre.friend_request WHERE from_id = $2 AND to_id = $1;
     END IF;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
+    user_id INTEGER,
+    friend_id INTEGER,
+    song_id TEXT
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
+        INSERT INTO timbre.recommendation(song_id, sender_id, friend_id) VALUES ($3, $1, $2);
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_recommendations(
+    user_id INTEGER
+)
+RETURNS TABLE (song_id TEXT, sender_id INTEGER, spotify_id TEXT, display_name TEXT, profile_pic TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    WITH sender_ids AS (
+        SELECT song_id, sender_id FROM timbre.recommendation
+        WHERE receiver_id = $1
+    )
+    SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic 
+    FROM sender_ids
+    JOIN timbre.timbre_user
+    ON sender_ids.sender_id = timbre_user.user_id;
 END;
 $$;
