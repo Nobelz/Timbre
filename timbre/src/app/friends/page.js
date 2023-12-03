@@ -49,7 +49,7 @@ export default function Friends() {
             const resJson = await response.json();
             setFriends(resJson.data.rows);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     };
 
@@ -70,7 +70,7 @@ export default function Friends() {
             const resJson = await response.json();
             setFriendRequests(resJson.data.rows);
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
     };
 
@@ -81,7 +81,7 @@ export default function Friends() {
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
-        }, 3000); // Adjust the duration as needed
+        }, 3000);
     };
 
     // Function that updates the friends after any friend-related action is taken
@@ -100,10 +100,7 @@ export default function Friends() {
             setSpotifyID(spotifyID);
             if (token) setIsAuthenticated(true);
         }
-        if (spotify_id) {
-            fetchFriends();
-            fetchFriendRequests();
-        }
+        updateFriends();
     }, [access_token, spotify_id]); 
 
     return (

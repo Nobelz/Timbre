@@ -3,30 +3,23 @@ import { Button, Container, Form } from "react-bootstrap";
 import styles from '../app/styles/friendRequests.module.css'
 import { ListGroup } from "react-bootstrap";
 import FriendRequestItem from './FriendRequestItem';
-import { useEffect } from "react";
 
 export default function FriendRequests({ friendRequests, updateFriends, handleToast }) {
     const [search, setSearch] = useState("");
-    
-    useEffect(() => {
-        console.log('Update friend requests');
-    }, [friendRequests]);
 
     const handleAddFriend = (e) => {
         e.stopPropagation();
         addFriend(search);
     }
 
-    const handleDeny = (index, deniedUserId) => {
-        friendRequests.splice(index, 1);
-        denyFriend(deniedUserId);
-        document.getElementById(index).remove()
+    const handleDeny = async (index, deniedUserId) => {
+        await denyFriend(deniedUserId);
+        updateFriends();
     }
 
-    const handleAccept = (index, acceptedUserId) => {
-        friendRequests.splice(index, 1);
-        acceptFriend(acceptedUserId);
-        document.getElementById(index).remove()
+    const handleAccept = async (index, acceptedUserId) => {
+        await acceptFriend(acceptedUserId);
+        updateFriends();
     }
 
     const addFriend = async (email) => {

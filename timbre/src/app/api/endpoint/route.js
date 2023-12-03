@@ -65,6 +65,7 @@ export async function PUT(request) {
                         }
                     };   
                 }
+                // TODO CHECK IF THEY ARE ALREADY FRIENDS
                 break;
             case 'MAKE_RECOMMENDATION':
                 /*

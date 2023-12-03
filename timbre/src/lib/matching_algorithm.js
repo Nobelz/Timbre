@@ -224,7 +224,7 @@ export const generateSpotifyData = async(access_token) => {
             instrumentalness: feature.instrumentalness,
             liveness: feature.liveness,
             valence: feature.valence,
-            tempo: Math.min(Math.log(feature.tempo) / Math.log(300), 1)
+            tempo: Math.max(Math.min(Math.log(feature.tempo) / Math.log(300), 1), 0)
         };
     });
 
