@@ -33,18 +33,20 @@ export default function RecSongPopup({ show, onHide, props }) {
                     if (image.height < smallest.height) return image;
                     return smallest;
                 }, track.album.images[0])
-
                 return {
                     artists: track.artists.map(artists => {
                         return artists.name;
                     }),
+                    artist_id: track.artists.map(artists => {
+                        return artists.id;
+                    }),
+                    song_id: track.id,
                     title: track.name,
                     uri: track.uri,
                     albumImageUrl: smallestAlbumImage.url
                 }
             }))
         })
-        console.log(searchResults);
         return () => (cancel = true)
     }, [search, accessToken]);
 

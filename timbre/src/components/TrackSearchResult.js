@@ -4,6 +4,7 @@ import styles from '../app/styles/trackSearchRes.module.css'
 export default function TrackSearchResult({ track, chooseTrack }) {
 
     function handleClick() {
+        console.log(track);
         chooseTrack(track);
     }
 
