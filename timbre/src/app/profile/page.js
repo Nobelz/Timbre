@@ -91,7 +91,7 @@ export default function Profile({content}) {
                 <title>Timbre</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Navigation isAuthenticated={isAuthenticated} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp} accessToken={access_token}/>
+            <Navigation isAuthenticated={isAuthenticated} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} accessToken={access_token}/>
 
             <div className={`${styles.profile}`}>
             <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>

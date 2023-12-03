@@ -7,7 +7,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: "Timbre",
   description: "Music matchmaking app",
+  favicon: "/favicon.ico",
 };
+
 
 export default function RootLayout({ children }) {
   return (
