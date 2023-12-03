@@ -9,6 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import { authorize, getToken } from "../api/auth/authorize";
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -39,6 +40,13 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, autho
   }
 
   const [userProfile, setUserProfile] = React.useState(null);
+
+  const router = useRouter();
+
+  const handleNavigation = (path) => {
+    router.push(path);
+  };
+  
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -85,17 +93,20 @@ return (
         </Nav>
 
       )}
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          Account
-        </Dropdown.Toggle>
+      <Dropdown align="end">
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Account
+          </Dropdown.Toggle>
 
-        <Dropdown.Menu>
-          <Dropdown.Item href="/profile"><Link href="/profile"><Button>My Profile</Button></Link></Dropdown.Item>
-          {/* Log out button */}
-          <Dropdown.Item><Button onClick={logout}>Log Out</Button></Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => handleNavigation('/profile')}>
+              My Profile
+            </Dropdown.Item>
+            <Dropdown.Item onClick={logout}>
+              Log Out
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
     </Container>
   </Navbar>
 );
