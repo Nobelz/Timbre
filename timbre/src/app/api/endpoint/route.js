@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations } from "../../../lib/db_functions"
+import { getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio} from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -76,6 +76,15 @@ export async function PUT(request) {
                 response2 = await getUserIDFromSpotifyID(body.friend_id);
                 response = await makeRecommendation(response1.rows[0].search_user_from_id, response2.rows[0].search_user_from_id, body.song_id);
                 break;
+            case 'UPDATE_BIO':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    new_bio: The bio to update to
+                */
+                response1 = await getUserIDFromSpotifyID(body.spotify_id);
+                response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio )
+                break;
+
         }
 
         return NextResponse.json({ message: 'Successful PUT request', data: response.data });
@@ -130,6 +139,7 @@ export async function POST(request) {
                     Returns: The profile of the current user
                 */
                response = await getUserInfo(body.spotify_id);
+               console.log(response);
                break;
         }
 

@@ -40,6 +40,7 @@ export default function Login() {
       <Head>
         <title>Timbre</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <Container className="d-flex vh-100 justify-content-center align-items-center">
         <Row>
