@@ -8,6 +8,7 @@ import FriendsTab from '../../components/FriendsTab'
 
 export default function Friends() {
     const [access_token, setAccessToken] = useState("");
+    const [spotify_id, setSpotifyID] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [friendRequests, setFriendRequests] = useState([
         { "username": "bob" },
@@ -36,14 +37,40 @@ export default function Friends() {
         await authorize();
     };
 
+    const fetchFriends = async () => {
+        try {
+            let data = {
+                command: 'GET_FRIENDS',
+                spotify_id: 'jonathanlong19148',
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+
+            console.log(await response.json());
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
-        if (!access_token) {
+        if (!access_token || !spotify_id) {
             let token = localStorage.getItem("access_token");
-            setAccessToken(token || "");
+            let spotifyID = localStorage.getItem("spotify_id");
+            setAccessToken(token);
+            setSpotifyID(spotifyID);
             if (token) setIsAuthenticated(true);
         }
-    }, [access_token]);
-
+        if (spotify_id) {
+            fetchFriends();
+        }
+    }, [access_token, spotify_id]); 
+    
     return (
         <div className={`${styles.friends}`}>
             <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />

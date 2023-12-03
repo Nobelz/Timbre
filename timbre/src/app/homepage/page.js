@@ -86,8 +86,6 @@ export default function Home() {
     }
   }, [isAuthenticated, access_token]);
 
-
-
   if (isLoading) {
     return null; // Or any other loading indicator
   }
