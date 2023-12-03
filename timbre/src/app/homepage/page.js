@@ -92,30 +92,30 @@ export default function Home() {
     return null; // Or any other loading indicator
   }
 
-  // Function to test connection to db called on button press
-  // makes a call to the route.js file in app/api/endpoint folder
-  const test = async () => {
-    // const res = await fetch('../api/endpoint', {
-    //   method: 'PUT',
-    // });
-    // const output = await res.json();
-    // // console.log(access_token);
-    // console.log(await output);
+  // // Function to test connection to db called on button press
+  // // makes a call to the route.js file in app/api/endpoint folder
+  // const test = async () => {
+  //   // const res = await fetch('../api/endpoint', {
+  //   //   method: 'PUT',
+  //   // });
+  //   // const output = await res.json();
+  //   // // console.log(access_token);
+  //   // console.log(await output);
 
-    let data = {
-      command: 'DENY_FRIEND_REQUEST',
-      receive_id: 'jonathanlong19148',
-      send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
-    };
+  //   let data = {
+  //     command: 'DENY_FRIEND_REQUEST',
+  //     receive_id: 'jonathanlong19148',
+  //     send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
+  //   };
 
-    const response = await fetch('../api/endpoint', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify( data ),
-    });
-  }
+  //   const response = await fetch('../api/endpoint', {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify( data ),
+  //   });
+  // }
 
   return (
     <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} accessToken={access_token}>
@@ -129,7 +129,7 @@ export default function Home() {
           setIsAuthenticated={setIsAuthenticated}
           setAccessToken={setAccessToken}
           accessToken={access_token}/>
-        <Button onClick={test}>Test API Endpoint</Button>
+        {/* <Button onClick={test}>Test API Endpoint</Button> */}
 
         <Container>
           <Row className={`${styles.row}`}>
