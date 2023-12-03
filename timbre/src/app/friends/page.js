@@ -83,6 +83,14 @@ export default function Friends() {
           setShowToast(false);
         }, 3000); // Adjust the duration as needed
     };
+
+    // Function that updates the friends after any friend-related action is taken
+    const updateFriends = () => {
+        if (spotify_id) {
+            fetchFriends();
+            fetchFriendRequests();
+        }
+    };
     
     useEffect(() => {
         if (!access_token || !spotify_id) {
@@ -106,7 +114,7 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} handleToast={handleShowToast}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast}/>
             </div>
             <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage}/>
         </div>

@@ -84,14 +84,15 @@ export async function PUT(request) {
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);
                 response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio )
                 break;
-
+            default:
+                return NextResponse.json({ message: 'Internal server error', success: false });
         }
-
-        return NextResponse.json({ message: 'Successful PUT request', data: response.data });
+        return NextResponse.json({ message: 'Successful PUT request', success: true, data: response.data });
     } catch (err) {
-        console.log(err);
-        return NextResponse.json({ message: 'Internal server error', error: err });
+        return NextResponse.json({ message: 'Internal server error', success: false, error: err });
     }
+
+    return NextResponse.json({ message: 'Internal server error', success: false});
 }
 
 export async function POST(request) {
@@ -141,17 +142,21 @@ export async function POST(request) {
                response = await getUserInfo(body.spotify_id);
                console.log(response);
                break;
+            default:
+                return NextResponse.json({ message: 'Internal server error', success: false });
         }
 
-        return NextResponse.json({ message: 'Successful POST request', data: response });
+        return NextResponse.json({ message: 'Successful POST request', success: true, data: response });
     } catch (err) {
         console.log(err);
-        return NextResponse.json({ message: 'Internal server error', error: err });
+        return NextResponse.json({ message: 'Internal server error', success: false, error: err });
     }
+
+    return NextResponse.json({ message: 'Internal server error', success: false});
 }
 
 export async function GET(request) {
-
+    return NextResponse.json({ message: 'Internal server error', success: false});
 }
 // look at this https://stackoverflow.com/questions/76214029/no-http-methods-exported-in-export-a-named-export-for-each-http-method
 // name each method POST, GET, etc...

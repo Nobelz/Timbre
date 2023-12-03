@@ -3,10 +3,15 @@ import { Button, Container, Form } from "react-bootstrap";
 import styles from '../app/styles/friendRequests.module.css'
 import { ListGroup } from "react-bootstrap";
 import FriendRequestItem from './FriendRequestItem';
+import { useEffect } from "react";
 
-export default function FriendRequests({ friendRequests, handleToast }) {
+export default function FriendRequests({ friendRequests, updateFriends, handleToast }) {
     const [search, setSearch] = useState("");
     
+    useEffect(() => {
+        console.log('Update friend requests');
+    }, [friendRequests]);
+
     const handleAddFriend = (e) => {
         e.stopPropagation();
         addFriend(search);
@@ -49,7 +54,8 @@ export default function FriendRequests({ friendRequests, handleToast }) {
                     handleToast('Friend Request Error', `You can't add yourself as a friend!`, 'danger');
                 }
             } else {
-                handleToast('Friend Request Sent', `Friend request sent to ${email}!`, 'success')
+                handleToast('Friend Request Sent', `Friend request sent to ${email}!`, 'success');
+                updateFriends();
             }
             setSearch("");
         } catch (error) {
