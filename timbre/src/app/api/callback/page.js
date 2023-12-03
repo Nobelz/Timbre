@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import useRefreshToken from "../../../hooks/useRefreshToken";
 import { Spinner, Container, Row, Col } from 'react-bootstrap';
+import styles from '../../styles/loading.module.css';
 
 export default function Callback() {
   const router = useRouter();
@@ -17,13 +18,28 @@ export default function Callback() {
   }
 
   return (
-    <Container className="text-center mt-5">
-      <Row>
+    <Container>
+      <Row style={{paddingTop: '15%'}}> 
         <Col>
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-          <h2 className="mt-3">Logging you in...</h2>
+          <div class={`${styles.center}`}>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+          <div class={`${styles.wave}`}></div>
+
+        </div>
+        <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
+          <h2 className="mt-3"style={{fontFamily: 'Lexend, sans-serif', 
+                        fontSize: 'x-large', 
+                        background: 'white', 
+                        color: '#083686',
+                        textAlign: 'center'
+                    }}> Hang tight! We're logging you in.</h2>
         </Col>
       </Row>
     </Container>

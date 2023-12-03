@@ -11,26 +11,13 @@ export default function Friends() {
     const [spotify_id, setSpotifyID] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [friendRequests, setFriendRequests] = useState([]);
-    const [songRecommendations, setSongRecommendations] = useState([
-        {
-            "albumImageUrl": "https://i.scdn.co/image/ab67616d00004851e4179b3fb74beaf0cdfa7a13",
-            "artists": ["League of Legends", "New Jeans"],
-            "title": "GODS",
-            "uri": "spotify:track:210JJAa9nJOgNa0YNrsT5g"
-        },
-        {
-            "albumImageUrl": "https://i.scdn.co/image/ab67616d000048517282412ad025c14f7039f516",
-            "artists": ['JAY-Z', 'Linkin Park'],
-            "title": "Numb / Encore",
-            "uri": "spotify:track:5sNESr6pQfIhL3krM8CtZn"
-        },
-    ]);
+    const [songRecommendations, setSongRecommendations] = useState([]);
     const [friends, setFriends] = useState([]);
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastVariant, setToastVariant] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [titleMessage, setTitleMessage] = useState('');
 
     const fetchFriends = async () => {
         try {
@@ -74,13 +61,34 @@ export default function Friends() {
         }
     };
 
-    const handleShowToast = (error, message, variant) => {
-        setErrorMessage(error);
+    const fetchRecommendations = async() => {
+        try {
+            let data = {
+                command: 'GET_RECOMMENDATIONS',
+                spotify_id: spotify_id,
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+            const resJson = await response.json();
+            setSongRecommendations(resJson.data.tracks);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleShowToast = (title, message, variant) => {
+        setTitleMessage(title);
         setToastMessage(message);
         setToastVariant(variant);
         setShowToast(true);
         setTimeout(() => {
-          setShowToast(false);
+            setShowToast(false);
         }, 3000);
     };
 
@@ -91,7 +99,7 @@ export default function Friends() {
             fetchFriendRequests();
         }
     };
-    
+
     useEffect(() => {
         if (!access_token || !spotify_id) {
             let token = localStorage.getItem("access_token");
@@ -100,7 +108,10 @@ export default function Friends() {
             setSpotifyID(spotifyID);
             if (token) setIsAuthenticated(true);
         }
-        updateFriends();
+        if (spotify_id && access_token) {
+            updateFriends();
+            fetchRecommendations();
+        }
     }, [access_token, spotify_id]); 
 
     return (
@@ -111,9 +122,9 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast} />
             </div>
-            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage}/>
+            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage} />
         </div>
     )
 }
