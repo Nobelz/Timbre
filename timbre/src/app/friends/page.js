@@ -10,13 +10,7 @@ export default function Friends() {
     const [access_token, setAccessToken] = useState("");
     const [spotify_id, setSpotifyID] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [friendRequests, setFriendRequests] = useState([
-        { "username": "bob" },
-        { "username": "billy" },
-        { "username": "joe" },
-        { "username": "steve" },
-        { "username": "jane" }
-    ]);
+    const [friendRequests, setFriendRequests] = useState([]);
     const [songRecommendations, setSongRecommendations] = useState([
         {
             "albumImageUrl": "https://i.scdn.co/image/ab67616d00004851e4179b3fb74beaf0cdfa7a13",
@@ -58,6 +52,27 @@ export default function Friends() {
         }
     };
 
+    const fetchFriendRequests = async () => {
+        try {
+            let data = {
+                command: 'GET_FRIEND_REQUESTS',
+                spotify_id: spotify_id,
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+            const resJson = await response.json();
+            setFriendRequests(resJson.data.rows);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         if (!access_token || !spotify_id) {
             let token = localStorage.getItem("access_token");
@@ -68,6 +83,7 @@ export default function Friends() {
         }
         if (spotify_id) {
             fetchFriends();
+            fetchFriendRequests();
         }
     }, [access_token, spotify_id]); 
     

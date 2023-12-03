@@ -113,7 +113,7 @@ export default function Home() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify( data ),
+      body: JSON.stringify(data),
     });
   }
 
@@ -139,7 +139,7 @@ export default function Home() {
                   <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
-                    
+
                     See some of your favorite songs below and click play to listen.
                   </Card.Text>
                   <SpotifyPlayer token={access_token} uris={playingTrack?.uri} />
@@ -147,7 +147,7 @@ export default function Home() {
               </Card>
             </Col>
           </Row>
-          
+
           <Row className="mb-4">
             <Col>
               <br />
@@ -155,34 +155,32 @@ export default function Home() {
           </Row>
           { }
           { /* if user logs out then don't show anything */ isAuthenticated && <Row>
-          <Col md={12}>
-            
-    <Card>
-        <Card.Title className={`${styles.top_tracks}`}>Your Top Tracks</Card.Title>
-        
-        <Container>
+            <Col md={12}>
 
+              <Card className={`${styles.card}`}>
+                <Card.Title className={`${styles.top_tracks}`}>Your Top Tracks</Card.Title>
 
-            <Row>
-                {
-                    userTopTracks.map(track => (
+                <Container className={`${styles.trackContainer}`}>
+                  <Row>
+                    {
+                      userTopTracks.map(track => (
                         <Col md={3} key={track.id}>
-                            <TrackSearchResult 
-                                track={{
-                                    albumImageUrl: track.album.images[0]?.url || '', 
-                                    title: track.name, 
-                                    artists: track.artists.map(artist => artist.name),
-                                    uri: track.uri
-                                }} 
-                                chooseTrack={chooseTrack} 
-                            />
+                          <TrackSearchResult
+                            track={{
+                              albumImageUrl: track.album.images[0]?.url || '',
+                              title: track.name,
+                              artists: track.artists.map(artist => artist.name),
+                              uri: track.uri
+                            }}
+                            chooseTrack={chooseTrack}
+                          />
                         </Col>
-                    ))
-                }
-            </Row>
-        </Container>
-    </Card>
-</Col>
+                      ))
+                    }
+                  </Row>
+                </Container>
+              </Card>
+            </Col>
           </Row>}
         </Container>
       </div>

@@ -106,7 +106,7 @@ export async function POST(request) {
                 break;
         }
 
-        return NextResponse.json({ message: 'get successful', data: response});
+        return NextResponse.json({ message: 'get successful', data: response });
     } catch (err) {
         return NextResponse.json({ message: 'Internal server error' });
     }
