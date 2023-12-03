@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { authorize, getToken } from "../api/auth/authorize";
 import Navigation from '../../components/Navigation';
 import styles from '../styles/friends.module.css';
 import FriendsTab from '../../components/FriendsTab'
@@ -26,10 +25,6 @@ export default function Friends() {
         },
     ]);
     const [friends, setFriends] = useState([]);
-
-    const authorizeApp = async () => {
-        await authorize();
-    };
 
     const fetchFriends = async () => {
         try {
@@ -89,7 +84,7 @@ export default function Friends() {
     
     return (
         <div className={`${styles.friends}`}>
-            <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
+            <Navigation isAuthenticated={isAuthenticated} />
             <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet' />
             <div className={`${styles.header}`}>
                 View Your Friends and Song Recommendations

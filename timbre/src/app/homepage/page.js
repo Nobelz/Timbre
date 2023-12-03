@@ -125,7 +125,6 @@ export default function Home() {
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         </Head>
         <Navigation isAuthenticated={isAuthenticated}
-          authorizeApp={authorizeApp}
           setIsAuthenticated={setIsAuthenticated}
           setAccessToken={setAccessToken}
           accessToken={access_token}/>

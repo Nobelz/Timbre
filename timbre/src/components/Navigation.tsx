@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 // profilePage is false by default
 // profilePage is true when the user is on the profile page
 
-const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, authorizeApp, accessToken }) => {
+const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, accessToken }) => {
   
   const [spotifyID, setSpotifyID] = useState('');
   const getInitials = (name) => {
@@ -50,12 +50,8 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, autho
   
 
   const fetchUserProfile = async () => {
-    // Fetch user profile using the access_token
+    // Fetch user profile using Spotify ID
     try {
-      // const response = await fetch('https://api.spotify.com/v1/me', {
-      //   headers: { Authorization: `Bearer ${accessToken}` },
-      // });
-      // const data = await response.json();
       let data = {
         command: 'GET_USER_PROFILE',
         spotify_id: spotifyID,
