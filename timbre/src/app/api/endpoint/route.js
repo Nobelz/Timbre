@@ -41,10 +41,30 @@ export async function PUT(request) {
             case 'MAKE_FRIEND_REQUEST':
                 /*
                     current_id: The Spotify ID of the current user
-                    friend_id: The email address of the potential friend
+                    email: The email address of the potential friend
                 */
                 response1 = await getUserIDFromEmail(body.email);
-                response = await makeFriendRequest(body.current_id, response1.rows[0].search_user_from_email);
+                response2 = await getUserIDFromSpotifyID(body.current_id);
+                if (response1) {
+                    response = await makeFriendRequest(response2.rows[0].search_user_from_id, response1.rows[0].search_user_from_email);
+                    if (!response) {
+                        response = {
+                            data:
+                            {
+                                code: 400,
+                                message: 'User cannot be friends with themselves',
+                            }
+                        }
+                    }
+                } else {
+                    response = {
+                        data:
+                        {
+                            code: 404,
+                            message: 'User not found',
+                        }
+                    };   
+                }
                 break;
             case 'MAKE_RECOMMENDATION':
                 /*
@@ -58,7 +78,7 @@ export async function PUT(request) {
                 break;
         }
 
-        return NextResponse.json({ message: 'Successful data entry', data: response.data });
+        return NextResponse.json({ message: 'Successful PUT request', data: response.data });
     } catch (err) {
         console.log(err);
         return NextResponse.json({ message: 'Internal server error', error: err });
@@ -113,10 +133,10 @@ export async function POST(request) {
                break;
         }
 
-        return NextResponse.json({ message: 'get successful', data: response });
+        return NextResponse.json({ message: 'Successful POST request', data: response });
     } catch (err) {
         console.log(err);
-        return NextResponse.json({ message: 'Internal server error' });
+        return NextResponse.json({ message: 'Internal server error', error: err });
     }
 }
 

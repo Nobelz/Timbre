@@ -10,8 +10,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-
-
 // profilePage is false by default
 // profilePage is true when the user is on the profile page
 

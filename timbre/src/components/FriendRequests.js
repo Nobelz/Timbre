@@ -4,12 +4,12 @@ import styles from '../app/styles/friendRequests.module.css'
 import { ListGroup } from "react-bootstrap";
 import FriendRequestItem from './FriendRequestItem';
 
-export default function FriendRequests({ friendRequests }) {
+export default function FriendRequests({ friendRequests, handleToast }) {
     const [search, setSearch] = useState("");
-
+    
     const handleAddFriend = (e) => {
         e.stopPropagation();
-        // add logic here for adding a friend
+        addFriend(search);
     }
 
     const handleDeny = (index, deniedUserId) => {
@@ -22,6 +22,39 @@ export default function FriendRequests({ friendRequests }) {
         friendRequests.splice(index, 1);
         acceptFriend(acceptedUserId);
         document.getElementById(index).remove()
+    }
+
+    const addFriend = async (email) => {
+        try {
+            let data = {
+                command: 'MAKE_FRIEND_REQUEST',
+                current_id: localStorage.getItem("spotify_id"),
+                email: email,
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+
+            let res = await response.json();
+            
+            if (res.data && res.data.code) {
+                if (res.data.code == 404) { // Check if user not found
+                    handleToast('Friend Request Error', 'User with that email does not exist!', 'danger');
+                } else if (res.data.code == 400) {
+                    handleToast('Friend Request Error', `You can't add yourself as a friend!`, 'danger');
+                }
+            } else {
+                handleToast('Friend Request Sent', `Friend request sent to ${email}!`, 'success')
+            }
+            setSearch("");
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     const denyFriend = async (deniedUserId) => {

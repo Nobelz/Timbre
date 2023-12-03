@@ -48,7 +48,7 @@ LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT user_id FROM timbre.timbre_user WHERE email = email_to_search;
+    SELECT user_id FROM timbre.timbre_user WHERE LOWER(email) = LOWER(email_to_search);
 END;
 $$;
 

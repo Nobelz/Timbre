@@ -75,7 +75,11 @@ const getUserIDFromEmail = async(email) => {
     try {
         const query = `SELECT * FROM timbre.search_user_from_email('${email}')`;
         const result = await connection.query(query);
-        return result;
+        if (result.rowCount === 0) {
+            return null;
+        } else {
+            return result;
+        }
     } catch (error) {
         console.log(error);
     }
@@ -185,7 +189,11 @@ const getProfileCharacteristics = async() => {
 
 const makeFriendRequest = async(user_id1, user_id2) => {
     try {
-        const query = `CALL timbre.make_friend_request(${user_id1}, ${user_id2})`;
+        if (user_id1 === user_id2) {
+            return null; // Users cannot be a friend of themselves
+        }
+
+        const query = `CALL timbre.friend_request(${user_id1}, ${user_id2})`;
         const result = await connection.query(query);
         return result;
     } catch (error) {

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Navigation from '../../components/Navigation';
 import styles from '../styles/friends.module.css';
-import FriendsTab from '../../components/FriendsTab'
+import FriendsTab from '../../components/FriendsTab';
+import ToastComponent from '../../components/ToastComponent';
 
 export default function Friends() {
     const [access_token, setAccessToken] = useState("");
@@ -25,6 +26,11 @@ export default function Friends() {
         },
     ]);
     const [friends, setFriends] = useState([]);
+
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastVariant, setToastVariant] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const fetchFriends = async () => {
         try {
@@ -68,6 +74,16 @@ export default function Friends() {
         }
     };
 
+    const handleShowToast = (error, message, variant) => {
+        setErrorMessage(error);
+        setToastMessage(message);
+        setToastVariant(variant);
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 3000); // Adjust the duration as needed
+    };
+    
     useEffect(() => {
         if (!access_token || !spotify_id) {
             let token = localStorage.getItem("access_token");
@@ -81,7 +97,7 @@ export default function Friends() {
             fetchFriendRequests();
         }
     }, [access_token, spotify_id]); 
-    
+
     return (
         <div className={`${styles.friends}`}>
             <Navigation isAuthenticated={isAuthenticated} />
@@ -90,8 +106,9 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} handleToast={handleShowToast}/>
             </div>
+            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage}/>
         </div>
     )
 }

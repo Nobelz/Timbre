@@ -6,7 +6,7 @@ import FriendsList from '../components/FriendsList';
 import FriendsRequests from '../components/FriendRequests';
 import Recommendations from '../components/Recommendations'
 
-export default function FriendsTab({ friends, friendRequests, recs }) {
+export default function FriendsTab({ friends, friendRequests, recs, handleToast}) {
     return (
         <div className={`${styles.tabContainer}`}>
             <Tabs
@@ -20,7 +20,7 @@ export default function FriendsTab({ friends, friendRequests, recs }) {
                     <Recommendations recs={recs} />
                 </Tab>
                 <Tab className={`${styles.navTabContent}`} eventKey="requests" title="Requests">
-                    <FriendsRequests friendRequests={friendRequests} />
+                    <FriendsRequests friendRequests={friendRequests} handleToast={handleToast} />
                 </Tab>
             </Tabs>
         </div>
