@@ -30,7 +30,7 @@ export default function Friends() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastVariant, setToastVariant] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [titleMessage, setTitleMessage] = useState('');
 
     const fetchFriends = async () => {
         try {
@@ -74,8 +74,8 @@ export default function Friends() {
         }
     };
 
-    const handleShowToast = (error, message, variant) => {
-        setErrorMessage(error);
+    const handleShowToast = (title, message, variant) => {
+        setTitleMessage(title);
         setToastMessage(message);
         setToastVariant(variant);
         setShowToast(true);
@@ -113,7 +113,7 @@ export default function Friends() {
             <div className={`${styles.container}`}>
                 <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast}/>
             </div>
-            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage}/>
+            <ToastComponent show={showToast} variant={toastVariant} title={titleMessage} message={toastMessage}/>
         </div>
     )
 }

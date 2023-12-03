@@ -388,7 +388,7 @@ RETURNS BOOLEAN
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song_id = $1) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE timbre.song.song_id = $1) THEN
         INSERT INTO timbre.song(song_id, title, uri, album_image_url) VALUES ($1, $2, $3, $4);
         RETURN TRUE;
     ELSE
@@ -405,7 +405,7 @@ CREATE OR REPLACE PROCEDURE timbre.add_song_artist(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE song_id = $1 AND artist_id = $2) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE timbre.song_artist.song_id = $1 AND timbre.song_artist.artist_id = $2) THEN
         INSERT INTO timbre.song_artist(song_id, artist_id, artist_name) VALUES ($1, $2, $3);
     END IF;
 END;
@@ -419,8 +419,12 @@ CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
-        INSERT INTO timbre.recommendation(song_id, sender_id, friend_id) VALUES ($3, $1, $2);
+    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
+        INSERT INTO timbre.recommendation(song_id, sender_id, receiver_id) VALUES ($3, $1, $2);
+    ELSE
+        UPDATE timbre.recommendation
+        SET rec_time = NOW()
+        WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2;
     END IF;
 END;
 $$;

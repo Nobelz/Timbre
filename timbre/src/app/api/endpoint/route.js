@@ -82,12 +82,11 @@ export async function PUT(request) {
             case 'MAKE_RECOMMENDATION':
                 /*
                     current_id: The Spotify ID of the current user
-                    friend_id: The Spotify ID of the friend receiving the recommendation
-                    song_id: The Spotify ID of the song being recommended
+                    friend_id: The User ID of the friend receiving the recommendation
+                    song: The song being recommended
                 */
                 response1 = await getUserIDFromSpotifyID(body.current_id);
-                response2 = await getUserIDFromSpotifyID(body.friend_id);
-                response = await makeRecommendation(response1.rows[0].search_user_from_id, response2.rows[0].search_user_from_id, body.song_id);
+                response = await makeRecommendation(response1.rows[0].search_user_from_id, body.friend_id, body.song);
                 break;
             case 'UPDATE_BIO':
                 /*

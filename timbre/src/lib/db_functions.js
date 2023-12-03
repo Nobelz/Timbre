@@ -241,9 +241,10 @@ const rejectFriendRequest = async(user_id1, user_id2) => {
     }
 };
 
-const makeRecommendation = async(user_id1, user_id2, song_id) => {
+const makeRecommendation = async(user_id1, user_id2, song) => {
     try {
-        const query = `CALL timbre.send_recommendation(${user_id1}, ${user_id2}, ${song_id}})`;
+        await addSong(song.song_id, song.title, song.uri, song.albumImageUrl, song.artists, song.artist_ids);
+        const query = `CALL timbre.send_recommendation(${user_id1}, ${user_id2}, '${song.song_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -271,14 +272,16 @@ const checkFriends = async(user_id1, user_id2) => {
     }
 };
 
-const addSong = async (song_id, title, uri, album_image, artists) => {
+const addSong = async (song_id, title, uri, album_image, artists, artist_ids) => {
     try {
         const query = `SELECT * FROM timbre.add_song('${song_id}', '${title}', '${uri}', '${album_image}')`;
         let result = await connection.query(query);
 
-        if (!result.rows[0].add_song) {
-            for (artist in artists) {
-                addArtist(song_id, artist.artist_id, artist.artist_name);
+        if (result.rows[0].add_song) {
+            for (let i = 0; i < artists.length; i++) {
+                const artist_name = artists[i];
+                const artist_id = artist_ids[i];
+                await addArtist(song_id, artist_id, artist_name);
             }
         }
         return result;
@@ -302,7 +305,7 @@ const db_functions = {
     getUserInfo,
     getRandomUsers,
     insertSongRating,
-    getSongRating, // TODO REMOVE
+    getSongRating, // TODO REMOVE (MAYBE NOT ACTUALLY)
     getUserIDFromSpotifyID,
     getUserIDFromEmail,
     createUser,
@@ -321,7 +324,6 @@ const db_functions = {
     makeRecommendation,
     getRecommendations,
     checkFriends,
-    addSong,
 };
 
 module.exports = db_functions;
