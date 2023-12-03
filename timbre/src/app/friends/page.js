@@ -44,18 +44,6 @@ export default function Friends() {
         }
     }, [access_token]);
 
-    useEffect(() => {
-        fetch('../api/endpoint', {
-            body: JSON.stringify({
-                command: 'GET_FRIENDS'
-            })
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setFriends(data)
-            })
-    }, []);
-
     return (
         <div className={`${styles.friends}`}>
             <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
