@@ -7,6 +7,7 @@ import FriendsRequests from '../components/FriendRequests';
 import Recommendations from '../components/Recommendations'
 
 export default function FriendsTab({ friends, friendRequests, recs }) {
+    console.log(friends)
     return (
         <div className={`${styles.tabContainer}`}>
             <Tabs

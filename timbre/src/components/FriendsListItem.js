@@ -19,8 +19,9 @@ export default function FriendsListItem({ friend }) {
     return (
         <div>
             <ListGroup.Item className={`${styles.listItem}`} onClick={(e) => handleRecommendSongs(e)}>
-                {friend.username}
-                <span className={`text-muted ${styles.listItemHidden}`}>Recommend Songs to {friend.username}?</span>
+                <img src={friend.profile_pic} height="64" width="70" className={`${styles.profilePic}`}></img>
+                {friend.display_name}
+                <span className={`text-muted ${styles.listItemHidden}`}>Recommend Songs to {friend.display_name}?</span>
             </ListGroup.Item>
             <RecSongPopup show={showRecSongPopup} onHide={handleRecSongPopupClose} props={friend} />
         </div>

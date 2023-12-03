@@ -41,7 +41,7 @@ export default function Friends() {
         try {
             let data = {
                 command: 'GET_FRIENDS',
-                spotify_id: 'jonathanlong19148',
+                spotify_id: spotify_id,
             };
 
             const response = await fetch('../api/endpoint', {
@@ -51,8 +51,8 @@ export default function Friends() {
                 },
                 body: JSON.stringify(data),
             });
-
-            console.log(await response.json());
+            const resJson = await response.json();
+            setFriends(resJson.data.rows);
         } catch (error) {
             console.error(error);
         }

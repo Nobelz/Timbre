@@ -51,7 +51,7 @@ export default function RecSongPopup({ show, onHide, props }) {
     return (
         <Modal show={show} onHide={onHide} dialogClassName={styles.recModal} scrollable={true} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Recommend songs for {props.username}</Modal.Title>
+                <Modal.Title>Recommend songs for {props.display_name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Container className={styles.container}>
