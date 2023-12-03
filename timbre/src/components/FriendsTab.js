@@ -14,7 +14,7 @@ export default function FriendsTab({ friends, friendRequests, recs, updateFriend
                 className={`${styles.navTab}`}
             >
                 <Tab className={`${styles.navTabContent}`} eventKey="friends" title="Friends">
-                    <FriendsList friends={friends} />
+                    <FriendsList friends={friends} handleToast={handleToast} />
                 </Tab>
                 <Tab className={`${styles.navTabContent}`} eventKey="recommendations" title="Recommendations">
                     <Recommendations recs={recs} />
