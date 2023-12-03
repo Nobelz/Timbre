@@ -92,15 +92,14 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
 
         {isAuthenticated && userProfile && (
           <Nav>
-            {userProfile?.pic_link ? (
-              <img src={userProfile.pic_link} alt="Profile" style={{ borderRadius: '50%', width: '40px' }} />
+            {userProfile['pic_link'] ? (
+              <img src={userProfile['pic_link']} alt="Profile" style={{ borderRadius: '50%', width: '40px' }} />
             ) : (
               // make it white so it's visible on the dark navbar
               <div style={{ backgroundColor: 'white', borderRadius: '50%', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px', fontSize: '20px' }}>
-                {getInitials(userProfile.display_name)}</div>
+                {getInitials(userProfile['display_name'])}</div>
             )}
           </Nav>
-
       )}
       <Dropdown align="end">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
