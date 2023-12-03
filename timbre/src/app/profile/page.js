@@ -2,25 +2,16 @@
 
 import Head from 'next/head'
 import { useState, useEffect, utate, useRef } from "react";
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Container, ListGroup, Button, Form } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
-import useRefreshToken from "../../hooks/useRefreshToken";
-import useUserProfile from "../../hooks/useUserProfile";
-import useAuthentication from '../../hooks/useAccessToken';
 import useAuthRedirect from '../../hooks/useAuthRedirect';
 import AuthRedirect from '../../components/AuthRedirect';
-import { useSearchParams, useRouter } from "next/navigation";
-import { authorize, getToken } from "../api/auth/authorize";
+import { authorize } from "../api/auth/authorize";
 import styles from '../styles/profile.module.css';
 import UpdateTextPopup from "../../components/BioPopup";
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-
 
 export default function Profile({content}) {
 
@@ -43,7 +34,6 @@ export default function Profile({content}) {
     const authorizeApp = async () => {
         await authorize();
     };
-    
 
     const fetchUserProfile = async () => {
         try {
@@ -113,7 +103,7 @@ export default function Profile({content}) {
                     </Col>
                     <Col className={`${styles.button_col}`}>
                         <Button className={styles.button} onClick={(event) => handleBio(event)}>Edit Bio</Button>
-                        <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content}/>
+                        <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content} onUpdate={fetchUserProfile}/>
                     </Col>
                 </Row>
 

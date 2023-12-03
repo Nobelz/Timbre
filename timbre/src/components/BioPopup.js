@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { Container, Form, Button } from "react-bootstrap";
 import styles from "../app/styles/bioPopup.module.css"
 
-export default function UpdateTextPopup({ show, onHide, updateBackend }) {
+export default function UpdateTextPopup({ show, onHide, onUpdate }) {
     const [inputText, setInputText] = useState("");
 
     const updateBio = async (newBio) => {
@@ -35,6 +35,7 @@ export default function UpdateTextPopup({ show, onHide, updateBackend }) {
             // Call the function to update the backend with the input text
             await updateBio(inputText);
             setInputText(""); // Clear the input after updating backend (if required)
+            onUpdate();
             onHide(); // Close the modal after updating
         } catch (error) {
             console.error('Error handling update:', error);
