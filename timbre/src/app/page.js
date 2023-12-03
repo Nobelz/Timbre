@@ -44,7 +44,7 @@ export default function Login() {
       <Container className="d-flex vh-100 justify-content-center align-items-center">
         <Row>
           <Col md={6} className="text-center">
-            <Image src="/Timbre.png" width={500} height={500} />
+            <Image src="/Timbre.png" width={500} height={500} style={{ borderRadius: '20px' }} />
           </Col>
           <Col md={6} className="d-flex flex-column align-items-center justify-content-center">
             <div>
