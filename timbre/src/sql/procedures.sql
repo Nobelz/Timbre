@@ -438,13 +438,14 @@ AS $$
 BEGIN
     RETURN QUERY
     WITH sender_ids AS (
-        SELECT song_id, sender_id FROM timbre.recommendation
+        SELECT timbre.recommendation.song_id, timbre.recommendation.sender_id, timbre.recommendation.rec_time FROM timbre.recommendation
         WHERE receiver_id = $1
     )
     SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic 
     FROM sender_ids
     JOIN timbre.timbre_user
-    ON sender_ids.sender_id = timbre_user.user_id;
+    ON sender_ids.sender_id = timbre_user.user_id
+    ORDER BY sender_ids.rec_time DESC;
 END;
 $$;
 
@@ -476,7 +477,8 @@ BEGIN
     SELECT song.title, song.uri, song.album_image_url, song_rating.rating
     FROM timbre.song
     LEFT JOIN timbre.song_rating
-    ON song.song_id = song_rating.song_id AND song_rating.user_id = $1;
+    ON song.song_id = song_rating.song_id AND song_rating.user_id = $1
+    WHERE song.song_id = $2;
 END;
 $$;
 

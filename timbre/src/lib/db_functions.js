@@ -300,6 +300,26 @@ const addArtist = async(song_id, artist_id, artist_name) => {
     }
 }
 
+const getSongInformation = async(user_id, song_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_song_info(${user_id}, '${song_id}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getSongArtistInformation = async(song_id) => {
+    try {
+        const query = `SELECT * FROM timbre.get_song_artists('${song_id}')`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // Put all function names here to export
 const db_functions = {
     getUserInfo,
@@ -324,6 +344,8 @@ const db_functions = {
     makeRecommendation,
     getRecommendations,
     checkFriends,
+    getSongInformation,
+    getSongArtistInformation,
 };
 
 module.exports = db_functions;
