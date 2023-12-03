@@ -45,9 +45,9 @@ export default function Home() {
   const [userTopTracks, setTopTracks] = useState([]);
   const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
   const isLoading = useAuthRedirect(isAuthenticated);
+  const userProfile = useUserProfile(access_token);
 
   // Add this inside your Home component or in a suitable place
-  const userProfile = useUserProfile(access_token);
 
   const [playingTrack, setPlayingTrack] = useState();
   const [showPlayer, setShowPlayer] = useState(false);
@@ -92,33 +92,33 @@ export default function Home() {
     return null; // Or any other loading indicator
   }
 
-  // Function to test connection to db called on button press
-  // makes a call to the route.js file in app/api/endpoint folder
-  const test = async () => {
-    // const res = await fetch('../api/endpoint', {
-    //   method: 'PUT',
-    // });
-    // const output = await res.json();
-    // // console.log(access_token);
-    // console.log(await output);
+  // // Function to test connection to db called on button press
+  // // makes a call to the route.js file in app/api/endpoint folder
+  // const test = async () => {
+  //   // const res = await fetch('../api/endpoint', {
+  //   //   method: 'PUT',
+  //   // });
+  //   // const output = await res.json();
+  //   // // console.log(access_token);
+  //   // console.log(await output);
 
-    let data = {
-      command: 'DENY_FRIEND_REQUEST',
-      receive_id: 'jonathanlong19148',
-      send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
-    };
+  //   let data = {
+  //     command: 'DENY_FRIEND_REQUEST',
+  //     receive_id: 'jonathanlong19148',
+  //     send_id: 'iobhblgu6dtcyol8vy5n0i7e7',
+  //   };
 
-    const response = await fetch('../api/endpoint', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify( data ),
-    });
-  }
+  //   const response = await fetch('../api/endpoint', {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify( data ),
+  //   });
+  // }
 
   return (
-    <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
+    <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} accessToken={access_token}>
       <div className={`${styles.homepage}`}>
         <Head>
           <title>Timbre</title>
@@ -126,10 +126,10 @@ export default function Home() {
         </Head>
         <Navigation isAuthenticated={isAuthenticated}
           authorizeApp={authorizeApp}
-          userProfile={userProfile}
           setIsAuthenticated={setIsAuthenticated}
-          setAccessToken={setAccessToken} />
-        <Button onClick={test}>Test API Endpoint</Button>
+          setAccessToken={setAccessToken}
+          accessToken={access_token}/>
+        {/* <Button onClick={test}>Test API Endpoint</Button> */}
 
         <Container>
           <Row className={`${styles.row}`}>
@@ -139,7 +139,7 @@ export default function Home() {
                   <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
-                    
+
                     See some of your favorite songs below and click play to listen.
                   </Card.Text>
                   <SpotifyPlayer token={access_token} uris={playingTrack?.uri} />
@@ -147,7 +147,7 @@ export default function Home() {
               </Card>
             </Col>
           </Row>
-          
+
           <Row className="mb-4">
             <Col>
               <br />
@@ -155,34 +155,32 @@ export default function Home() {
           </Row>
           { }
           { /* if user logs out then don't show anything */ isAuthenticated && <Row>
-          <Col md={12}>
-            
-    <Card>
-        <Card.Title className={`${styles.top_tracks}`}>Your Top Tracks</Card.Title>
-        
-        <Container>
+            <Col md={12}>
 
+              <Card className={`${styles.card}`}>
+                <Card.Title className={`${styles.top_tracks}`}>Your Top Tracks</Card.Title>
 
-            <Row>
-                {
-                    userTopTracks.map(track => (
+                <Container className={`${styles.trackContainer}`}>
+                  <Row>
+                    {
+                      userTopTracks.map(track => (
                         <Col md={3} key={track.id}>
-                            <TrackSearchResult 
-                                track={{
-                                    albumImageUrl: track.album.images[0]?.url || '', 
-                                    title: track.name, 
-                                    artists: track.artists.map(artist => artist.name),
-                                    uri: track.uri
-                                }} 
-                                chooseTrack={chooseTrack} 
-                            />
+                          <TrackSearchResult
+                            track={{
+                              albumImageUrl: track.album.images[0]?.url || '',
+                              title: track.name,
+                              artists: track.artists.map(artist => artist.name),
+                              uri: track.uri
+                            }}
+                            chooseTrack={chooseTrack}
+                          />
                         </Col>
-                    ))
-                }
-            </Row>
-        </Container>
-    </Card>
-</Col>
+                      ))
+                    }
+                  </Row>
+                </Container>
+              </Card>
+            </Col>
           </Row>}
         </Container>
       </div>

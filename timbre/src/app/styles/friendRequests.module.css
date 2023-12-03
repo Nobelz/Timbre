@@ -34,6 +34,7 @@
     font-size: .7em;
     float: right;
     visibility: hidden;
+    transform: translateY(50%);
 }
 
 .listItem:hover .listItemHidden{
@@ -48,6 +49,7 @@
 .deny {
     font-size: 1.1em;
 }
+
 .accept:hover {
     color: green;
     text-decoration: underline;
@@ -56,4 +58,8 @@
 .deny:hover {
     color: red;
     text-decoration: underline;
+}
+
+.profilePic {
+    padding-right: 10px;
 }

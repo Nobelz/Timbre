@@ -12,6 +12,58 @@ export default function FriendRequests({ friendRequests }) {
         // add logic here for adding a friend
     }
 
+    const handleDeny = (index, deniedUserId) => {
+        friendRequests.splice(index, 1);
+        denyFriend(deniedUserId);
+        document.getElementById(index).remove()
+    }
+
+    const handleAccept = (index, acceptedUserId) => {
+        friendRequests.splice(index, 1);
+        acceptFriend(acceptedUserId);
+        document.getElementById(index).remove()
+    }
+
+    const denyFriend = async (deniedUserId) => {
+        try {
+            let data = {
+                command: 'DENY_FRIEND_REQUEST',
+                current_id: localStorage.getItem("spotify_id"),
+                friend_id: deniedUserId
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const acceptFriend = async (acceptedUserId) => {
+        try {
+            let data = {
+                command: 'ACCEPT_FRIEND_REQUEST',
+                current_id: localStorage.getItem("spotify_id"),
+                friend_id: acceptedUserId
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div>
             <Container className={`${styles.container}`}>
@@ -24,7 +76,7 @@ export default function FriendRequests({ friendRequests }) {
             <ListGroup className='mt-3' variant="flush">
                 {friendRequests.map((request, index) => {
                     return (
-                        <FriendRequestItem request={request} key={index} />
+                        <FriendRequestItem request={request} index={index} handleDeny={handleDeny} handleAccept={handleAccept} key={index}/>
                     )
                 })}
             </ListGroup>

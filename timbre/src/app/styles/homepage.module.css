@@ -1,6 +1,7 @@
 .homepage {
     background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
     height: 100%;
+    overflow: auto;
 }
 
 .top_tracks {
@@ -10,4 +11,8 @@
 .row {
     justify-content: center;
     text-align: center;
+}
+
+.trackContainer {
+    overflow-y: auto;
 }

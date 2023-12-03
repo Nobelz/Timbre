@@ -27,7 +27,6 @@ export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
     const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
-    const userProfile = useUserProfile(access_token);
     const isLoading = useAuthRedirect(isAuthenticated);
 
     const authorizeApp = async () => {
@@ -54,7 +53,7 @@ export default function Profile({content}) {
                 <title>Timbre</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Navigation isAuthenticated={isAuthenticated} userProfile={userProfile} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp}/>
+            <Navigation isAuthenticated={isAuthenticated} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp} accessToken={access_token}/>
 
             <div className={`${styles.profile}`}>
             <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
