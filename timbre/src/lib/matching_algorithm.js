@@ -32,7 +32,7 @@ export const calculateCompatibilityScore = async (id1, id2) => {
     // Get all song profiles for each user
     const songProfiles1 = await getSongProfiles(user_ids[0], 1);
     const songProfiles2 = await getSongProfiles(user_ids[1], 1);
-
+    
     // Parse song profiles for each user
     const profiles1 = [{}, {}, {}, {}];
     const profiles2 = [{}, {}, {}, {}];
