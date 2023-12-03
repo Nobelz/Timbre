@@ -378,6 +378,39 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE FUNCTION timbre.add_song(
+    song_id TEXT,
+    title TEXT,
+    uri TEXT,
+    album_image_url TEXT
+)
+RETURNS BOOLEAN
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song_id = $1) THEN
+        INSERT INTO timbre.song(song_id, title, uri, album_image_url) VALUES ($1, $2, $3, $4);
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE timbre.add_song_artist(
+    song_id TEXT,
+    artist_id TEXT,
+    artist_name TEXT
+)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE song_id = $1 AND artist_id = $2) THEN
+        INSERT INTO timbre.song_artist(song_id, artist_id, artist_name) VALUES ($1, $2, $3);
+    END IF;
+END;
+$$;
+
 CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
     user_id INTEGER,
     friend_id INTEGER,

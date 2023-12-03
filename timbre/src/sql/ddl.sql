@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS recommendation;
 DROP TABLE IF EXISTS song;
 DROP TABLE IF EXISTS timbre_user;
 DROP TABLE IF EXISTS characteristics;
+DROP TABLE IF EXISTS song_artist;
 
 CREATE TABLE timbre_user (
 	user_id SERIAL PRIMARY KEY,
@@ -56,7 +57,23 @@ CREATE TABLE friendship (
 CREATE UNIQUE INDEX unique_relationship_pair ON timbre.friendship (LEAST(user_id1, user_id2), GREATEST(user_id1, user_id2));
 
 CREATE TABLE song (
-	song_id TEXT PRIMARY KEY
+	song_id TEXT PRIMARY KEY,
+	title TEXT,
+	uri TEXT,
+	album_image_url TEXT
+);
+
+CREATE TABLE song_artist (
+	song_id TEXT,
+	artist_id TEXT,
+	artist_name TEXT,
+	
+	PRIMARY KEY(song_id, artist_id),
+
+	CONSTRAINT fk_song_artist_song
+		FOREIGN KEY(song_id) 
+			REFERENCES song(song_id)
+			ON DELETE CASCADE
 );
 
 CREATE TABLE song_rating(
