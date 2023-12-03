@@ -18,6 +18,8 @@ import AuthRedirect from '../../components/AuthRedirect';
 import Player from '../../components/Player';
 import SpotifyPlayer from 'react-spotify-web-playback';
 import TrackSearchResult from '../../components/TrackSearchResult';
+import styles from '../styles/homepage.module.css';
+
 
 /*
  Homepage of the application where users can get matched with other users.
@@ -119,7 +121,7 @@ export default function Home() {
 
   return (
     <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
-      <div>
+      <div className={`${styles.homepage}`}>
         <Head>
           <title>Timbre</title>
           <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -132,14 +134,14 @@ export default function Home() {
         <Button onClick={test}>Test API Endpoint</Button>
 
         <Container>
-          <Row className="mb-4">
+          {/* <Row className="mb-4"> */}
+          <Row className={`${styles.row}`}>
             <Col>
               <Card>
                 <Card.Body>
                   {/* Make this look nicer */}
                   <Card.Img variant="top" src={userProfile?.images[0]?.url || ''} />
-                  <Card.Title>{userProfile?.display_name}</Card.Title>
-                  <Card.Title>Welcome to Timbre, {userProfile?.display_name}</Card.Title>
+                  <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
                     
@@ -150,35 +152,7 @@ export default function Home() {
               </Card>
             </Col>
           </Row>
-          <Row>
-            <Col md={6}>
-              <Card>
-                {/* Link to the matches page. No underline*/}
-                <Card.Title><Card.Link href="/matches">Matches</Card.Link></Card.Title>
-                <ListGroup variant="flush" style={{ maxHeight: '5em', overflowY: 'scroll' }}>
-                  {dummyMatches.map(match => (
-                    <ListGroup.Item key={match.id} href={`/profile/${match.id}`}>
-                      <img src={match.profilePictureUrl} alt={match.name} />
-                      {match.name}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card>
-            </Col>
-            <Col md={6}>
-              <Card>
-                <Card.Title><Card.Link href="/friends">Friends</Card.Link></Card.Title>
-                <ListGroup variant="flush" style={{ maxHeight: '5em', overflowY: 'scroll' }}>
-                  {dummyFriends.map(friend => (
-                    <ListGroup.Item key={friend.id} href={`/profile/${friend.id}`}>
-                      <img src={friend.profilePictureUrl} alt={friend.name} />
-                      {friend.name}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </Card>
-            </Col>
-          </Row>
+          
           {/* Add some space between the two sections */}
           <Row className="mb-4">
             <Col>
@@ -188,10 +162,13 @@ export default function Home() {
           { }
           { /* if user logs out then don't show anything */ isAuthenticated && <Row>
           <Col md={12}>
+            
     <Card>
-        <Card.Title>Your Top Tracks</Card.Title>
+        <Card.Title className={`${styles.top_tracks}`}>Your Top Tracks</Card.Title>
         
         <Container>
+
+
             <Row>
                 {
                     userTopTracks.map(track => (

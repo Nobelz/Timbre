@@ -1,0 +1,13 @@
+.homepage {
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
+    height: 100%;
+}
+
+.top_tracks {
+    padding: 3%;
+}
+
+.row {
+    justify-content: center;
+    text-align: center;
+}
