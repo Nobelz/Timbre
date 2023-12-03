@@ -8,6 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -39,7 +40,14 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, autho
     console.log("Logged out");
   }
 
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = React.useState(null);
+
+  const router = useRouter();
+
+  const handleNavigation = (path) => {
+    router.push(path);
+  };
+  
 
   const fetchUserProfile = async () => {
     // Fetch user profile using the access_token
@@ -99,21 +107,24 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, autho
             )}
           </Nav>
 
-        )}
-        <Dropdown>
+      )}
+      <Dropdown align="end">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Account
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="/profile"><Link href="/profile"><Button>My Profile</Button></Link></Dropdown.Item>
-            {/* Log out button */}
-            <Dropdown.Item><Button onClick={logout}>Log Out</Button></Dropdown.Item>
+            <Dropdown.Item onClick={() => handleNavigation('/profile')}>
+              My Profile
+            </Dropdown.Item>
+            <Dropdown.Item onClick={logout}>
+              Log Out
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-      </Container>
-    </Navbar>
-  );
+    </Container>
+  </Navbar>
+);
 };
 
 export default Navigation;
