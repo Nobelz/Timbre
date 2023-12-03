@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations } from "../../../lib/db_functions"
+import { getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -104,10 +104,18 @@ export async function POST(request) {
                 */
                 response = await getRecommendations(body.spotify_id);
                 break;
+            case 'GET_USER_PROFILE':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    Returns: The profile of the current user
+                */
+               response = await getUserInfo(body.spotify_id);
+               break;
         }
 
         return NextResponse.json({ message: 'get successful', data: response });
     } catch (err) {
+        console.log(err);
         return NextResponse.json({ message: 'Internal server error' });
     }
 }

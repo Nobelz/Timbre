@@ -68,7 +68,7 @@ export const getUserProfile = async () => {
         );
         return response.json();
     } catch (err) {
-        console.log("Error getting user profile:", err);
+        console.log(err);
     }
 };
 
