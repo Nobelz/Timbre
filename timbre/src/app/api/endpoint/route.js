@@ -60,6 +60,7 @@ export async function PUT(request) {
 export async function GET(request) {
     try {
         let response;
+        console.log("here")
         switch (body.command) {
             case 'CALCULATE_COMPATIBILITY':
                 /*

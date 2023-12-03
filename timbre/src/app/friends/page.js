@@ -9,23 +9,6 @@ import FriendsTab from '../../components/FriendsTab'
 export default function Friends() {
     const [access_token, setAccessToken] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [friends, setFriends] = useState([
-        { "username": "bob" },
-        { "username": "billy" },
-        { "username": "joe" },
-        { "username": "steve" },
-        { "username": "jane" },
-        { "username": "bob" },
-        { "username": "billy" },
-        { "username": "joe" },
-        { "username": "steve" },
-        { "username": "jane" },
-        { "username": "bob" },
-        { "username": "billy" },
-        { "username": "joe" },
-        { "username": "steve" },
-        { "username": "jane" }
-    ]);
     const [friendRequests, setFriendRequests] = useState([
         { "username": "bob" },
         { "username": "billy" },
@@ -47,6 +30,7 @@ export default function Friends() {
             "uri": "spotify:track:5sNESr6pQfIhL3krM8CtZn"
         },
     ]);
+    const [friends, setFriends] = useState([]);
 
     const authorizeApp = async () => {
         await authorize();
@@ -58,12 +42,24 @@ export default function Friends() {
             setAccessToken(token || "");
             if (token) setIsAuthenticated(true);
         }
-    }, [access_token]); 
-    
+    }, [access_token]);
+
+    useEffect(() => {
+        fetch('../api/endpoint', {
+            body: JSON.stringify({
+                command: 'GET_FRIENDS'
+            })
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setFriends(data)
+            })
+    }, []);
+
     return (
         <div className={`${styles.friends}`}>
             <Navigation isAuthenticated={isAuthenticated} authorizeApp={authorizeApp} />
-            <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
+            <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet' />
             <div className={`${styles.header}`}>
                 View Your Friends and Song Recommendations
             </div>
