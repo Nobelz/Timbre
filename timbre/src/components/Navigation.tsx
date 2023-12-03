@@ -82,17 +82,33 @@ return (
       </Nav>
 
       {isAuthenticated && userProfile && (
-        <Nav>
-          {userProfile?.images?.length > 0 ? (
-            <img src={userProfile.images[0].url} alt="Profile" style={{ borderRadius: '50%', width: '40px' }} />
-          ) : (
-            // make it white so it's visible on the dark navbar
-            <div style={{ backgroundColor: 'white', borderRadius: '50%', width: '40px', height: '40px', textAlign: 'center', lineHeight: '40px', fontSize: '20px' }}>
-              {getInitials(userProfile.display_name)}</div>
-          )}
-        </Nav>
-
-      )}
+          <Nav>
+            {//userProfile?.images?.length > 0 &&
+              <img 
+                src="https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3dhdGVyLXVwZGF0ZS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjgyOH0sInRvRm9ybWF0IjoiYXZpZiJ9fQ==" 
+                alt="Profile" 
+                style={{ 
+                  borderRadius: '50%', 
+                  width: '40px', 
+                  height: '40px', 
+                  objectFit: 'cover', // ensures the image covers the area without distortion
+                  objectPosition: 'center' // ensures the image is centered
+                }} 
+              />
+              }
+              <div style={{
+                backgroundColor: 'white',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                textAlign: 'center',
+                lineHeight: '40px',
+                fontSize: '20px'
+              }}>
+                {getInitials(userProfile.display_name)}
+              </div>
+          </Nav>
+        )}
       <Dropdown align="end">
           <Dropdown.Toggle variant="success" id="dropdown-basic">
             Account
