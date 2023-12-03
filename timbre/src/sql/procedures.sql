@@ -1,16 +1,23 @@
 CREATE OR REPLACE FUNCTION timbre.get_random_users(
-    current_user_spotify_id TEXT
+    current_user_spotify_id TEXT,
+    num_user INTEGER DEFAULT 10
 )
 RETURNS SETOF TEXT
 LANGUAGE PLPGSQL
 AS $$
+DECLARE
+    user_id_to_exclude INTEGER;
 BEGIN
+    user_id_to_exclude := (SELECT * FROM timbre.search_user_from_id(current_user_spotify_id));
+    
     RETURN QUERY
 	SELECT spotify_id 
-	FROM timbre.timbre_user
-    WHERE spotify_id != current_user_spotify_id
+	FROM timbre.timbre_user as u, timbre.friendship as f
+    WHERE u.spotify_id != current_user_spotify_id
+        AND f.user_id1 != user_id_to_exclude
+        AND f.user_id2 != user_id_to_exclude
 	ORDER BY RANDOM()
-	LIMIT 5; /* change this value to set the number of randomly sampled users to return */ 
+	LIMIT num_user; /* change this value to set the number of randomly sampled users to return */ 
 END;
 $$;
 
