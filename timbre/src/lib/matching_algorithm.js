@@ -22,7 +22,6 @@ export const calculateCompatibilityScore = async (id1, id2) => {
         return Object.keys(dict).length === 0;
     };
     
-    try {
     // Get User IDs from emails
     const user_id1 = await getUserIDFromSpotifyID(id1);
     const user_id2 = await getUserIDFromSpotifyID(id2);
@@ -107,9 +106,6 @@ export const calculateCompatibilityScore = async (id1, id2) => {
             score: sum
         }
     };
-} catch (err) {
-    console.log(err);
-}
 };
 
 export const generateSpotifyData = async(access_token) => {
