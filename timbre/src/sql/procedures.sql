@@ -17,12 +17,12 @@ $$;
 CREATE OR REPLACE FUNCTION timbre.get_user_info_from_spotify_id(
     spotify_id_to_search TEXT
 )
-RETURNS TABLE (display_name TEXT, pic_link TEXT, bio TEXT, last_refresh TIMESTAMP)
+RETURNS TABLE (display_name TEXT, user_email TEXT, pic_link TEXT, bio TEXT, last_refresh TIMESTAMP)
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT spotify_display_name, profile_pic, user_bio, spotify_last_refresh
+	SELECT spotify_display_name, email, profile_pic, user_bio, spotify_last_refresh
 	FROM timbre.timbre_user
     WHERE spotify_id = spotify_id_to_search;
 END;

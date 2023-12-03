@@ -26,12 +26,11 @@ import Col from 'react-bootstrap/Col';
 export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
-    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
+    const [access_token, setAccessToken] = useState("");
+    const [userInfo, setUserInfo] = useState({})
+    const [spotify_id, setSpotifyID] = useState("");
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const isLoading = useAuthRedirect(isAuthenticated);
-
-    const authorizeApp = async () => {
-        await authorize();
-      };
 
     const handleBio = (e) => {
         e.stopPropagation();
@@ -41,6 +40,45 @@ export default function Profile({content}) {
     const handleBioPopupClose = () => {
         setShowBioPopup(false);
     }
+
+    const authorizeApp = async () => {
+        await authorize();
+    };
+    
+
+    const fetchUserProfile = async () => {
+        try {
+            let data = {
+                command: 'GET_USER_PROFILE',
+                spotify_id: spotify_id,
+            };
+
+            const response = await fetch('../api/endpoint', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            });
+            const resJson = await response.json();
+            setUserInfo(resJson.data.rows[0]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (!access_token || !spotify_id) {
+            let token = localStorage.getItem("access_token");
+            let spotifyID = localStorage.getItem("spotify_id");
+            setAccessToken(token);
+            setSpotifyID(spotifyID);
+            if (token) setIsAuthenticated(true);
+        }
+        if (spotify_id) {
+            fetchUserProfile();
+        }
+    }, [access_token, spotify_id]); 
 
     if (isLoading){
         return null;
@@ -63,15 +101,15 @@ export default function Profile({content}) {
                     <Col className={`${styles.info}`}>
                         <Row>
                             <Col className={`${styles.title_col}`}>Display Name</Col>
-                            <Col className={`${styles.content_col}`}>display_name</Col>
+                            <Col className={`${styles.content_col}`}>{userInfo.display_name}</Col>
                         </Row>
                         <Row>
                             <Col className={`${styles.title_col}`}>Email</Col>
-                            <Col className={`${styles.content_col}`}>email_info</Col>
+                            <Col className={`${styles.content_col}`}>{userInfo.user_email}</Col>
                         </Row>
                         <Row>
                             <Col className={`${styles.title_col}`}>Bio</Col>
-                            <Col className={`${styles.content_col}`}>bio_info</Col>
+                            <Col className={`${styles.content_col}`}>{userInfo.bio}</Col>
                         </Row>
                     </Col>
                     <Col className={`${styles.button_col}`}>
@@ -85,11 +123,11 @@ export default function Profile({content}) {
                     <Col className={`${styles.info}`}>
                         <Row>
                             <Col className={`${styles.title_col}`}>Spotify ID</Col>
-                            <Col className={`${styles.content_col}`}>spotify_id</Col>
+                            <Col className={`${styles.content_col}`}>{spotify_id}</Col>
                         </Row>
                         <Row>
                             <Col className={`${styles.title_col}`}>Last Synced</Col>
-                            <Col className={`${styles.content_col}`}>last_synced_info</Col>
+                            <Col className={`${styles.content_col}`}>{userInfo.last_refresh}</Col>
                         </Row>
                     </Col>
                     <Col className={`${styles.button_col}`}>
