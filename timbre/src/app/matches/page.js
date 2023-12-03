@@ -21,8 +21,23 @@ export default function Matches() {
     ]);
     
     const [access_token, setAccessToken] = useState("");
+    const [spotify_id, setSpotifyID] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const isLoading = useAuthRedirect(isAuthenticated);
+
+    const authorizeApp = async () => {
+        await authorize();
+    };
+    
+    useEffect(() => {
+        if (!access_token || !spotify_id) {
+            let token = localStorage.getItem("access_token");
+            let spotifyID = localStorage.getItem("spotify_id");
+            setAccessToken(token);
+            setSpotifyID(spotifyID);
+            if (token) setIsAuthenticated(true);
+        }
+    })
 
     return (
         <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken}>
