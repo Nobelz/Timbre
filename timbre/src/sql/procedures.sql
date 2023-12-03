@@ -464,3 +464,31 @@ BEGIN
     END IF;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION timbre.get_song_info(
+    user_id INTEGER,
+    song_id TEXT
+) RETURNS TABLE (title TEXT, uri TEXT, album_image_url TEXT, rating DECIMAL)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT song.title, song.uri, song.album_image_url, song_rating.rating
+    FROM timbre.song
+    LEFT JOIN timbre.song_rating
+    ON song.song_id = song_rating.song_id AND song_rating.user_id = $1;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_song_artists(
+    song_id TEXT
+) RETURNS TABLE(artist_id TEXT, artist_name TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT song_artist.artist_id, song_artist.artist_name
+    FROM timbre.song_artist
+    WHERE song_artist.song_id = $1;
+END;
+$$;
