@@ -53,61 +53,63 @@ export default function Profile({content}) {
 
     return (
         <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
-        <div className={`${styles.profile}`}>
-                <Head>
-                    <title>Timbre</title>
-                    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                </Head>
-                <Navigation isAuthenticated={isAuthenticated} userProfile={userProfile} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp}/>
+        <div >
+            <Head>
+                <title>Timbre</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
+            <Navigation isAuthenticated={isAuthenticated} userProfile={userProfile} setAccessToken={setAccessToken} setIsAuthenticated={setIsAuthenticated} authorizeApp={authorizeApp}/>
 
-                <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
-                <Container class={`${styles.container}`}>
-                    <h1 class={`${styles.row}`}>Personal Details</h1>
-                    <Row>
-                        <Col class={`${styles.info}`}>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Display Name</Col>
-                                <Col class={`${styles.content_col}`}>display_name</Col>
-                            </Row>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Email</Col>
-                                <Col class={`${styles.content_col}`}>email_info</Col>
-                            </Row>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Bio</Col>
-                                <Col class={`${styles.content_col}`}>bio_info</Col>
-                            </Row>
-                        </Col>
-                        <Col class={`${styles.button_col}`}>
-                            <Button className={styles.button} onClick={(event) => handleBio(event)}>Edit Bio</Button>
-                            <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content}/>
-                        </Col>
-                    </Row>
+            <div className={`${styles.profile}`}>
+            <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
+            <Container className={`${styles.container}`}>
+                <h1 className={`${styles.row}`}>Personal Details</h1>
+                <Row>
+                    <Col className={`${styles.info}`}>
+                        <Row>
+                            <Col className={`${styles.title_col}`}>Display Name</Col>
+                            <Col className={`${styles.content_col}`}>display_name</Col>
+                        </Row>
+                        <Row>
+                            <Col className={`${styles.title_col}`}>Email</Col>
+                            <Col className={`${styles.content_col}`}>email_info</Col>
+                        </Row>
+                        <Row>
+                            <Col className={`${styles.title_col}`}>Bio</Col>
+                            <Col className={`${styles.content_col}`}>bio_info</Col>
+                        </Row>
+                    </Col>
+                    <Col className={`${styles.button_col}`}>
+                        <Button className={styles.button} onClick={(event) => handleBio(event)}>Edit Bio</Button>
+                        <UpdateTextPopup show={showBioPopup} onHide={handleBioPopupClose} props={content}/>
+                    </Col>
+                </Row>
 
-                    <h1 class={`${styles.row}`}>Spotify</h1>
-                    <Row>
-                        <Col class={`${styles.info}`}>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Spotify ID</Col>
-                                <Col class={`${styles.content_col}`}>spotify_id</Col>
-                            </Row>
-                            <Row>
-                                <Col class={`${styles.title_col}`}>Last Synced</Col>
-                                <Col class={`${styles.content_col}`}>last_synced_info</Col>
-                            </Row>
-                        </Col>
-                        <Col class={`${styles.button_col}`}>
-                            <Button className={styles.button} onClick={authorizeApp}>Resync Now</Button>
-                        </Col>
-                    </Row>
+                <h1 className={`${styles.row}`}>Spotify</h1>
+                <Row>
+                    <Col className={`${styles.info}`}>
+                        <Row>
+                            <Col className={`${styles.title_col}`}>Spotify ID</Col>
+                            <Col className={`${styles.content_col}`}>spotify_id</Col>
+                        </Row>
+                        <Row>
+                            <Col className={`${styles.title_col}`}>Last Synced</Col>
+                            <Col className={`${styles.content_col}`}>last_synced_info</Col>
+                        </Row>
+                    </Col>
+                    <Col className={`${styles.button_col}`}>
+                        <Button className={styles.button} onClick={authorizeApp}>Resync Now</Button>
+                    </Col>
+                </Row>
 
-                    <Row class={`${styles.row}`}>
-                        <Button className={styles.button}>Log Out</Button>
-                    </Row>
+                <Row className={`${styles.row}`}>
+                    <Button className={styles.logoutbutton}>Log Out</Button>
+                </Row>
 
-                </Container>
-                
+            </Container>
             </div>
-            </AuthRedirect>
+            
+        </div>
+        </AuthRedirect>
     )
 }
