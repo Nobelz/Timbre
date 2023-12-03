@@ -3,7 +3,7 @@ import FriendsListItem from '../components/FriendsListItem'
 import styles from '../app/styles/friends.module.css'
 import { useEffect, useState } from "react";
 
-export default function FriendsList({ friends }) {
+export default function FriendsList({ friends, handleToast }) {
     return (
         <div>
             <div className={`${styles.yourFriends}`}>
@@ -12,7 +12,7 @@ export default function FriendsList({ friends }) {
             <ListGroup variant="flush">
                 {friends.map((friend, index) => {
                     return (
-                        <FriendsListItem friend={friend} key={index} />
+                        <FriendsListItem friend={friend} handleToast={handleToast} key={index} />
                     )
                 })}
             </ListGroup>

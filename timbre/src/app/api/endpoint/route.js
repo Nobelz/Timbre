@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio} from "../../../lib/db_functions"
+import { checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio, getSongInformation, getSongArtistInformation } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -8,6 +8,7 @@ import { getTop3Matches } from "../../../lib/matching"
 // That will get the body of the fetch request from the frontend: line 50 of homepage/page.js
 // There might be a better method
 
+// TODO fix the response garbage, it's possibly causing errors
 export async function PUT(request) {
     const body = await request.json();
     try {
@@ -82,12 +83,11 @@ export async function PUT(request) {
             case 'MAKE_RECOMMENDATION':
                 /*
                     current_id: The Spotify ID of the current user
-                    friend_id: The Spotify ID of the friend receiving the recommendation
-                    song_id: The Spotify ID of the song being recommended
+                    friend_id: The User ID of the friend receiving the recommendation
+                    song: The song being recommended
                 */
                 response1 = await getUserIDFromSpotifyID(body.current_id);
-                response2 = await getUserIDFromSpotifyID(body.friend_id);
-                response = await makeRecommendation(response1.rows[0].search_user_from_id, response2.rows[0].search_user_from_id, body.song_id);
+                response = await makeRecommendation(response1.rows[0].search_user_from_id, body.friend_id, body.song);
                 break;
             case 'UPDATE_BIO':
                 /*
@@ -115,6 +115,8 @@ export async function POST(request) {
         let response;
         let response1;
         let response2;
+        let response3;
+        let response4;
         switch (body.command) {
             case 'CALCULATE_COMPATIBILITY':
                 /*
@@ -145,7 +147,38 @@ export async function POST(request) {
                     spotify_id: The Spotify ID of the current user
                     Returns: The recommendations of the current user, along with the user that recommended them
                 */
-                response = await getRecommendations(body.spotify_id);
+                response1 = await getUserIDFromSpotifyID(body.spotify_id);
+                response2 = await getRecommendations(response1.rows[0].search_user_from_id);
+            
+                let recIDs = response2.rows.map((rec) => rec.song_id);
+                recIDs = Array.from(new Set(recIDs)); // Remove recommendation duplicates
+                recIDs = recIDs.slice(0, 20); 
+
+                let recommendedTracks = [];
+                for (const id of recIDs) {
+                    let track = {};
+                    track.song_id = id;
+
+                    response3 = await getSongInformation(response1.rows[0].search_user_from_id, id);
+                    let songInfo = response3.rows[0];
+                    track.title = songInfo.title;
+                    track.uri = songInfo.uri;
+                    track.albumImageUrl = songInfo.album_image_url;
+                    track.rating = songInfo.rating;
+
+                    response4 = await getSongArtistInformation(id);
+                    track.artists = [];
+                    track.artist_ids = [];
+                    let artistInfo = response4.rows;
+                    for (const artist of artistInfo) {
+                        track.artists.push(artist.artist_name);
+                        track.artist_ids.push(artist.artist_id);
+                    }
+
+                    recommendedTracks.push(track);
+                }
+
+                response = {tracks: recommendedTracks};
                 break;
             case 'GET_USER_PROFILE':
                 /*

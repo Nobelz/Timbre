@@ -3,13 +3,12 @@ import styles from '../app/styles/friends.module.css';
 import { ListGroup } from "react-bootstrap";
 import RecSongPopup from '../components/RecSongsPopup'
 
-export default function FriendsListItem({ friend }) {
+export default function FriendsListItem({ friend, handleToast }) {
     const [showRecSongPopup, setShowRecSongPopup] = useState(false);
 
     const handleRecommendSongs = (e) => {
         e.stopPropagation();
         setShowRecSongPopup(true);
-        // add logic here for recommending a song
     }
 
     const handleRecSongPopupClose = () => {
@@ -23,7 +22,7 @@ export default function FriendsListItem({ friend }) {
                 {friend.display_name}
                 <span className={`text-muted ${styles.listItemHidden}`}>Recommend Songs to {friend.display_name}?</span>
             </ListGroup.Item>
-            <RecSongPopup show={showRecSongPopup} onHide={handleRecSongPopupClose} props={friend} />
+            <RecSongPopup show={showRecSongPopup} onHide={handleRecSongPopupClose} props={friend} handleToast={handleToast} />
         </div>
     )
 }
