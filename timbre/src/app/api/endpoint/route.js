@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio} from "../../../lib/db_functions"
+import { checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio} from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -14,6 +14,7 @@ export async function PUT(request) {
         let response;
         let response1;
         let response2;
+        let response3;
         switch (body.command) {
             case 'GENERATE_SPOTIFY_DATA':
                 /*
@@ -46,14 +47,26 @@ export async function PUT(request) {
                 response1 = await getUserIDFromEmail(body.email);
                 response2 = await getUserIDFromSpotifyID(body.current_id);
                 if (response1) {
-                    response = await makeFriendRequest(response2.rows[0].search_user_from_id, response1.rows[0].search_user_from_email);
-                    if (!response) {
+                    if (response1.rows[0].search_user_from_email === response2.rows[0].search_user_from_id) {
                         response = {
                             data:
                             {
                                 code: 400,
-                                message: 'User cannot be friends with themselves',
+                                message: `You can't add yourself as a friend!`,
                             }
+                        }
+                    } else {
+                        response3 = await checkFriends(response1.rows[0].search_user_from_email, response2.rows[0].search_user_from_id);
+                        if (response3.rowCount > 0) {
+                            response = {
+                                data:
+                                {
+                                    code: 400,
+                                    message: 'You are already friends with this user!',
+                                }
+                            };
+                        } else {
+                            response = await makeFriendRequest(response2.rows[0].search_user_from_id, response1.rows[0].search_user_from_email);
                         }
                     }
                 } else {
@@ -65,7 +78,6 @@ export async function PUT(request) {
                         }
                     };   
                 }
-                // TODO CHECK IF THEY ARE ALREADY FRIENDS
                 break;
             case 'MAKE_RECOMMENDATION':
                 /*

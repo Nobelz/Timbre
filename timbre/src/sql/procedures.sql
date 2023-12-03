@@ -410,3 +410,20 @@ BEGIN
     ON sender_ids.sender_id = timbre_user.user_id;
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION timbre.check_friends(
+    user_id INTEGER,
+    friend_id INTEGER
+) RETURNS BOOLEAN
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM timbre.friendship WHERE user_id1 = $1 AND user_id2 = $2) THEN
+        RETURN TRUE;
+    ELSIF EXISTS (SELECT 1 FROM timbre.friendship WHERE user_id1 = $2 AND user_id2 = $1) THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$;

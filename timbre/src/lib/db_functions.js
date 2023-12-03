@@ -261,6 +261,16 @@ const getRecommendations = async(user_id) => {
     }
 }
 
+const checkFriends = async(user_id1, user_id2) => {
+    try {
+        const query = `SELECT * FROM timbre.check_friends(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // Put all function names here to export
 const db_functions = {
     getUserInfo,
@@ -284,6 +294,7 @@ const db_functions = {
     rejectFriendRequest,
     makeRecommendation,
     getRecommendations,
+    checkFriends,
 };
 
 module.exports = db_functions;

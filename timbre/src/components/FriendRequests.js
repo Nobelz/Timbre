@@ -44,7 +44,7 @@ export default function FriendRequests({ friendRequests, updateFriends, handleTo
                 if (res.data.code == 404) { // Check if user not found
                     handleToast('Friend Request Error', 'User with that email does not exist!', 'danger');
                 } else if (res.data.code == 400) {
-                    handleToast('Friend Request Error', `You can't add yourself as a friend!`, 'danger');
+                    handleToast('Friend Request Error', res.data.message, 'danger');
                 }
             } else {
                 handleToast('Friend Request Sent', `Friend request sent to ${email}!`, 'success');
