@@ -140,7 +140,6 @@ export async function POST(request) {
                     Returns: The profile of the current user
                 */
                response = await getUserInfo(body.spotify_id);
-               console.log(response);
                break;
             default:
                 return NextResponse.json({ message: 'Internal server error', success: false });
