@@ -132,13 +132,10 @@ export default function Home() {
         <Button onClick={test}>Test API Endpoint</Button>
 
         <Container>
-          {/* <Row className="mb-4"> */}
           <Row className={`${styles.row}`}>
             <Col>
               <Card>
                 <Card.Body>
-                  {/* Make this look nicer */}
-                  <Card.Img variant="top" src={userProfile?.images[0]?.url || ''} />
                   <Card.Title >Welcome to Timbre, {userProfile?.display_name}!</Card.Title>
                   <Card.Text>
                     Connect with your music matches and explore new tracks!
@@ -151,7 +148,6 @@ export default function Home() {
             </Col>
           </Row>
           
-          {/* Add some space between the two sections */}
           <Row className="mb-4">
             <Col>
               <br />
