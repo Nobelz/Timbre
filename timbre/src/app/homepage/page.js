@@ -4,8 +4,6 @@ import Head from 'next/head'
 import { useEffect, useState } from "react";
 import { authorize, getToken } from "../api/auth/authorize";
 import { topTracks, topArtists } from "../../lib/spotify";
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useUserProfile from "../../hooks/useUserProfile";
@@ -53,6 +51,10 @@ export default function Home() {
   const [showPlayer, setShowPlayer] = useState(false);
   const [play, setPlay] = useState(false);
 
+  const [showBioPopup, setShowBioPopup] = useState(false);
+  const [userInfo, setUserInfo] = useState({})
+  const [spotify_id, setSpotifyID] = useState("");
+  
   function chooseTrack(track) {
     setPlayingTrack(track);
     setShowPlayer(true);
@@ -117,6 +119,7 @@ export default function Home() {
   //   });
   // }
 
+
   return (
     <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} accessToken={access_token}>
       <div className={`${styles.homepage}`}>
@@ -130,6 +133,7 @@ export default function Home() {
           accessToken={access_token}/>
         {/* <Button onClick={test}>Test API Endpoint</Button> */}
 
+        <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
         <Container>
           <Row className={`${styles.row}`}>
             <Col>
