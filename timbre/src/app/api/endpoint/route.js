@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends } from "../../../lib/db_functions"
+import { getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -48,6 +48,16 @@ export async function PUT(request) {
                 response1 = await getUserIDFromEmail(body.email);
                 response = await makeFriendRequest(body.current_id, response1.rows[0].search_user_from_email);
                 break;
+            case 'MAKE_RECOMMENDATION':
+                /*
+                    current_id: The Spotify ID of the current user
+                    friend_id: The Spotify ID of the friend receiving the recommendation
+                    song_id: The Spotify ID of the song being recommended
+                */
+                response1 = await getUserIDFromSpotifyID(body.current_id);
+                response2 = await getUserIDFromSpotifyID(body.friend_id);
+                response = await makeRecommendation(response1.rows[0].search_user_from_id, response2.rows[0].search_user_from_id, body.song_id);
+                break;
         }
 
         return NextResponse.json({ message: 'Successful data entry', data: response.data });
@@ -83,7 +93,13 @@ export async function GET(request) {
                 */
                 response = await getFriendRequests(body.spotify_id);
                 break;
-            
+            case 'GET_RECOMMENDATIONS':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    Returns: The recommendations of the current user, along with the user that recommended them
+                */
+                response = await getRecommendations(body.spotify_id);
+                break;
         }
 
         let sampledUsers = await getTop3Matches('jonathanlong19148');
