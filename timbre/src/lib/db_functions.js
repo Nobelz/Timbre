@@ -209,7 +209,7 @@ const getFriends = async(user_id) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const getFriendRequests = async(user_id) => {
     try {
@@ -229,7 +229,7 @@ const acceptFriendRequest = async(user_id1, user_id2) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const rejectFriendRequest = async(user_id1, user_id2) => {
     try {
@@ -239,7 +239,7 @@ const rejectFriendRequest = async(user_id1, user_id2) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const makeRecommendation = async(user_id1, user_id2, song_id) => {
     try {
@@ -249,7 +249,7 @@ const makeRecommendation = async(user_id1, user_id2, song_id) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const getRecommendations = async(user_id) => {
     try {
@@ -259,11 +259,37 @@ const getRecommendations = async(user_id) => {
     } catch (error) {
         console.log(error);
     }
-}
+};
 
 const checkFriends = async(user_id1, user_id2) => {
     try {
         const query = `SELECT * FROM timbre.check_friends(${user_id1}, ${user_id2})`;
+        const result = await connection.query(query);
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const addSong = async (song_id, title, uri, album_image, artists) => {
+    try {
+        const query = `SELECT * FROM timbre.add_song('${song_id}', '${title}', '${uri}', '${album_image}')`;
+        let result = await connection.query(query);
+
+        if (!result.rows[0].add_song) {
+            for (artist in artists) {
+                addArtist(song_id, artist.artist_id, artist.artist_name);
+            }
+        }
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const addArtist = async(song_id, artist_id, artist_name) => {
+    try {
+        const query = `CALL timbre.add_song_artist('${song_id}', '${artist_id}', '${artist_name}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -295,6 +321,7 @@ const db_functions = {
     makeRecommendation,
     getRecommendations,
     checkFriends,
+    addSong,
 };
 
 module.exports = db_functions;

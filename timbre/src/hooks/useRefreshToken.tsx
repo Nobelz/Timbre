@@ -32,6 +32,7 @@ export default function useRefreshToken(code: string) {
     }
   };
 
+  // TODO fix
   // Gets a new access token after the previous one expired
   const refreshTokenFn = async () => {
     if (lock.current)
