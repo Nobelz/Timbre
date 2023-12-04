@@ -22,7 +22,7 @@ export default function Recommendations({ recs }) {
             <div className={`${styles.yourRecs}`}>
                 Your Song Recommendations
             </div>
-            <Player trackUri={playingTrack?.uri} show={showPlayer} onHide={hidePlayer} />
+            <Player trackUri={playingTrack?.uri} show={showPlayer} onHide={hidePlayer} trackRating={playingTrack?.rating} />
             <Row>
                 {recs.map((track, index) => (
                     <Col key={index} md={6}>

@@ -4,7 +4,7 @@ import SpotifyPlayer from "react-spotify-web-playback"
 import styles from '../app/styles/player.module.css'
 import { Rating } from 'react-simple-star-rating'
 
-export default function Player({ trackUri, show, onHide }) {
+export default function Player({ trackUri, show, onHide, trackRating }) {
     const [accessToken, setAccessToken] = useState();
     const [play, setPlay] = useState(false);
     const [rating, setRating] = useState(0);
@@ -14,8 +14,16 @@ export default function Player({ trackUri, show, onHide }) {
     }, []);
 
     useEffect(() => {
-        setPlay(true);
-    }, [trackUri]);
+        if (show) {
+            setPlay(true);
+            if (trackRating) {         
+                console.log(trackRating / 2);  
+                setRating(trackRating / 2);
+            } else {
+                setRating(0);
+            }
+        }
+    }, [show]);
 
     const handleRating = (rating) => {
         setRating(rating);
@@ -40,6 +48,7 @@ export default function Player({ trackUri, show, onHide }) {
                     />
                     <Rating 
                         onClick={handleRating}
+                        initialValue={rating}
                         allowFraction={true}
                         transition={true}
                     />

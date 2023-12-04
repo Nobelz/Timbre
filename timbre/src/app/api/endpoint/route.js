@@ -164,7 +164,7 @@ export async function POST(request) {
                     track.title = songInfo.title;
                     track.uri = songInfo.uri;
                     track.albumImageUrl = songInfo.album_image_url;
-                    track.rating = songInfo.rating;
+                    track.rating = parseFloat(songInfo.rating);
 
                     response4 = await getSongArtistInformation(id);
                     track.artists = [];
