@@ -4,7 +4,7 @@ import SpotifyPlayer from "react-spotify-web-playback"
 import styles from '../app/styles/player.module.css'
 import { Rating } from 'react-simple-star-rating'
 
-export default function Player({ track, show, onHide, updateRecommendations }) {
+export default function Player({ track, show, onHide, onUpdateRating }) {
     const [accessToken, setAccessToken] = useState();
     const [play, setPlay] = useState(false);
     const [rating, setRating] = useState(0);
@@ -30,7 +30,7 @@ export default function Player({ track, show, onHide, updateRecommendations }) {
 
     const handleRating = (rating) => {
         setRating(rating);
-        updateRecommendations(track, rating * 2);
+        onUpdateRating(track, rating * 2);
     }
 
     if (!accessToken) return null;

@@ -524,7 +524,6 @@ BEGIN
 END;
 $$;
 
-
 CREATE OR REPLACE FUNCTION timbre.get_song_artists(
     song_id TEXT
 ) RETURNS TABLE(artist_id TEXT, artist_name TEXT)
@@ -535,5 +534,19 @@ BEGIN
     SELECT song_artist.artist_id, song_artist.artist_name
     FROM timbre.song_artist
     WHERE song_artist.song_id = $1;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION timbre.get_song_rating(
+    user_id INTEGER,
+    song_id TEXT
+) RETURNS TABLE(rating DECIMAL)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT song_rating.rating
+    FROM timbre.song_rating
+    WHERE song_rating.user_id = $1 AND song_rating.song_id = $2;
 END;
 $$;

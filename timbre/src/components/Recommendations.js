@@ -16,13 +16,13 @@ export default function Recommendations({ recs, updateRecs }) {
     function hidePlayer() {
         setShowPlayer(false);
     }
-
+    
     return (
         <div>
             <div className={`${styles.yourRecs}`}>
                 Your Song Recommendations
             </div>
-            <Player track={playingTrack} show={showPlayer} onHide={hidePlayer} updateRecommendations={updateRecs} />
+            <Player track={playingTrack} show={showPlayer} onHide={hidePlayer} onUpdateRating={updateRecs} />
             <Row>
                 {recs.map((track, index) => (
                     <Col key={index} md={6}>

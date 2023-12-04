@@ -54,10 +54,9 @@ const insertSongRating = async (user_id, song_id, rating) => {
     }
 };
 
-// TODO: remove this function, replaced by getTopRatings ACTUALLY DON'T REMOVE
-const getSongRating = async () => {
+const getSongRating = async (user_id, song_id) => {
     try {
-        const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
+        const query = `SELECT * FROM timbre.get_song_rating(${user_id}, '${song_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -330,7 +329,7 @@ const db_functions = {
     getUserInfo,
     getRandomUsers,
     insertSongRating,
-    getSongRating, // TODO REMOVE (MAYBE NOT ACTUALLY)
+    getSongRating,
     getUserIDFromSpotifyID,
     getUserIDFromEmail,
     createUser,
@@ -351,6 +350,7 @@ const db_functions = {
     checkFriends,
     getSongInformation,
     getSongArtistInformation,
+    addSong,
 };
 
 module.exports = db_functions;
