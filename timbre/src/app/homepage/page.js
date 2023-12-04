@@ -9,7 +9,7 @@ import useUserProfile from "../../hooks/useUserProfile";
 import useAuthentication from '../../hooks/useAccessToken';
 import useAuthRedirect from '../../hooks/useAuthRedirect';
 import { useSearchParams, useRouter } from "next/navigation";
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Dropdown} from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
 import AuthRedirect from '../../components/AuthRedirect';
 import TrackSearchResult from '../../components/TrackSearchResult';
@@ -187,7 +187,17 @@ export default function Home() {
 
                     See some of your favorite songs below or search a song to listen or rate!
                   </Card.Text>
-                  <Form.Control type="search" placeholder="Search for Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
+
+                  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></link>
+                  <Row style={{alignItems: 'center'}}>
+                    <Col xs={5} style={{width: '10px'}}>
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                    </Col>
+                    <Col>
+                      <Form.Control className={`${styles.search}`} type="search" placeholder="Search for Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
+                    </Col>
+                  </Row>
+                  
                   <div className={styles.songs}>
                     {searchResults.map(track => (
                       <TrackSearchResult track={track} chooseTrack={chooseSearchTrack} key={track.uri} />
