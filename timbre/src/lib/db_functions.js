@@ -54,10 +54,9 @@ const insertSongRating = async (user_id, song_id, rating) => {
     }
 };
 
-// TODO: remove this function, replaced by getTopRatings ACTUALLY DON'T REMOVE
-const getSongRating = async () => {
+const getSongRating = async (user_id, song_id) => {
     try {
-        const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
+        const query = `SELECT * FROM timbre.get_song_rating(${user_id}, '${song_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -116,13 +115,16 @@ const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
 
 const updateUserBio = async(user_id, bio) => {
     try {
-        if (bio)
-            bio = bio.replace(/'/g, "''");
-        else 
-            bio = null;
+        console.log(bio);
 
-        const query = `CALL timbre.update_bio(${user_id}, '${bio}')`;
-        console.log(query);
+        let query;
+        if (bio) {
+            bio = bio.replace(/'/g, "''");
+            query = `CALL timbre.update_bio(${user_id}, '${bio}')`;
+        } else {
+            query = `CALL timbre.update_bio(${user_id}, null)`;
+        }
+        
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -330,7 +332,7 @@ const db_functions = {
     getUserInfo,
     getRandomUsers,
     insertSongRating,
-    getSongRating, // TODO REMOVE (MAYBE NOT ACTUALLY)
+    getSongRating,
     getUserIDFromSpotifyID,
     getUserIDFromEmail,
     createUser,
@@ -351,6 +353,7 @@ const db_functions = {
     checkFriends,
     getSongInformation,
     getSongArtistInformation,
+    addSong,
 };
 
 module.exports = db_functions;

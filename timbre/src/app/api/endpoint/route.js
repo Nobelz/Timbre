@@ -1,5 +1,6 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { insertSongRating, checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio, getSongInformation, getSongArtistInformation } from "../../../lib/db_functions"
+import { getSongRating, addSong, insertSongRating, checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio, getSongInformation, getSongArtistInformation } from "../../../lib/db_functions"
+import { topTracks } from '../../../lib/spotify';
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -195,6 +196,67 @@ export async function POST(request) {
                 */
                 let matchResponse = await getTop3Matches(body.spotify_id);
                 return NextResponse.json({ message: 'Successful POST request', success: true, data: matchResponse });
+            case 'GET_TOP_TRACKS':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    tracks: The Spotify top tracks result
+                    Returns: The top tracks of the current user
+                */
+                let spotifyTopTracksResponse = await topTracks(body.access_token); 
+                let topTrackResponse1 = await getUserIDFromSpotifyID(body.spotify_id);
+                
+                let topSongs = [];
+                for (const item of spotifyTopTracksResponse.items) {
+                    let track = {};
+                    track.song_id = item.id;
+                    track.title = item.name;
+                    track.uri = item.uri;
+                    track.albumImageUrl = item.album.images[0].url;
+                    
+                    track.artists = [];
+                    track.artist_ids = [];
+                    for (const artist of item.artists) {
+                        track.artists.push(artist.name);
+                        track.artist_ids.push(artist.id);
+                    }
+                    
+                    // Add song to database
+                    await addSong(track.song_id, track.title, track.uri, track.albumImageUrl, track.artists, track.artist_ids); 
+                    
+                    // Get song rating (if exists)
+                    let ratingResponse = await getSongRating(topTrackResponse1.rows[0].search_user_from_id, track.song_id);
+                    if (ratingResponse.rows.length > 0) {
+                        track.rating = parseFloat(ratingResponse.rows[0].rating);
+                    } else {
+                        track.rating = null;
+                    }
+
+                    topSongs.push(track);
+                }
+                console.log(topSongs);
+                return NextResponse.json({ message: 'Successful POST request', success: true, data: topSongs });
+            case 'GET_SONG_RATING':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    track: The track to get the rating of
+                    Returns: The rating of the song
+                */
+                let ratingResponse1 = await getUserIDFromSpotifyID(body.spotify_id);
+                
+                let track = body.track;
+                console.log(track);
+                // Add song to database
+                await addSong(track.song_id, track.title, track.uri, track.albumImageUrl, track.artists, track.artist_ids); 
+                
+                // Get song rating (if exists)
+                let ratingResponse = await getSongRating(ratingResponse1.rows[0].search_user_from_id, track.song_id);
+                if (ratingResponse.rows.length > 0) {
+                    track.rating = parseFloat(ratingResponse.rows[0].rating);
+                } else {
+                    track.rating = null;
+                }
+
+                return NextResponse.json({ message: 'Successful POST request', success: true, data: track });
             default:
                 return NextResponse.json({ message: 'Internal server error', success: false });
         }

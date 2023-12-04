@@ -45,7 +45,7 @@ export default function RecSongPopup({ show, onHide, props, handleToast }) {
                     albumImageUrl: smallestAlbumImage.url
                 }
             }))
-        })
+        });
     }, [search, accessToken]);
 
     const recommendSong = async (track) => {
