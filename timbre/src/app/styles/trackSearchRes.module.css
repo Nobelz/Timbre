@@ -3,6 +3,7 @@
     margin: 8px;
     align-items: center;
     cursor: pointer;
+    text-align: left;
 }
 
 .searchCard:hover {
