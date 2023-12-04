@@ -1,3 +1,9 @@
+.profile {
+    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
+    height: 100%;
+    overflow: auto;
+}
+
  .container {
     text-align: center;
     vertical-align: middle;
@@ -94,9 +100,4 @@
     font-weight: 500;
     font-family: 'Lexend';
     justify-content: center;
-}
-
-.profile {
-    background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
-    height: 100%;
 }
