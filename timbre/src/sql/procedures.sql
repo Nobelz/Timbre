@@ -10,14 +10,17 @@ DECLARE
 BEGIN
     user_id_to_exclude := (SELECT * FROM timbre.search_user_from_id(current_user_spotify_id));
     
-    RETURN QUERY
-	SELECT spotify_id 
-	FROM timbre.timbre_user as u, timbre.friendship as f
+	RETURN QUERY
+    SELECT DISTINCT spotify_id 
+    FROM timbre.timbre_user AS u
     WHERE u.spotify_id != current_user_spotify_id
-        AND f.user_id1 != user_id_to_exclude
-        AND f.user_id2 != user_id_to_exclude
-	ORDER BY RANDOM()
-	LIMIT num_user; /* change this value to set the number of randomly sampled users to return */ 
+        AND u.user_id NOT IN (
+            SELECT user_id1 FROM timbre.friendship WHERE user_id2 = user_id_to_exclude
+            UNION
+            SELECT user_id2 FROM timbre.friendship WHERE user_id1 = user_id_to_exclude
+        )
+    ORDER BY RANDOM()
+    LIMIT num_user;
 END;
 $$;
 
@@ -395,7 +398,7 @@ RETURNS BOOLEAN
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE timbre.song.song_id = $1) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song_id = $1) THEN
         INSERT INTO timbre.song(song_id, title, uri, album_image_url) VALUES ($1, $2, $3, $4);
         RETURN TRUE;
     ELSE
@@ -412,7 +415,7 @@ CREATE OR REPLACE PROCEDURE timbre.add_song_artist(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE timbre.song_artist.song_id = $1 AND timbre.song_artist.artist_id = $2) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE song_id = $1 AND artist_id = $2) THEN
         INSERT INTO timbre.song_artist(song_id, artist_id, artist_name) VALUES ($1, $2, $3);
     END IF;
 END;
@@ -426,12 +429,8 @@ CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
-        INSERT INTO timbre.recommendation(song_id, sender_id, receiver_id) VALUES ($3, $1, $2);
-    ELSE
-        UPDATE timbre.recommendation
-        SET rec_time = NOW()
-        WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2;
+    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
+        INSERT INTO timbre.recommendation(song_id, sender_id, friend_id) VALUES ($3, $1, $2);
     END IF;
 END;
 $$;
@@ -445,14 +444,13 @@ AS $$
 BEGIN
     RETURN QUERY
     WITH sender_ids AS (
-        SELECT timbre.recommendation.song_id, timbre.recommendation.sender_id, timbre.recommendation.rec_time FROM timbre.recommendation
+        SELECT song_id, sender_id FROM timbre.recommendation
         WHERE receiver_id = $1
     )
     SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic 
     FROM sender_ids
     JOIN timbre.timbre_user
-    ON sender_ids.sender_id = timbre_user.user_id
-    ORDER BY sender_ids.rec_time DESC;
+    ON sender_ids.sender_id = timbre_user.user_id;
 END;
 $$;
 
@@ -470,34 +468,5 @@ BEGIN
     ELSE
         RETURN FALSE;
     END IF;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION timbre.get_song_info(
-    user_id INTEGER,
-    song_id TEXT
-) RETURNS TABLE (title TEXT, uri TEXT, album_image_url TEXT, rating DECIMAL)
-LANGUAGE PLPGSQL
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT song.title, song.uri, song.album_image_url, song_rating.rating
-    FROM timbre.song
-    LEFT JOIN timbre.song_rating
-    ON song.song_id = song_rating.song_id AND song_rating.user_id = $1
-    WHERE song.song_id = $2;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION timbre.get_song_artists(
-    song_id TEXT
-) RETURNS TABLE(artist_id TEXT, artist_name TEXT)
-LANGUAGE PLPGSQL
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT song_artist.artist_id, song_artist.artist_name
-    FROM timbre.song_artist
-    WHERE song_artist.song_id = $1;
 END;
 $$;
