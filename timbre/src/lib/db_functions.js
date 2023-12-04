@@ -281,6 +281,12 @@ const checkFriends = async(user_id1, user_id2) => {
 
 const addSong = async (song_id, title, uri, album_image, artists, artist_ids) => {
     try {
+        // Escape single quotes
+        for (let artist_name of artists) {
+            artist_name = artist_name.replace(/'/g, "''");
+        }
+        title = title.replace(/'/g, "''");
+
         const query = `SELECT * FROM timbre.add_song('${song_id}', '${title}', '${uri}', '${album_image}')`;
         let result = await connection.query(query);
 
