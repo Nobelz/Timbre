@@ -83,3 +83,8 @@
 .profilePic {
     padding-right: 10px;
 }
+
+.score {
+    padding-left: 7px;
+    font-size: .75em;
+}

@@ -20,8 +20,9 @@ export default function FriendsListItem({ friend, handleToast }) {
             <ListGroup.Item className={`${styles.listItem}`} onClick={(e) => handleRecommendSongs(e)}>
                 <img src={friend.profile_pic} height="64" width="70" className={`${styles.profilePic}`} />
                 {friend.display_name}
-                {'   '}
-                {Math.round((friend.score + Number.EPSILON) * 100)}{'%'}
+                <span className={`text-muted ${styles.score}`}>
+                    Compatibility score: {Math.round((friend.score + Number.EPSILON) * 100)}{'%'}
+                </span>
                 <span className={`text-muted ${styles.listItemHidden}`}>Recommend Songs to {friend.display_name}?</span>
             </ListGroup.Item>
             <RecSongPopup show={showRecSongPopup} onHide={handleRecSongPopupClose} props={friend} handleToast={handleToast} />
