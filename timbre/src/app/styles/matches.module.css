@@ -43,7 +43,7 @@
 .cardGrid {
     display: grid;
     justify-content: center;
-    grid-template-areas: 'card card card';
+    grid-auto-flow: column;
     gap: 5rem;
 }
 

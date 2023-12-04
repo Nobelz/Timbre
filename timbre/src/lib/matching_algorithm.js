@@ -3,8 +3,8 @@ import { recentlyPlayed, topTracks, topArtists, profileInfo, artistTopTracks, tr
 
 export const calculateCompatibilityScore = async (spotify_id1, spotify_id2) => {
     // Get User IDs from emails
-    const user_id1 = await getUserIDFromSpotifyID(id1);
-    const user_id2 = await getUserIDFromSpotifyID(id2);
+    const user_id1 = await getUserIDFromSpotifyID(spotify_id1);
+    const user_id2 = await getUserIDFromSpotifyID(spotify_id2);
 
     return calculateCompatibilityScoreWithUserIDs(user_id1.rows[0].search_user_from_id, user_id2.rows[0].search_user_from_id);
 }
