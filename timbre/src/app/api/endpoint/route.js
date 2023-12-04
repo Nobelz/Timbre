@@ -234,7 +234,29 @@ export async function POST(request) {
                     topSongs.push(track);
                 }
                 console.log(topSongs);
-                return NextResponse.json({ message: 'Successful POST request', success: true, data: topSongs }); 
+                return NextResponse.json({ message: 'Successful POST request', success: true, data: topSongs });
+            case 'GET_SONG_RATING':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    track: The track to get the rating of
+                    Returns: The rating of the song
+                */
+                let ratingResponse1 = await getUserIDFromSpotifyID(body.spotify_id);
+                
+                let track = body.track;
+                console.log(track);
+                // Add song to database
+                await addSong(track.song_id, track.title, track.uri, track.albumImageUrl, track.artists, track.artist_ids); 
+                
+                // Get song rating (if exists)
+                let ratingResponse = await getSongRating(ratingResponse1.rows[0].search_user_from_id, track.song_id);
+                if (ratingResponse.rows.length > 0) {
+                    track.rating = parseFloat(ratingResponse.rows[0].rating);
+                } else {
+                    track.rating = null;
+                }
+
+                return NextResponse.json({ message: 'Successful POST request', success: true, data: track });
             default:
                 return NextResponse.json({ message: 'Internal server error', success: false });
         }

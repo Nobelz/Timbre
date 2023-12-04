@@ -92,7 +92,6 @@ export default function Friends() {
             spotify_id: spotify_id,
             track_id: track.song_id,
             rating: rating,
-            insert_song: false,
         };
 
         const response = await fetch('../api/endpoint', {
