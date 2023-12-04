@@ -18,7 +18,7 @@ export default function Callback() {
   }
 
   return (
-    <Container>
+    <Container fluid className={`${styles.page}`}>
       <Row style={{paddingTop: '15%'}}> 
         <Col>
           <div class={`${styles.center}`}>
