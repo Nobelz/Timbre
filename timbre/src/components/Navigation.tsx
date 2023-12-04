@@ -9,6 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { refreshSpotifyToken } from "../app/api/auth/authorize";
 
 // profilePage is false by default
 // profilePage is true when the user is on the profile page
@@ -16,6 +17,9 @@ import { useRouter } from 'next/navigation';
 const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, accessToken }) => {
   
   const [spotifyID, setSpotifyID] = useState('');
+  const [expiresIn, setExpiresIn] = useState(0);
+  const [refreshToken, setRefreshToken] = useState('');
+
   const getInitials = (name) => {
     // if name, then first character, else empty string
     return name &&
@@ -46,7 +50,6 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
     router.push(path);
   };
   
-
   const fetchUserProfile = async () => {
     // Fetch user profile using Spotify ID
     try {
@@ -71,13 +74,48 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
     }
   };
 
+  const fetchRefreshToken = async () => {
+    try {
+      let response = await refreshSpotifyToken(refreshToken);
+      localStorage.setItem("access_token", response.access_token);
+      localStorage.setItem("refresh_token", response.refresh_token);
+      localStorage.setItem('expires_in', (response.expires_in * 1000 + Date.now()).toString());
+      setRefreshToken(response.refresh_token);
+      setAccessToken(response.access_token);
+      setExpiresIn(response.expires_in * 1000 + Date.now());
+    } catch (error) {
+      console.error("Error refreshing token:", error);
+    }
+  }
+
   useEffect(() => {
+    if (!refreshToken) {
+      setRefreshToken(localStorage.getItem('refresh_token') || '');
+      return;
+    }
+    if (!expiresIn) {
+      setExpiresIn(parseInt(localStorage.getItem('expires_in') || '0'));
+    }
     if (!spotifyID) {
       setSpotifyID(localStorage.getItem('spotify_id') || '');
     } else {
       fetchUserProfile();
     }
-  }, [accessToken, spotifyID]);
+  }, [accessToken, refreshToken, spotifyID]);
+
+  useEffect(() => {
+    if (!refreshToken) {
+      return;
+    }
+    const interval = setInterval(() => {
+      if (Date.now() + 600 * 1000 > expiresIn) { // Refresh within 10 minutes of expiration
+        console.log('Refreshing token');
+        fetchRefreshToken();
+      }
+    }, 540 * 1000); // Check every 9 minutes
+  
+    return () => clearInterval(interval);
+  }, [refreshToken])
 
   return (
     <Navbar bg="dark" variant="dark" style={{ fontFamily: 'Lexend, sans-serif', height: '60px'}}>
