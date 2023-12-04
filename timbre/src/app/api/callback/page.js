@@ -21,16 +21,16 @@ export default function Callback() {
     <Container>
       <Row style={{paddingTop: '15%'}}> 
         <Col>
-          <div class={`${styles.center}`}>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
-          <div class={`${styles.wave}`}></div>
+          <div className={`${styles.center}`}>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
+          <div className={`${styles.wave}`}></div>
 
         </div>
         <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
