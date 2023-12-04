@@ -77,8 +77,13 @@ export async function PUT(request) {
                             code: 404,
                             message: 'User not found',
                         }
-                    };   
+                    };
                 }
+                break;
+            case 'MAKE_FRIEND_REQUEST_WITH_ID':
+                response1 = await getUserIDFromSpotifyID(body.match_id);
+                response2 = await getUserIDFromSpotifyID(body.current_id);
+                response = await makeFriendRequest(response2.rows[0].search_user_from_id, response1.rows[0].search_user_from_id);
                 break;
             case 'MAKE_RECOMMENDATION':
                 /*
@@ -95,7 +100,7 @@ export async function PUT(request) {
                     new_bio: The bio to update to
                 */
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);
-                response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio )
+                response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio)
                 break;
             case 'RATE_SONG':
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);
@@ -109,7 +114,7 @@ export async function PUT(request) {
         return NextResponse.json({ message: 'Internal server error', success: false, error: err });
     }
 
-    return NextResponse.json({ message: 'Internal server error', success: false});
+    return NextResponse.json({ message: 'Internal server error', success: false });
 }
 
 export async function POST(request) {
@@ -189,8 +194,15 @@ export async function POST(request) {
                     spotify_id: The Spotify ID of the current user
                     Returns: The profile of the current user
                 */
-               response = await getUserInfo(body.spotify_id);
-               break;
+                response = await getUserInfo(body.spotify_id);
+                break;
+            case 'GET_MATCHES':
+                /*
+                    spotify_id: The Spotify ID of the current user
+                    Returns: The matches of the current user
+                */
+                response = await getTop3Matches(body.spotify_id);
+                break;
             default:
                 return NextResponse.json({ message: 'Internal server error', success: false });
         }
@@ -201,11 +213,11 @@ export async function POST(request) {
         return NextResponse.json({ message: 'Internal server error', success: false, error: err });
     }
 
-    return NextResponse.json({ message: 'Internal server error', success: false});
+    return NextResponse.json({ message: 'Internal server error', success: false });
 }
 
 export async function GET(request) {
-    return NextResponse.json({ message: 'Internal server error', success: false});
+    return NextResponse.json({ message: 'Internal server error', success: false });
 }
 // look at this https://stackoverflow.com/questions/76214029/no-http-methods-exported-in-export-a-named-export-for-each-http-method
 // name each method POST, GET, etc...

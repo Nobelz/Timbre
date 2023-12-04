@@ -9,6 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     position: relative;
     border-radius: 1.5rem;
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, .3);
@@ -59,4 +60,29 @@
     font-size: 6.5em;
     font-weight: 900;
     font-family: 'Lexend';
+}
+
+.profilePic {
+    height: 150px;
+    width: 150px;
+    border-radius: 1.5rem;
+    transform: translateY(-10px);
+}
+
+.name {
+    font-weight: 900;
+    margin-top: 20px;
+}
+
+.compatability {
+    transform: translateY(-20px);
+    font-weight: 900;
+    margin-top: 20px;
+    text-decoration: underline;
+}
+
+.score {
+    transform: translateY(-20px);
+    font-weight: 900;
+    margin-top: 20px;
 }
