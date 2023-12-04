@@ -100,7 +100,7 @@ export async function PUT(request) {
                     new_bio: The bio to update to
                 */
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);
-                response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio)
+                response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio);
                 break;
             case 'RATE_SONG':
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);

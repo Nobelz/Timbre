@@ -117,11 +117,12 @@ const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
 const updateUserBio = async(user_id, bio) => {
     try {
         if (bio)
-            bio = `'${bio}'`;
+            bio = bio.replace(/'/g, "''");
         else 
             bio = null;
 
-        const query = `CALL timbre.update_bio(${user_id}, ${bio})`;
+        const query = `CALL timbre.update_bio(${user_id}, '${bio}')`;
+        console.log(query);
         const result = await connection.query(query);
         return result;
     } catch (error) {
