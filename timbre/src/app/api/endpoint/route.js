@@ -13,7 +13,7 @@ export async function PUT(request) {
                     access_token: The API access token
                 */
                 let spotifyDataResponse = await generateSpotifyData(body.access_token);
-                return NextResponse.json({ message: 'Successful PUT request', success: true, data: spotifyDataResponse });
+                return NextResponse.json({ message: 'Successful PUT request', success: true, data: spotifyDataResponse.data });
             case 'DENY_FRIEND_REQUEST':
                 /*
                     current_id: The Spotify ID of the current user
