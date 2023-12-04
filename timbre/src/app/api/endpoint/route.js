@@ -1,5 +1,5 @@
 import { calculateCompatibilityScore, generateSpotifyData } from '../../../lib/matching_algorithm';
-import { checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio, getSongInformation, getSongArtistInformation } from "../../../lib/db_functions"
+import { insertSongRating, checkFriends, getUserInfo, getUserIDFromSpotifyID, getUserIDFromEmail, rejectFriendRequest, acceptFriendRequest, makeFriendRequest, getFriendRequests, getFriends, makeRecommendation, getRecommendations, updateUserBio, getSongInformation, getSongArtistInformation } from "../../../lib/db_functions"
 import { NextResponse } from 'next/server';
 import { getTop3Matches } from "../../../lib/matching"
 
@@ -96,6 +96,10 @@ export async function PUT(request) {
                 */
                 response1 = await getUserIDFromSpotifyID(body.spotify_id);
                 response = await updateUserBio(response1.rows[0].search_user_from_id, body.new_bio )
+                break;
+            case 'RATE_SONG':
+                response1 = await getUserIDFromSpotifyID(body.spotify_id);
+                response = await insertSongRating(response1.rows[0].search_user_from_id, body.track_id, body.rating);
                 break;
             default:
                 return NextResponse.json({ message: 'Internal server error', success: false });

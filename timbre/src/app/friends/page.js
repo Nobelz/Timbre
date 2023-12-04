@@ -82,6 +82,29 @@ export default function Friends() {
         }
     };
 
+    const updateRecommendations = async(track, rating) => {
+        let data = {
+            command: 'RATE_SONG',
+            spotify_id: spotify_id,
+            track_id: track.song_id,
+            rating: rating,
+        };
+
+        const response = await fetch('../api/endpoint', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        });
+
+        await response.json();
+
+        if (spotify_id) {
+            fetchRecommendations();
+        }
+    }
+
     const handleShowToast = (title, message, variant) => {
         setTitleMessage(title);
         setToastMessage(message);
@@ -122,7 +145,7 @@ export default function Friends() {
                 View Your Friends and Song Recommendations
             </div>
             <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast}/>
+                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} updateRecs={updateRecommendations} handleToast={handleShowToast}/>
             </div>
             <ToastComponent show={showToast} variant={toastVariant} title={titleMessage} message={toastMessage}/>
         </div>

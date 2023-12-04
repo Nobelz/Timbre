@@ -4,7 +4,7 @@ import TrackSearchResult from "./TrackSearchResult"
 import Player from './Player'
 import styles from '../app/styles/songRecs.module.css'
 
-export default function Recommendations({ recs }) {
+export default function Recommendations({ recs, updateRecs }) {
     const [playingTrack, setPlayingTrack] = useState();
     const [showPlayer, setShowPlayer] = useState(false);
 
@@ -22,7 +22,7 @@ export default function Recommendations({ recs }) {
             <div className={`${styles.yourRecs}`}>
                 Your Song Recommendations
             </div>
-            <Player trackUri={playingTrack?.uri} show={showPlayer} onHide={hidePlayer} trackRating={playingTrack?.rating} />
+            <Player track={playingTrack} show={showPlayer} onHide={hidePlayer} updateRecommendations={updateRecs} />
             <Row>
                 {recs.map((track, index) => (
                     <Col key={index} md={6}>
