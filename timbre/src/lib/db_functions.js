@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { calculateCompatibilityScoreWithUserIDs } from "./matching_algorithm";
 
 let connection;
 
@@ -212,6 +213,11 @@ const getFriends = async(user_id) => {
     try {
         const query = `SELECT * FROM timbre.get_friends(${user_id})`;
         const result = await connection.query(query);
+        let friends = result.rows;
+        for (let friend of friends) {
+            const compatibility_score = await calculateCompatibilityScoreWithUserIDs(user_id, friend.friend_id);
+            friend.score = compatibility_score.data.score;
+        }
         return result;
     } catch (error) {
         console.log(error);
