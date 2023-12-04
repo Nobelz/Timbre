@@ -233,7 +233,6 @@ export async function POST(request) {
 
                     topSongs.push(track);
                 }
-                console.log(topSongs);
                 return NextResponse.json({ message: 'Successful POST request', success: true, data: topSongs });
             case 'GET_SONG_RATING':
                 /*

@@ -1,7 +1,15 @@
 import { createUser, getUserIDFromSpotifyID, getSongProfiles, getProfileCharacteristics, getTopRatings, insertSongProfile, updateUser } from './db_functions';
 import { recentlyPlayed, topTracks, topArtists, profileInfo, artistTopTracks, trackFeatures } from './spotify';
 
-export const calculateCompatibilityScore = async (id1, id2) => {
+export const calculateCompatibilityScore = async (spotify_id1, spotify_id2) => {
+    // Get User IDs from emails
+    const user_id1 = await getUserIDFromSpotifyID(id1);
+    const user_id2 = await getUserIDFromSpotifyID(id2);
+
+    return calculateCompatibilityScoreWithUserIDs(user_id1.rows[0].search_user_from_id, user_id2.rows[0].search_user_from_id);
+}
+
+export const calculateCompatibilityScoreWithUserIDs = async (id1, id2) => {
     // ACCESSORY FUNCTIONS
     // Accessory Function: Calculate the score between each profile
     const calculateScore = async (profile1, profile2, total) => {
@@ -21,12 +29,8 @@ export const calculateCompatibilityScore = async (id1, id2) => {
     const isEmpty = (dict) => {
         return Object.keys(dict).length === 0;
     };
-    
-    // Get User IDs from emails
-    const user_id1 = await getUserIDFromSpotifyID(id1);
-    const user_id2 = await getUserIDFromSpotifyID(id2);
 
-    const user_ids = [user_id1.rows[0].search_user_from_id, user_id2.rows[0].search_user_from_id]
+    const user_ids = [id1, id2];
 
     // Get all song profiles for each user
     const songProfiles1 = await getSongProfiles(user_ids[0], 1);
