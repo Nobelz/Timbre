@@ -42,7 +42,6 @@ CREATE TABLE friendship (
 	matching_id SERIAL PRIMARY KEY,
 	user_id1 INTEGER NOT NULL,
 	user_id2 INTEGER NOT NULL,
-	compatibility_score DOUBLE PRECISION,
 	
 	CONSTRAINT fk_matching_user1
 		FOREIGN KEY(user_id1)

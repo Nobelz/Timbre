@@ -9,7 +9,7 @@ export default function FriendsList({ friends, handleToast }) {
             <div className={`${styles.yourFriends}`}>
                 Your Friends
             </div>
-            <ListGroup variant="flush">
+            <ListGroup className={`${styles.list}`} variant="flush">
                 {friends.map((friend, index) => {
                     return (
                         <FriendsListItem friend={friend} handleToast={handleToast} key={index} />

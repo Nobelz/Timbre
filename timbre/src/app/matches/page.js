@@ -18,9 +18,8 @@ import { match } from 'assert';
 export default function Matches() {
     const [matchcards, setMatchcards] = useState([]);
 
-    const [access_token, setAccessToken] = useState("");
     const [spotify_id, setSpotifyID] = useState("");
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
     const isLoading = useAuthRedirect(isAuthenticated);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -88,7 +87,7 @@ export default function Matches() {
                         Your Matches
                     </div>
                     <div className={`${styles.container}`}>
-                        <MatchcardList matchcards={matchcards} handleToast={handleShowToast}/>
+                        <MatchcardList matchcards={matchcards} handleToast={handleShowToast} />
                     </div>
                 </div>
             </div>

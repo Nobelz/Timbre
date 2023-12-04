@@ -5,14 +5,18 @@ import Navigation from '../../components/Navigation';
 import styles from '../styles/friends.module.css';
 import FriendsTab from '../../components/FriendsTab';
 import ToastComponent from '../../components/ToastComponent';
+import useAuthentication from '../../hooks/useAccessToken';
+import useAuthRedirect from '../../hooks/useAuthRedirect';
+import AuthRedirect from '../../components/AuthRedirect';
 
 export default function Friends() {
-    const [access_token, setAccessToken] = useState("");
     const [spotify_id, setSpotifyID] = useState("");
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
+
     const [friendRequests, setFriendRequests] = useState([]);
     const [songRecommendations, setSongRecommendations] = useState([]);
     const [friends, setFriends] = useState([]);
+    const isLoading = useAuthRedirect(isAuthenticated);
 
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -61,7 +65,7 @@ export default function Friends() {
         }
     };
 
-    const fetchRecommendations = async() => {
+    const fetchRecommendations = async () => {
         try {
             let data = {
                 command: 'GET_RECOMMENDATIONS',
@@ -82,7 +86,7 @@ export default function Friends() {
         }
     };
 
-    const updateRecommendations = async(track, rating) => {
+    const updateRecommendations = async (track, rating) => {
         let data = {
             command: 'RATE_SONG',
             spotify_id: spotify_id,
@@ -135,19 +139,21 @@ export default function Friends() {
             updateFriends();
             fetchRecommendations();
         }
-    }, [access_token, spotify_id]); 
+    }, [access_token, spotify_id]);
 
     return (
-        <div className={`${styles.friends}`}>
-            <Navigation isAuthenticated={isAuthenticated} />
-            <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet' />
-            <div className={`${styles.header}`}>
-                View Your Friends and Song Recommendations
+        <AuthRedirect isLoading={isLoading} isAuth={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setAccessToken={setAccessToken} >
+            <div className={`${styles.friends}`}>
+                <Navigation isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} accessToken={access_token} setAccessToken={setAccessToken} />
+                <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet' />
+                <div className={`${styles.header}`}>
+                    View Your Friends and Song Recommendations
+                </div>
+                <div className={`${styles.container}`}>
+                    <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} updateRecs={updateRecommendations} handleToast={handleShowToast} />
+                </div>
+                <ToastComponent show={showToast} variant={toastVariant} title={titleMessage} message={toastMessage} />
             </div>
-            <div className={`${styles.container}`}>
-                <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} updateRecs={updateRecommendations} handleToast={handleShowToast}/>
-            </div>
-            <ToastComponent show={showToast} variant={toastVariant} title={titleMessage} message={toastMessage} />
-        </div>
+        </AuthRedirect>
     )
 }

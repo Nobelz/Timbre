@@ -18,7 +18,7 @@ export default function Callback() {
   }
 
   return (
-    <Container>
+    <Container fluid className={`${styles.page}`}>
       <Row style={{paddingTop: '15%'}}> 
         <Col>
           <div className={`${styles.center}`}>
@@ -34,7 +34,7 @@ export default function Callback() {
 
         </div>
         <link href='https://fonts.googleapis.com/css?family=Lexend' rel='stylesheet'/>
-          <h2 className="mt-3"style={{fontFamily: 'Lexend, sans-serif', 
+          <h2 className="mt-3" style={{fontFamily: 'Lexend, sans-serif', 
                         fontSize: 'x-large', 
                         background: 'white', 
                         color: '#083686',

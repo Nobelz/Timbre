@@ -1,3 +1,11 @@
+.page {
+  background-color: white;
+  height: 100%;
+  margin:0px;
+  padding:0px;
+  justify-content: center;
+}
+
 .bodY {
     margin: 0;
     padding: 0;

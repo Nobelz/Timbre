@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import { calculateCompatibilityScoreWithUserIDs } from "./matching_algorithm";
 
 let connection;
 
@@ -54,10 +55,9 @@ const insertSongRating = async (user_id, song_id, rating) => {
     }
 };
 
-// TODO: remove this function, replaced by getTopRatings ACTUALLY DON'T REMOVE
-const getSongRating = async () => {
+const getSongRating = async (user_id, song_id) => {
     try {
-        const query = `SELECT * FROM timbre.get_song_profile(1, 1)`;
+        const query = `SELECT * FROM timbre.get_song_rating(${user_id}, '${song_id}')`;
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -116,12 +116,16 @@ const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
 
 const updateUserBio = async(user_id, bio) => {
     try {
-        if (bio)
-            bio = `'${bio}'`;
-        else 
-            bio = null;
+        console.log(bio);
 
-        const query = `CALL timbre.update_bio(${user_id}, ${bio})`;
+        let query;
+        if (bio) {
+            bio = bio.replace(/'/g, "''");
+            query = `CALL timbre.update_bio(${user_id}, '${bio}')`;
+        } else {
+            query = `CALL timbre.update_bio(${user_id}, null)`;
+        }
+        
         const result = await connection.query(query);
         return result;
     } catch (error) {
@@ -209,6 +213,11 @@ const getFriends = async(user_id) => {
     try {
         const query = `SELECT * FROM timbre.get_friends(${user_id})`;
         const result = await connection.query(query);
+        let friends = result.rows;
+        for (let friend of friends) {
+            const compatibility_score = await calculateCompatibilityScoreWithUserIDs(user_id, friend.friend_id);
+            friend.score = compatibility_score.data.score;
+        }
         return result;
     } catch (error) {
         console.log(error);
@@ -278,6 +287,12 @@ const checkFriends = async(user_id1, user_id2) => {
 
 const addSong = async (song_id, title, uri, album_image, artists, artist_ids) => {
     try {
+        // Escape single quotes
+        for (let artist_name of artists) {
+            artist_name = artist_name.replace(/'/g, "''");
+        }
+        title = title.replace(/'/g, "''");
+
         const query = `SELECT * FROM timbre.add_song('${song_id}', '${title}', '${uri}', '${album_image}')`;
         let result = await connection.query(query);
 
@@ -329,7 +344,7 @@ const db_functions = {
     getUserInfo,
     getRandomUsers,
     insertSongRating,
-    getSongRating, // TODO REMOVE (MAYBE NOT ACTUALLY)
+    getSongRating,
     getUserIDFromSpotifyID,
     getUserIDFromEmail,
     createUser,
@@ -350,6 +365,7 @@ const db_functions = {
     checkFriends,
     getSongInformation,
     getSongArtistInformation,
+    addSong,
 };
 
 module.exports = db_functions;
