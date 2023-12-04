@@ -3,7 +3,7 @@ import { getRandomUsers, getUserInfo } from './db_functions';
 
 async function getTop3Matches(currSpotifyID) {
   try {
-    const sampledUsers = await getRandomUsers(currSpotifyID);
+    const sampledUsers = await getRandomUsers(currSpotifyID, 10);
     const userDict = {};
 
     // calculate scores

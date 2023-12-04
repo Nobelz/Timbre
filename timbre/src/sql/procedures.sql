@@ -9,9 +9,9 @@ DECLARE
     user_id_to_exclude INTEGER;
 BEGIN
     user_id_to_exclude := (SELECT * FROM timbre.search_user_from_id(current_user_spotify_id));
-    
-	RETURN QUERY
-    SELECT DISTINCT spotify_id 
+   
+    RETURN QUERY
+    SELECT spotify_id
     FROM timbre.timbre_user AS u
     WHERE u.spotify_id != current_user_spotify_id
         AND u.user_id NOT IN (
@@ -24,6 +24,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.get_user_info_from_spotify_id(
     spotify_id_to_search TEXT
 )
@@ -32,16 +33,17 @@ LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT spotify_display_name, email, profile_pic, user_bio, spotify_last_refresh
-	FROM timbre.timbre_user
+    SELECT spotify_display_name, email, profile_pic, user_bio, spotify_last_refresh
+    FROM timbre.timbre_user
     WHERE spotify_id = spotify_id_to_search;
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.search_user_from_id(
     id_to_search TEXT
 )
-RETURNS SETOF INTEGER 
+RETURNS SETOF INTEGER
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
@@ -50,10 +52,11 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.search_user_from_email(
     email_to_search TEXT
 )
-RETURNS SETOF INTEGER 
+RETURNS SETOF INTEGER
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
@@ -61,6 +64,7 @@ BEGIN
     SELECT user_id FROM timbre.timbre_user WHERE LOWER(email) = LOWER(email_to_search);
 END;
 $$;
+
 
 CREATE OR REPLACE PROCEDURE timbre.create_user(
     spotify_id TEXT,
@@ -73,18 +77,20 @@ AS $$
     INSERT INTO timbre.timbre_user (spotify_id, email, spotify_display_name, profile_link, spotify_last_refresh, create_time) VALUES (spotify_id, email, spotify_display_name, profile_link, NOW(), NOW());
 $$;
 
+
 CREATE OR REPLACE PROCEDURE timbre.update_user(
     user_id INTEGER,
     email TEXT,
     spotify_display_name TEXT,
-	profile_pic TEXT
+    profile_pic TEXT
 )
 LANGUAGE SQL
 AS $$
-    UPDATE timbre.timbre_user 
+    UPDATE timbre.timbre_user
     SET email = $2, spotify_display_name = $3, profile_pic = $4, spotify_last_refresh = NOW()
     WHERE user_id = $1;
 $$;
+
 
 CREATE OR REPLACE PROCEDURE timbre.update_bio(
     user_id INTEGER,
@@ -92,10 +98,11 @@ CREATE OR REPLACE PROCEDURE timbre.update_bio(
 )
 LANGUAGE SQL
 AS $$
-    UPDATE timbre.timbre_user 
+    UPDATE timbre.timbre_user
     SET user_bio = $2
     WHERE user_id = $1;
 $$;
+
 
 CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
     user_id INTEGER,
@@ -113,8 +120,9 @@ CREATE OR REPLACE PROCEDURE timbre.insert_song_profile(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    INSERT INTO timbre.song_profile 
+    INSERT INTO timbre.song_profile
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+
 
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'acousticness') THEN
         UPDATE timbre.characteristics
@@ -124,6 +132,7 @@ BEGIN
         INSERT INTO timbre.characteristics VALUES ('acousticness', $3, $3);
     END IF;
 
+
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'valence') THEN
         UPDATE timbre.characteristics
         SET c_min = LEAST(c_min, $4), c_max = GREATEST(c_max, $4)
@@ -131,6 +140,7 @@ BEGIN
     ELSE
         INSERT INTO timbre.characteristics VALUES ('valence', $4, $4);
     END IF;
+
 
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'danceability') THEN
         UPDATE timbre.characteristics
@@ -140,6 +150,7 @@ BEGIN
         INSERT INTO timbre.characteristics VALUES ('danceability', $5, $5);
     END IF;
 
+
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'energy') THEN
         UPDATE timbre.characteristics
         SET c_min = LEAST(c_min, $6), c_max = GREATEST(c_max, $6)
@@ -147,6 +158,7 @@ BEGIN
     ELSE
         INSERT INTO timbre.characteristics VALUES ('energy', $6, $6);
     END IF;
+
 
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'instrumentalness') THEN
         UPDATE timbre.characteristics
@@ -156,6 +168,7 @@ BEGIN
         INSERT INTO timbre.characteristics VALUES ('instrumentalness', $7, $7);
     END IF;
 
+
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'liveness') THEN
         UPDATE timbre.characteristics
         SET c_min = LEAST(c_min, $8), c_max = GREATEST(c_max, $8)
@@ -163,6 +176,7 @@ BEGIN
     ELSE
         INSERT INTO timbre.characteristics VALUES ('liveness', $8, $8);
     END IF;
+
 
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'loudness') THEN
         UPDATE timbre.characteristics
@@ -172,6 +186,7 @@ BEGIN
         INSERT INTO timbre.characteristics VALUES ('loudness', $9, $9);
     END IF;
 
+
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'speechiness') THEN
         UPDATE timbre.characteristics
         SET c_min = LEAST(c_min, $10), c_max = GREATEST(c_max, $10)
@@ -179,6 +194,7 @@ BEGIN
     ELSE
         INSERT INTO timbre.characteristics VALUES ('speechiness', $10, $10);
     END IF;
+
 
     IF EXISTS (SELECT 1 FROM timbre.characteristics WHERE c_name = 'tempo') THEN
         UPDATE timbre.characteristics
@@ -190,6 +206,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.get_top_ratings(
     user_id INTEGER,
     rating_limit INTEGER
@@ -199,13 +216,13 @@ LANGUAGE PLPGSQL
 AS $$
 BEGIN
     RETURN QUERY
-	SELECT song_rating.song_id, song_rating.rating FROM timbre.song_rating
+    SELECT song_rating.song_id, song_rating.rating FROM timbre.song_rating
     WHERE timbre.song_rating.user_id = $1
     ORDER BY rating DESC, rating_time DESC -- Take the top ratings, and if there are ties, take the most recent ratings
     LIMIT rating_limit;
 END;
 $$;
-    
+   
 CREATE OR REPLACE PROCEDURE timbre.make_rating(
     user_id INTEGER,
     song_id TEXT,
@@ -223,16 +240,18 @@ BEGIN
             INSERT INTO timbre.song(song_id) VALUES ($2);
         END IF;
 
+
         INSERT INTO timbre.song_rating(user_id, song_id, rating) VALUES ($1, $2, $3);
     END IF;
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.get_song_profile(
     user_id INTEGER,
     type_id INTEGER,
     num_profiles INTEGER DEFAULT 0
-) 
+)
 RETURNS TABLE (acousticness DECIMAL, valence DECIMAL, danceability DECIMAL, energy DECIMAL, instrumentalness DECIMAL, liveness DECIMAL, loudness DECIMAL, speechiness DECIMAL, tempo DECIMAL, profile_time TIMESTAMP)
 LANGUAGE PLPGSQL
 AS $$
@@ -251,6 +270,7 @@ BEGIN
     END IF;
 END;
 $$;
+
 
 CREATE OR REPLACE FUNCTION timbre.get_all_song_profiles(
     user_id INTEGER,
@@ -291,6 +311,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.get_profile_characteristics()
 RETURNS TABLE (c_name TEXT, c_min DECIMAL, c_max DECIMAL)
 LANGUAGE PLPGSQL
@@ -301,10 +322,11 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE PROCEDURE timbre.friend_request(
     request_id INTEGER,
     receive_id INTEGER
-) 
+)
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
@@ -319,13 +341,14 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.get_friends(
     user_id INTEGER
-) 
+)
 RETURNS TABLE (friend_id INTEGER, spotify_id TEXT, display_name TEXT, profile_pic TEXT)
 LANGUAGE PLPGSQL
 AS $$
-BEGIN 
+BEGIN
     RETURN QUERY
     WITH friend_ids AS (
         SELECT user_id1 AS friend_id FROM timbre.friendship
@@ -336,10 +359,11 @@ BEGIN
     )
     SELECT friend_ids.friend_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic FROM
     friend_ids
-    JOIN timbre.timbre_user 
+    JOIN timbre.timbre_user
     ON friend_ids.friend_id = timbre_user.user_id;
 END;
 $$;
+
 
 CREATE OR REPLACE FUNCTION timbre.get_friend_requests(
     friend_id INTEGER
@@ -361,6 +385,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE PROCEDURE timbre.accept_friend_request(
     user_id INTEGER,
     friend_id INTEGER
@@ -375,6 +400,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE PROCEDURE timbre.reject_friend_request(
     user_id INTEGER,
     friend_id INTEGER
@@ -388,6 +414,7 @@ BEGIN
 END;
 $$;
 
+
 CREATE OR REPLACE FUNCTION timbre.add_song(
     song_id TEXT,
     title TEXT,
@@ -398,7 +425,7 @@ RETURNS BOOLEAN
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE song_id = $1) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song WHERE timbre.song.song_id = $1) THEN
         INSERT INTO timbre.song(song_id, title, uri, album_image_url) VALUES ($1, $2, $3, $4);
         RETURN TRUE;
     ELSE
@@ -406,6 +433,7 @@ BEGIN
     END IF;
 END;
 $$;
+
 
 CREATE OR REPLACE PROCEDURE timbre.add_song_artist(
     song_id TEXT,
@@ -415,11 +443,12 @@ CREATE OR REPLACE PROCEDURE timbre.add_song_artist(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE song_id = $1 AND artist_id = $2) THEN
+    IF NOT EXISTS (SELECT 1 FROM timbre.song_artist WHERE timbre.song_artist.song_id = $1 AND timbre.song_artist.artist_id = $2) THEN
         INSERT INTO timbre.song_artist(song_id, artist_id, artist_name) VALUES ($1, $2, $3);
     END IF;
 END;
 $$;
+
 
 CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
     user_id INTEGER,
@@ -429,11 +458,16 @@ CREATE OR REPLACE PROCEDURE timbre.send_recommendation(
 LANGUAGE PLPGSQL
 AS $$
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
-        INSERT INTO timbre.recommendation(song_id, sender_id, friend_id) VALUES ($3, $1, $2);
+    IF NOT EXISTS (SELECT 1 FROM timbre.recommendation WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2) THEN
+        INSERT INTO timbre.recommendation(song_id, sender_id, receiver_id) VALUES ($3, $1, $2);
+    ELSE
+        UPDATE timbre.recommendation
+        SET rec_time = NOW()
+        WHERE timbre.recommendation.song_id = $3 AND sender_id = $1 AND friend_id = $2;
     END IF;
 END;
 $$;
+
 
 CREATE OR REPLACE FUNCTION timbre.get_recommendations(
     user_id INTEGER
@@ -444,15 +478,17 @@ AS $$
 BEGIN
     RETURN QUERY
     WITH sender_ids AS (
-        SELECT song_id, sender_id FROM timbre.recommendation
+        SELECT timbre.recommendation.song_id, timbre.recommendation.sender_id, timbre.recommendation.rec_time FROM timbre.recommendation
         WHERE receiver_id = $1
     )
-    SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic 
+    SELECT sender_ids.song_id, sender_ids.sender_id, timbre_user.spotify_id, timbre_user.spotify_display_name, timbre_user.profile_pic
     FROM sender_ids
     JOIN timbre.timbre_user
-    ON sender_ids.sender_id = timbre_user.user_id;
+    ON sender_ids.sender_id = timbre_user.user_id
+    ORDER BY sender_ids.rec_time DESC;
 END;
 $$;
+
 
 CREATE OR REPLACE FUNCTION timbre.check_friends(
     user_id INTEGER,
@@ -468,5 +504,36 @@ BEGIN
     ELSE
         RETURN FALSE;
     END IF;
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION timbre.get_song_info(
+    user_id INTEGER,
+    song_id TEXT
+) RETURNS TABLE (title TEXT, uri TEXT, album_image_url TEXT, rating DECIMAL)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT song.title, song.uri, song.album_image_url, song_rating.rating
+    FROM timbre.song
+    LEFT JOIN timbre.song_rating
+    ON song.song_id = song_rating.song_id AND song_rating.user_id = $1
+    WHERE song.song_id = $2;
+END;
+$$;
+
+
+CREATE OR REPLACE FUNCTION timbre.get_song_artists(
+    song_id TEXT
+) RETURNS TABLE(artist_id TEXT, artist_name TEXT)
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT song_artist.artist_id, song_artist.artist_name
+    FROM timbre.song_artist
+    WHERE song_artist.song_id = $1;
 END;
 $$;

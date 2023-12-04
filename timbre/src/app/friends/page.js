@@ -124,7 +124,7 @@ export default function Friends() {
             <div className={`${styles.container}`}>
                 <FriendsTab friends={friends} friendRequests={friendRequests} recs={songRecommendations} updateFriends={updateFriends} handleToast={handleShowToast} />
             </div>
-            <ToastComponent show={showToast} variant={toastVariant} title={errorMessage} message={toastMessage} />
+            <ToastComponent show={showToast} variant={toastVariant} title={titleMessage} message={toastMessage} />
         </div>
     )
 }
