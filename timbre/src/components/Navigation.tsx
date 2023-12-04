@@ -9,7 +9,7 @@ import Nav from 'react-bootstrap/Nav';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { refreshSpotifyToken } from "../app/api/auth/authorize";
+import { refreshSpotifyToken, authorize } from "../app/api/auth/authorize";
 
 // profilePage is false by default
 // profilePage is true when the user is on the profile page
@@ -77,6 +77,9 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
   const fetchRefreshToken = async () => {
     try {
       let response = await refreshSpotifyToken(refreshToken);
+      if (response.error) {
+        await authorize();
+      }
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("refresh_token", response.refresh_token);
       localStorage.setItem('expires_in', (response.expires_in * 1000 + Date.now()).toString());
@@ -95,27 +98,36 @@ const Navigation = ({ isAuthenticated, setIsAuthenticated, setAccessToken, acces
     }
     if (!expiresIn) {
       setExpiresIn(parseInt(localStorage.getItem('expires_in') || '0'));
+      return;
     }
     if (!spotifyID) {
       setSpotifyID(localStorage.getItem('spotify_id') || '');
-    } else {
-      fetchUserProfile();
-    }
-  }, [accessToken, refreshToken, spotifyID]);
-
-  useEffect(() => {
-    if (!refreshToken) {
       return;
     }
+    if (expiresIn && spotifyID && refreshToken && accessToken) {
+      fetchUserProfile();
+    }
+  }, [accessToken, refreshToken, spotifyID, expiresIn]);
+
+  useEffect(() => {
+    if (!refreshToken || !expiresIn) {
+      return;
+    }
+
+    if (Date.now() + 600 * 1000 > expiresIn) { // Check refresh upon loading of page
+      console.log('Refreshing token');
+      fetchRefreshToken();
+    }
+
     const interval = setInterval(() => {
-      if (Date.now() + 600 * 1000 > expiresIn) { // Refresh within 10 minutes of expiration
+      if (Date.now() + 600 * 1000 > expiresIn) { // Check refresh every 9 minutes
         console.log('Refreshing token');
         fetchRefreshToken();
       }
     }, 540 * 1000); // Check every 9 minutes
   
     return () => clearInterval(interval);
-  }, [refreshToken])
+  }, [refreshToken, expiresIn])
 
   return (
     <Navbar bg="dark" variant="dark" style={{ fontFamily: 'Lexend, sans-serif', height: '60px'}}>

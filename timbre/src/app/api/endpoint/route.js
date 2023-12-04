@@ -243,7 +243,6 @@ export async function POST(request) {
                 let ratingResponse1 = await getUserIDFromSpotifyID(body.spotify_id);
                 
                 let track = body.track;
-                console.log(track);
                 // Add song to database
                 await addSong(track.song_id, track.title, track.uri, track.albumImageUrl, track.artists, track.artist_ids); 
                 
