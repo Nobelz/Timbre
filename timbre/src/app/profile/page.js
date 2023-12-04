@@ -5,6 +5,7 @@ import { useState, useEffect, utate, useRef } from "react";
 import { Container, Button } from 'react-bootstrap';
 import Navigation from '../../components/Navigation';
 import useAuthRedirect from '../../hooks/useAuthRedirect';
+import useAuthentication from '../../hooks/useAccessToken';
 import AuthRedirect from '../../components/AuthRedirect';
 import { authorize } from "../api/auth/authorize";
 import styles from '../styles/profile.module.css';
@@ -16,10 +17,9 @@ import Col from 'react-bootstrap/Col';
 export default function Profile({content}) {
 
     const [showBioPopup, setShowBioPopup] = useState(false);
-    const [access_token, setAccessToken] = useState("");
     const [userInfo, setUserInfo] = useState({})
     const [spotify_id, setSpotifyID] = useState("");
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { access_token, isAuthenticated, setAccessToken, setIsAuthenticated } = useAuthentication();
     const isLoading = useAuthRedirect(isAuthenticated);
 
     const handleBio = (e) => {
