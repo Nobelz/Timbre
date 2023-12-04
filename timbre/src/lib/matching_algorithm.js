@@ -206,7 +206,7 @@ export const generateSpotifyData = async(access_token) => {
     }
 
     // Get top rating IDs
-    let topRatings = await getTopRatings(userID, 10);
+    let topRatings = await getTopRatings(userID, 25);
     topRatings = topRatings.rows.map(row => [row.song_id, parseFloat(row.rating)]);
     const topRatingIDs = topRatings.map(rating => rating[0]);
 
