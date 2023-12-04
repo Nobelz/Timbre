@@ -58,7 +58,7 @@ export async function PUT(request) {
                         }
                     } else {
                         response3 = await checkFriends(response1.rows[0].search_user_from_email, response2.rows[0].search_user_from_id);
-                        if (response3.rowCount > 0) {
+                        if (response3.rows[0].check_friends) {
                             response = {
                                 data:
                                 {
