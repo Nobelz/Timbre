@@ -50,6 +50,7 @@
 .matches {
     background-image: linear-gradient(rgb(0, 36, 83), rgb(0, 0, 0));
     height: 100%;
+    overflow-y: hidden
 }
 
 .header {

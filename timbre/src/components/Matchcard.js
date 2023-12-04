@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import styles from '../app/styles/matches.module.css';
 import { Button } from "react-bootstrap";
+import ViewBio from '../components/ViewBio';
 
 export default function Matchcard({ content, handleToast }) {
     const [isFlipped, setIsFlipped] = useState(false);
+    const [showBio, setShowBio] = useState(false);
 
     const handleFlip = () => {
         setIsFlipped(!isFlipped);
@@ -12,6 +14,15 @@ export default function Matchcard({ content, handleToast }) {
     const handleAddFriend = (e) => {
         e.stopPropagation();
         addFriend();
+    }
+
+    const handleBioClose = () => {
+        setShowBio(false);
+    }
+
+    const handleBioOpen = (e) => {
+        e.stopPropagation();
+        setShowBio(true);
     }
 
     const addFriend = async () => {
@@ -56,6 +67,7 @@ export default function Matchcard({ content, handleToast }) {
                 <div className={`${styles.cardFace}`}>
                     <img src={content.profile_pic} className={`${styles.profilePic}`}/>
                     <p className={`${styles.name}`}>{content.display_name}</p>
+                    <Button onClick={(event) => handleBioOpen(event)}>Open Bio</Button>
                 </div>
                 <div className={`${styles.cardFace} ${styles.cardFaceBack}`}>
                     <div className={`${styles.compatability}`}>Compatibility Score</div>
@@ -63,6 +75,7 @@ export default function Matchcard({ content, handleToast }) {
                     <Button onClick={(event) => handleAddFriend(event)}>Add Friend</Button>
                 </div>
             </div>
+            <ViewBio username={content.display_name} bio={content.user_bio} show={showBio} onHide={handleBioClose} />
         </div>
     )
 }

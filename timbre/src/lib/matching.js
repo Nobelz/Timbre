@@ -22,7 +22,6 @@ async function getTop3Matches(currSpotifyID) {
     const matchInfo = []
     for (const id in top3Matches) {
       const userInfo = await getUserInfo(id);
-      
       matchInfo.push({
         match_id: id,
         score: top3Matches[id],
