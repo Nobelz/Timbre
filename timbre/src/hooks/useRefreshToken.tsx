@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { getToken, refreshSpotifyToken } from "../app/api/auth/authorize";
+import { useRouter } from "next/navigation";
 
 /* 
  Whenever a page is loaded this function should be called.
@@ -11,8 +12,8 @@ export default function useRefreshToken(code: string) {
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");
   const [spotifyID, setSpotifyID] = useState("");
-
   const lock = useRef(false);
+  const router = useRouter();
 
   // Gets a new access token upon login
   const fetchToken = async (code) => {
@@ -83,7 +84,7 @@ export default function useRefreshToken(code: string) {
 
   useEffect(() => {
     if (spotifyID && spotifyID !== 'undefined') {
-      window.location.href = '../homepage'; //TODO change back once done debugging Oswin says use Router
+      router.push('../homepage'); //TODO change back once done debugging Oswin says use Router
     }
   }, [spotifyID]);
 

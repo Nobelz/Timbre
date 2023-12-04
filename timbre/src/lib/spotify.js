@@ -9,29 +9,6 @@ const RECENTLY_PLAYED_ENDPOINT = 'https://api.spotify.com/v1/me/player/recently-
  and pass that as authorization to the Spotify api.
  */
 
-// Gets the playlists of the current user
-// TODO: Do we need this?
-export const playlists = async (access_token) => {
-    let token = access_token;
-
-    if (typeof window !== 'undefined' && localStorage)
-        token = localStorage.getItem("access_token") || access_token;
-
-    try {
-        const response = await fetch(
-            PLAYLISTS_ENDPOINT,
-            {
-                headers: {
-                    Authorization: "Bearer " + access_token,
-                },
-            }
-        );
-        return response.json();
-    } catch (err) {
-        console.log(err);
-    }
-};
-
 // Gets the top tracks of the current user
 export const topTracks = async (access_token) => {
     let token = access_token;
