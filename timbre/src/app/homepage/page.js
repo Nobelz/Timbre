@@ -191,7 +191,7 @@ export default function Home() {
                   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></link>
                   <Row style={{alignItems: 'center'}}>
                     <Col xs={5} style={{width: '10px'}}>
-                      <i class="fa fa-search" aria-hidden="true"></i>
+                      <i className="fa fa-search" aria-hidden="true"></i>
                     </Col>
                     <Col>
                       <Form.Control className={`${styles.search}`} type="search" placeholder="Search for Songs/Artists" value={search} onChange={e => setSearch(e.target.value)} />
