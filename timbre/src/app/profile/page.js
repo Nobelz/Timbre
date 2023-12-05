@@ -35,6 +35,20 @@ export default function Profile({content}) {
         await authorize();
     };
 
+    const logout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('expires_in');
+        localStorage.removeItem('token_type');
+        localStorage.removeItem('scope');
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('spotify_id');
+        localStorage.removeItem('userProfile');
+        setIsAuthenticated(false);
+        setAccessToken(null);
+        console.log("Logged out");
+    }
+
     const fetchUserProfile = async () => {
         try {
             let data = {
@@ -124,7 +138,7 @@ export default function Profile({content}) {
                     </Row>
 
                     <Row className={`${styles.row}`}>
-                        <Button className={styles.logoutbutton}>Log Out</Button>
+                        <Button className={styles.logoutbutton} onClick={logout}>Log Out</Button>
                     </Row>
 
                 </div>
