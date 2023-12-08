@@ -116,8 +116,6 @@ const updateUser = async(user_id, email, spotify_display_name, profile_pic) => {
 
 const updateUserBio = async(user_id, bio) => {
     try {
-        console.log(bio);
-
         let query;
         if (bio) {
             bio = bio.replace(/'/g, "''");
